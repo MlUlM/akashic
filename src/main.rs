@@ -12,6 +12,7 @@ fn main() {
 }
 
 fn setup(mut commands: Commands) {
+    console_log!("setup");
     commands.append(FilledRect::new(FilledRectParameter {
         scene: GAME.scene(),
         css_color: "#ff0000".to_string(),

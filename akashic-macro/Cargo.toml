@@ -1,0 +1,17 @@
+[package]
+name = "akashic-macro"
+version = "0.1.0"
+edition = "2021"
+
+
+[lib]
+proc-macro = true
+
+
+[dependencies]
+quote = "1.0.23"
+proc-macro2 = "1.0.51"
+syn = { version = "2.0.15", features = ["full", "extra-traits", "derive"] }
+convert_case = "0.6.0"
+paste = { workspace = true }
+

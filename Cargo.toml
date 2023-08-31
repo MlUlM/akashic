@@ -6,7 +6,8 @@ edition = "2021"
 [workspace]
 members = [
     "akashic-rs",
-    "bevy-akashic-engine"
+    "akashic-macro",
+    "bevy-akashic-engine",
 ]
 
 [dependencies]
