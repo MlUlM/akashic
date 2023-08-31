@@ -1,0 +1,13 @@
+[package]
+name = "bevy-akashic-engine"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+
+[dependencies]
+akashic-rs = {path = "../akashic-rs"}
+bevy = { workspace = true }
+wasm-bindgen = { workspace = true }
+auto-delegate = { workspace = true }
