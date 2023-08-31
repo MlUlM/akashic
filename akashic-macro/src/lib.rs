@@ -8,6 +8,8 @@ use crate::scene::expand_scene;
 mod trigger;
 mod entity;
 mod scene;
+mod children;
+mod modified;
 
 #[proc_macro_derive(AkashicEntity)]
 pub fn akashic_entity(input: TokenStream) -> TokenStream {

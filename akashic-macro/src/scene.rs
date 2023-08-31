@@ -1,6 +1,8 @@
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::ItemStruct;
+use crate::children::expand_children;
+use crate::modified::expand_modify;
 use crate::trigger::{expand_on_load, expand_on_update};
 
 #[inline(always)]
@@ -13,8 +15,13 @@ fn try_expand_scene(input: TokenStream) -> syn::Result<TokenStream>{
     let entity_name = syn::parse::<ItemStruct>(input)?.ident;
     let on_load = expand_on_load(&entity_name)?;
     let on_update = expand_on_update(&entity_name)?;
+    let children = expand_children(&entity_name);
+    let modify = expand_modify(&entity_name);
+
     Ok(quote!{
         #on_update
         #on_load
+        #children
+        #modify
     }.into())
 }
