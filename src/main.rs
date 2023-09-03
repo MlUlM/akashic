@@ -1,7 +1,11 @@
 use bevy::app::Update;
-use bevy::prelude::{App, Commands, EventReader, OnEnter, Query, Transform, With};
+use bevy::prelude::{App, Commands, EventReader, OnEnter, Query, Res, Transform, With};
 
 use bevy_akashic_engine::prelude::*;
+use bevy_akashic_engine::prelude::append::AkashicCommandEx;
+use bevy_akashic_engine::prelude::filled_rect::{FilledRect, FilledRectParameter};
+use bevy_akashic_engine::prelude::point_down::{PointDown, ScenePointDown};
+use bevy_akashic_engine::prelude::sprite::{Sprite, SpriteParameterObject, Src};
 
 fn main() {
     App::new()
@@ -10,16 +14,31 @@ fn main() {
             .build()
         ))
         .add_systems(OnEnter(SceneLoadState::Loaded), setup)
-        .add_systems(Update, move_system)
+
         .add_systems(Update, (
+            move_system,
             read_point_down,
             read_scene_point_down_event
         ))
         .run();
 }
 
-fn setup(mut commands: Commands) {
+fn setup(
+    mut commands: Commands,
+    server: Res<AkashicAssetServer>,
+) {
     console_log!("setup");
+
+    let src = Src::ImageAsset(server.get_image_by_id("player"));
+    let param = SpriteParameterObject::builder(GAME.scene(), src)
+        .height(32.)
+        .width(32.)
+        .x(100.)
+        .y(100.)
+        .build();
+
+    commands.append(Sprite::new(param));
+
     commands.append(FilledRect::new(FilledRectParameter {
         scene: GAME.scene(),
         css_color: "#ff0000".to_string(),
@@ -27,7 +46,7 @@ fn setup(mut commands: Commands) {
         height: 100.,
         touchable: true,
     }));
-
+    //
     commands.append(FilledRect::new(FilledRectParameter {
         scene: GAME.scene(),
         css_color: "#ffff00".to_string(),
