@@ -29,9 +29,12 @@ fn try_expand_entity(input: TokenStream) -> syn::Result<TokenStream> {
 fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
     let children = expand_children(entity_name);
     let modify = expand_modify(entity_name);
+    let size = expand_entity_size(entity_name);
+
     quote! {
         #modify
         #children
+        #size
 
         #[wasm_bindgen]
         extern "C"{
@@ -60,6 +63,38 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
             #[inline(always)]
             fn as_js_value(&self) -> JsValue{
                 self.obj.clone()
+            }
+        }
+    }
+}
+
+
+
+pub fn expand_entity_size(
+    entity_name: &Ident
+) -> TokenStream2{
+    quote!{
+        #[wasm_bindgen]
+        extern "C"{
+            #[doc(hidden)]
+            #[wasm_bindgen(js_namespace = g, method, getter, js_name=width)]
+            fn _width(this: &#entity_name) -> f32;
+
+            #[doc(hidden)]
+            #[wasm_bindgen(js_namespace = g, method, getter, js_name=height)]
+            fn _height(this: &#entity_name) -> f32;
+        }
+
+
+        impl crate::entity::EntitySize for #entity_name{
+            #[inline(always)]
+            fn width(&self) -> f32{
+                self._width()
+            }
+
+            #[inline(always)]
+            fn height(&self) -> f32{
+                self._height()
             }
         }
     }

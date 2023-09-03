@@ -9,8 +9,8 @@ pub fn expand_entity_triggers(entity_name: &Ident) -> syn::Result<TokenStream2> 
     let point_down = expand_trigger(
         entity_name,
         ident("onPointDown"),
-        quote!(crate::trigger::prelude::PointDownHandler),
-        quote!(crate::trigger::on_point_down::PointDownEvent),
+        quote!(crate::prelude::PointDownHandler),
+        quote!(crate::prelude::PointDownEvent),
     )?;
     let on_update = expand_on_update(entity_name)?;
     let on_load = expand_on_load(entity_name)?;
@@ -28,7 +28,7 @@ pub fn expand_on_update(entity_name: &Ident) -> syn::Result<TokenStream2> {
         entity_name,
         ident("onUpdate"),
         quote!(crate::prelude::UpdateHandler),
-        quote!(crate::trigger::Void),
+        quote!(crate::prelude::Void),
     )
 }
 

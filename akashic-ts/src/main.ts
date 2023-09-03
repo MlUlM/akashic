@@ -12,8 +12,7 @@ function main(param: g.GameMainParameterObject): void {
         const playerImageAsset = scene.asset.getImageById("player");
         const shotImageAsset = scene.asset.getImageById("shot");
         const seAudioAsset = scene.asset.getAudioById("se");
-    
- 
+        
         // プレイヤーを生成します
         const player = new g.Sprite({
             scene: scene,
@@ -25,8 +24,7 @@ function main(param: g.GameMainParameterObject): void {
         // プレイヤーの初期座標を、画面の中心に設定します
         player.x = (g.game.width - player.width) / 2;
         player.y = (g.game.height - player.height) / 2;
-
-
+        
         player.onUpdate.add(() => {
             // 毎フレームでY座標を再計算し、プレイヤーの飛んでいる動きを表現します
             // ここではMath.sinを利用して、時間経過によって増加するg.game.ageと組み合わせて
