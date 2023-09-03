@@ -73,6 +73,7 @@ fn read_scene_point_down_event(
             .y(player_pos.y)
             .build()
         );
+
         commands.append(shot).insert(Shot);
         commands.play_audio(server.get_audio_by_id("se"));
     }

@@ -83,8 +83,16 @@ pub fn expand_entity_size(
             fn _width(this: &#entity_name) -> f32;
 
             #[doc(hidden)]
+            #[wasm_bindgen(js_namespace = g, method, setter, js_name=width)]
+            fn _set_width(this: &#entity_name, width: f32);
+
+            #[doc(hidden)]
             #[wasm_bindgen(js_namespace = g, method, getter, js_name=height)]
             fn _height(this: &#entity_name) -> f32;
+
+            #[doc(hidden)]
+            #[wasm_bindgen(js_namespace = g, method, setter, js_name=height)]
+            fn _set_height(this: &#entity_name, height: f32);
         }
 
 
@@ -95,9 +103,20 @@ pub fn expand_entity_size(
             }
 
             #[inline(always)]
+            fn set_width(&self, w: f32){
+                self._set_width(w)
+            }
+
+            #[inline(always)]
             fn height(&self) -> f32{
                 self._height()
             }
+
+            #[inline(always)]
+            fn set_height(&self, h: f32){
+                self._set_height(h)
+            }
+
         }
     }
 }
