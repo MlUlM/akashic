@@ -54,11 +54,11 @@ let wasm_bindgen;
         return real;
     }
     function __wbg_adapter_22(arg0, arg1, arg2) {
-        wasm.closure14_externref_shim(arg0, arg1, arg2);
+        wasm.closure361_externref_shim(arg0, arg1, arg2);
     }
 
     function __wbg_adapter_25(arg0, arg1, arg2) {
-        wasm.closure413_externref_shim(arg0, arg1, arg2);
+        wasm.closure359_externref_shim(arg0, arg1, arg2);
     }
 
     function __wbg_adapter_28(arg0, arg1) {
@@ -168,6 +168,15 @@ let wasm_bindgen;
 
     function isLikeNone(x) {
         return x === undefined || x === null;
+    }
+
+    let cachedFloat32Memory0 = null;
+
+    function getFloat32Memory0() {
+        if (cachedFloat32Memory0 === null || cachedFloat32Memory0.byteLength === 0) {
+            cachedFloat32Memory0 = new Float32Array(wasm.memory.buffer);
+        }
+        return cachedFloat32Memory0;
     }
 
     function handleError(f, args) {
@@ -282,6 +291,308 @@ let wasm_bindgen;
         }
     }
     __exports.FilledRectParameter = FilledRectParameter;
+    /**
+    */
+    class Object2DParameterObject {
+
+        __destroy_into_raw() {
+            const ptr = this.__wbg_ptr;
+            this.__wbg_ptr = 0;
+
+            return ptr;
+        }
+
+        free() {
+            const ptr = this.__destroy_into_raw();
+            wasm.__wbg_object2dparameterobject_free(ptr);
+        }
+        /**
+        *このオブジェクトの横位置。実際の座標位置はscaleX, scaleY, angle, anchorX, anchorYの値も考慮する必要がある。
+        * @returns {number | undefined}
+        */
+        get x() {
+            try {
+                const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+                wasm.__wbg_get_object2dparameterobject_x(retptr, this.__wbg_ptr);
+                var r0 = getInt32Memory0()[retptr / 4 + 0];
+                var r1 = getFloat32Memory0()[retptr / 4 + 1];
+                return r0 === 0 ? undefined : r1;
+            } finally {
+                wasm.__wbindgen_add_to_stack_pointer(16);
+            }
+        }
+        /**
+        *このオブジェクトの横位置。実際の座標位置はscaleX, scaleY, angle, anchorX, anchorYの値も考慮する必要がある。
+        * @param {number | undefined} arg0
+        */
+        set x(arg0) {
+            wasm.__wbg_set_object2dparameterobject_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        }
+        /**
+        *
+        *     * このオブジェクトの縦位置。実際の座標位置はscaleX, scaleY, angle, anchorX, anchorYの値も考慮する必要がある。
+        *     * @default 0
+        *
+        * @returns {number | undefined}
+        */
+        get y() {
+            try {
+                const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+                wasm.__wbg_get_object2dparameterobject_y(retptr, this.__wbg_ptr);
+                var r0 = getInt32Memory0()[retptr / 4 + 0];
+                var r1 = getFloat32Memory0()[retptr / 4 + 1];
+                return r0 === 0 ? undefined : r1;
+            } finally {
+                wasm.__wbindgen_add_to_stack_pointer(16);
+            }
+        }
+        /**
+        *
+        *     * このオブジェクトの縦位置。実際の座標位置はscaleX, scaleY, angle, anchorX, anchorYの値も考慮する必要がある。
+        *     * @default 0
+        *
+        * @param {number | undefined} arg0
+        */
+        set y(arg0) {
+            wasm.__wbg_set_object2dparameterobject_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        }
+        /**
+        *
+        *     * このオブジェクトの横幅。実際の表示領域としてはscaleX, scaleY, angleの値も考慮する必要がある。
+        *     * @default 0
+        *
+        * @returns {number | undefined}
+        */
+        get width() {
+            try {
+                const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+                wasm.__wbg_get_object2dparameterobject_width(retptr, this.__wbg_ptr);
+                var r0 = getInt32Memory0()[retptr / 4 + 0];
+                var r1 = getFloat32Memory0()[retptr / 4 + 1];
+                return r0 === 0 ? undefined : r1;
+            } finally {
+                wasm.__wbindgen_add_to_stack_pointer(16);
+            }
+        }
+        /**
+        *
+        *     * このオブジェクトの横幅。実際の表示領域としてはscaleX, scaleY, angleの値も考慮する必要がある。
+        *     * @default 0
+        *
+        * @param {number | undefined} arg0
+        */
+        set width(arg0) {
+            wasm.__wbg_set_object2dparameterobject_width(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        }
+        /**
+        *
+        *     * このオブジェクトの縦幅。実際の表示領域としてはscaleX, scaleY, angleの値も考慮する必要がある。
+        *     * @default 0
+        *
+        * @returns {number | undefined}
+        */
+        get height() {
+            try {
+                const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+                wasm.__wbg_get_object2dparameterobject_height(retptr, this.__wbg_ptr);
+                var r0 = getInt32Memory0()[retptr / 4 + 0];
+                var r1 = getFloat32Memory0()[retptr / 4 + 1];
+                return r0 === 0 ? undefined : r1;
+            } finally {
+                wasm.__wbindgen_add_to_stack_pointer(16);
+            }
+        }
+        /**
+        *
+        *     * このオブジェクトの縦幅。実際の表示領域としてはscaleX, scaleY, angleの値も考慮する必要がある。
+        *     * @default 0
+        *
+        * @param {number | undefined} arg0
+        */
+        set height(arg0) {
+            wasm.__wbg_set_object2dparameterobject_height(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        }
+        /**
+        *
+        *     * 0～1でオブジェクトの不透明度を表す。
+        *     * この値が0の場合、Rendererは描画処理を省略する。
+        *     * @default 1
+        *
+        * @returns {number | undefined}
+        */
+        get opacity() {
+            try {
+                const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+                wasm.__wbg_get_object2dparameterobject_opacity(retptr, this.__wbg_ptr);
+                var r0 = getInt32Memory0()[retptr / 4 + 0];
+                var r1 = getFloat32Memory0()[retptr / 4 + 1];
+                return r0 === 0 ? undefined : r1;
+            } finally {
+                wasm.__wbindgen_add_to_stack_pointer(16);
+            }
+        }
+        /**
+        *
+        *     * 0～1でオブジェクトの不透明度を表す。
+        *     * この値が0の場合、Rendererは描画処理を省略する。
+        *     * @default 1
+        *
+        * @param {number | undefined} arg0
+        */
+        set opacity(arg0) {
+            wasm.__wbg_set_object2dparameterobject_opacity(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        }
+        /**
+        *
+        *     * オブジェクトの横方向の倍率。
+        *     * @default 1
+        *
+        * @returns {number | undefined}
+        */
+        get scaleX() {
+            try {
+                const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+                wasm.__wbg_get_object2dparameterobject_scaleX(retptr, this.__wbg_ptr);
+                var r0 = getInt32Memory0()[retptr / 4 + 0];
+                var r1 = getFloat32Memory0()[retptr / 4 + 1];
+                return r0 === 0 ? undefined : r1;
+            } finally {
+                wasm.__wbindgen_add_to_stack_pointer(16);
+            }
+        }
+        /**
+        *
+        *     * オブジェクトの横方向の倍率。
+        *     * @default 1
+        *
+        * @param {number | undefined} arg0
+        */
+        set scaleX(arg0) {
+            wasm.__wbg_set_object2dparameterobject_scaleX(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        }
+        /**
+        *
+        *     * オブジェクトの縦方向の倍率。
+        *     * @default 1
+        *
+        * @returns {number | undefined}
+        */
+        get scaleY() {
+            try {
+                const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+                wasm.__wbg_get_object2dparameterobject_scaleY(retptr, this.__wbg_ptr);
+                var r0 = getInt32Memory0()[retptr / 4 + 0];
+                var r1 = getFloat32Memory0()[retptr / 4 + 1];
+                return r0 === 0 ? undefined : r1;
+            } finally {
+                wasm.__wbindgen_add_to_stack_pointer(16);
+            }
+        }
+        /**
+        *
+        *     * オブジェクトの縦方向の倍率。
+        *     * @default 1
+        *
+        * @param {number | undefined} arg0
+        */
+        set scaleY(arg0) {
+            wasm.__wbg_set_object2dparameterobject_scaleY(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        }
+        /**
+        *
+        *     * オブジェクトの回転。度数で指定する。
+        *     * @default 0
+        *
+        * @returns {number | undefined}
+        */
+        get angle() {
+            try {
+                const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+                wasm.__wbg_get_object2dparameterobject_angle(retptr, this.__wbg_ptr);
+                var r0 = getInt32Memory0()[retptr / 4 + 0];
+                var r1 = getFloat32Memory0()[retptr / 4 + 1];
+                return r0 === 0 ? undefined : r1;
+            } finally {
+                wasm.__wbindgen_add_to_stack_pointer(16);
+            }
+        }
+        /**
+        *
+        *     * オブジェクトの回転。度数で指定する。
+        *     * @default 0
+        *
+        * @param {number | undefined} arg0
+        */
+        set angle(arg0) {
+            wasm.__wbg_set_object2dparameterobject_angle(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        }
+        /**
+        *
+        *     * 描画時の合成方法を指定する。
+        *     * 省略された場合、合成方法を指定しない（親の合成方法を利用する）。
+        *     * なお `CompositeOperation` での指定は非推奨である。 `CompositeOperationString` を利用すること。
+        *     * @default undefined
+        *
+        * @returns {string | undefined}
+        */
+        get compositeOperation() {
+            const ret = wasm.__wbg_get_object2dparameterobject_compositeOperation(this.__wbg_ptr);
+            return ret;
+        }
+        /**
+        *
+        *     * 描画時の合成方法を指定する。
+        *     * 省略された場合、合成方法を指定しない（親の合成方法を利用する）。
+        *     * なお `CompositeOperation` での指定は非推奨である。 `CompositeOperationString` を利用すること。
+        *     * @default undefined
+        *
+        * @param {string | undefined} arg0
+        */
+        set compositeOperation(arg0) {
+            wasm.__wbg_set_object2dparameterobject_compositeOperation(this.__wbg_ptr, isLikeNone(arg0) ? 0 : addToExternrefTable0(arg0));
+        }
+        /**
+        * @returns {number | undefined}
+        */
+        get anchorX() {
+            try {
+                const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+                wasm.__wbg_get_object2dparameterobject_anchorX(retptr, this.__wbg_ptr);
+                var r0 = getInt32Memory0()[retptr / 4 + 0];
+                var r1 = getFloat32Memory0()[retptr / 4 + 1];
+                return r0 === 0 ? undefined : r1;
+            } finally {
+                wasm.__wbindgen_add_to_stack_pointer(16);
+            }
+        }
+        /**
+        * @param {number | undefined} arg0
+        */
+        set anchorX(arg0) {
+            wasm.__wbg_set_object2dparameterobject_anchorX(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        }
+        /**
+        * @returns {number | undefined}
+        */
+        get anchorY() {
+            try {
+                const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+                wasm.__wbg_get_object2dparameterobject_anchorY(retptr, this.__wbg_ptr);
+                var r0 = getInt32Memory0()[retptr / 4 + 0];
+                var r1 = getFloat32Memory0()[retptr / 4 + 1];
+                return r0 === 0 ? undefined : r1;
+            } finally {
+                wasm.__wbindgen_add_to_stack_pointer(16);
+            }
+        }
+        /**
+        * @param {number | undefined} arg0
+        */
+        set anchorY(arg0) {
+            wasm.__wbg_set_object2dparameterobject_anchorY(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        }
+    }
+    __exports.Object2DParameterObject = Object2DParameterObject;
     /**
     */
     class SceneParameterObject {
@@ -540,6 +851,10 @@ let wasm_bindgen;
             const ret = arg0.onLoad;
             return ret;
         };
+        imports.wbg.__wbg_onPointDownCapture_1234399682b45f88 = function(arg0) {
+            const ret = arg0.onPointDownCapture;
+            return ret;
+        };
         imports.wbg.__wbg_children_9c84bf48e70f7f04 = function(arg0, arg1) {
             const ret = arg1.children;
             const ptr1 = passArrayJsValueToWasm0(ret, wasm.__wbindgen_malloc);
@@ -656,16 +971,16 @@ let wasm_bindgen;
             const ret = wasm.memory;
             return ret;
         };
-        imports.wbg.__wbindgen_closure_wrapper185 = function(arg0, arg1, arg2) {
-            const ret = makeMutClosure(arg0, arg1, 15, __wbg_adapter_22);
+        imports.wbg.__wbindgen_closure_wrapper1195 = function(arg0, arg1, arg2) {
+            const ret = makeMutClosure(arg0, arg1, 362, __wbg_adapter_22);
             return ret;
         };
-        imports.wbg.__wbindgen_closure_wrapper1278 = function(arg0, arg1, arg2) {
-            const ret = makeMutClosure(arg0, arg1, 414, __wbg_adapter_25);
+        imports.wbg.__wbindgen_closure_wrapper1197 = function(arg0, arg1, arg2) {
+            const ret = makeMutClosure(arg0, arg1, 360, __wbg_adapter_25);
             return ret;
         };
-        imports.wbg.__wbindgen_closure_wrapper3028 = function(arg0, arg1, arg2) {
-            const ret = makeMutClosure(arg0, arg1, 611, __wbg_adapter_28);
+        imports.wbg.__wbindgen_closure_wrapper3648 = function(arg0, arg1, arg2) {
+            const ret = makeMutClosure(arg0, arg1, 705, __wbg_adapter_28);
             return ret;
         };
         imports.wbg.__wbindgen_init_externref_table = function() {
@@ -689,6 +1004,7 @@ let wasm_bindgen;
     function __wbg_finalize_init(instance, module) {
         wasm = instance.exports;
         __wbg_init.__wbindgen_wasm_module = module;
+        cachedFloat32Memory0 = null;
         cachedInt32Memory0 = null;
         cachedUint32Memory0 = null;
         cachedUint8Memory0 = null;

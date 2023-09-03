@@ -42,6 +42,16 @@ pub fn expand_on_load(entity_name: &Ident) -> syn::Result<TokenStream2> {
     )
 }
 
+pub fn expand_on_point_down_capture(entity_name: &Ident) -> syn::Result<TokenStream2> {
+    expand_trigger(
+        entity_name,
+        ident("onPointDownCapture"),
+        quote!(crate::prelude::PointDownCaptureHandler),
+        quote!(crate::prelude::PointDownEvent),
+    )
+}
+
+
 fn expand_trigger(
     entity_name: &Ident,
     fn_name: Ident,

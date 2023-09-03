@@ -10,6 +10,7 @@ mod entity;
 mod scene;
 mod children;
 mod modified;
+mod asset;
 
 #[proc_macro_derive(AkashicEntity)]
 pub fn akashic_entity(input: TokenStream) -> TokenStream {

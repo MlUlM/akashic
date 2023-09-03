@@ -1,5 +1,5 @@
 use bevy::app::Update;
-use bevy::prelude::{App, Commands, EventReader, OnEnter, Query};
+use bevy::prelude::{App, Commands, EventReader, OnEnter, Query, Transform, With};
 
 use bevy_akashic_engine::prelude::*;
 
@@ -8,11 +8,15 @@ fn main() {
         .add_plugins(AkashicPlugin)
         .add_systems(OnEnter(SceneLoadState::Loaded), setup)
         .add_systems(Update, move_system)
-        .add_systems(Update, read_point_down)
+        .add_systems(Update, (
+            read_point_down,
+            read_scene_point_down_event
+        ))
         .run();
 }
 
 fn setup(mut commands: Commands) {
+
     console_log!("setup");
     commands.append(FilledRect::new(FilledRectParameter {
         scene: GAME.scene(),
@@ -20,6 +24,7 @@ fn setup(mut commands: Commands) {
         width: 100.,
         height: 100.,
         touchable: true,
+
     }));
 
     commands.append(FilledRect::new(FilledRectParameter {
@@ -32,10 +37,10 @@ fn setup(mut commands: Commands) {
 }
 
 fn move_system(
-    mut rects: Query<&mut AkashicTransform>
+    mut rects: Query<&mut Transform, With<AkashicEntityId>>
 ){
     for mut t in rects.iter_mut(){
-        t.transition.y += 1.;
+        t.translation.y += 1.;
     }
 }
 
@@ -46,5 +51,15 @@ fn read_point_down(
     for event in er.iter(){
         let id = rects.iter().find(|r|**r == event.entity_id);
         console_log!("{:?}", id);
+    }
+}
+
+
+
+fn read_scene_point_down_event(
+    mut er: EventReader<ScenePointDown>
+){
+    for e in er.iter(){
+        console_log!("on point down scene! {:?}", e.point);
     }
 }
