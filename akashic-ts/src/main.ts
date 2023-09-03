@@ -12,9 +12,9 @@ function main(param: g.GameMainParameterObject): void {
         const playerImageAsset = scene.asset.getImageById("player");
         const shotImageAsset = scene.asset.getImageById("shot");
         const seAudioAsset = scene.asset.getAudioById("se");
-        
+
         seAudioAsset.play();
-        
+
         // プレイヤーを生成します
         const player = new g.Sprite({
             scene: scene,

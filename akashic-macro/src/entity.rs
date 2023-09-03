@@ -30,11 +30,13 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
     let children = expand_children(entity_name);
     let modify = expand_modify(entity_name);
     let size = expand_entity_size(entity_name);
+    let destroy = expand_entity_destroy(entity_name);
 
     quote! {
         #modify
         #children
         #size
+        #destroy
 
         #[wasm_bindgen]
         extern "C"{
@@ -95,6 +97,34 @@ pub fn expand_entity_size(
             #[inline(always)]
             fn height(&self) -> f32{
                 self._height()
+            }
+        }
+    }
+}
+
+
+
+pub fn expand_entity_destroy(
+    entity_name: &Ident
+) -> TokenStream2{
+    quote!{
+        #[wasm_bindgen]
+        extern "C"{
+            #[doc(hidden)]
+            #[wasm_bindgen(js_namespace = g, method,  js_name=destroy)]
+            fn _destory(this: &#entity_name, destroySurface: bool);
+        }
+
+
+        impl crate::entity::EntityDestroy for #entity_name{
+            #[inline(always)]
+            fn destroy(&self){
+                self._destory(false)
+            }
+
+            #[inline(always)]
+            fn destroy_with_surface(&self){
+                self._destory(true)
             }
         }
     }

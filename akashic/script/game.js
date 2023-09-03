@@ -54,11 +54,11 @@ let wasm_bindgen;
         return real;
     }
     function __wbg_adapter_22(arg0, arg1, arg2) {
-        wasm.closure345_externref_shim(arg0, arg1, arg2);
+        wasm.closure466_externref_shim(arg0, arg1, arg2);
     }
 
     function __wbg_adapter_25(arg0, arg1, arg2) {
-        wasm.closure343_externref_shim(arg0, arg1, arg2);
+        wasm.closure464_externref_shim(arg0, arg1, arg2);
     }
 
     function __wbg_adapter_28(arg0, arg1) {
@@ -980,6 +980,9 @@ let wasm_bindgen;
         imports.wbg.__wbg_modified_6f96956179fce28e = function(arg0) {
             arg0.modified();
         };
+        imports.wbg.__wbg_destroy_549e71ecb131a195 = function(arg0, arg1) {
+            arg0.destroy(arg1 !== 0);
+        };
         imports.wbg.__wbg_id_12a1a14cc5946b59 = function(arg0) {
             const ret = arg0.id;
             return ret;
@@ -1169,16 +1172,16 @@ let wasm_bindgen;
             const ret = wasm.memory;
             return ret;
         };
-        imports.wbg.__wbindgen_closure_wrapper1289 = function(arg0, arg1, arg2) {
-            const ret = makeMutClosure(arg0, arg1, 346, __wbg_adapter_22);
+        imports.wbg.__wbindgen_closure_wrapper1608 = function(arg0, arg1, arg2) {
+            const ret = makeMutClosure(arg0, arg1, 467, __wbg_adapter_22);
             return ret;
         };
-        imports.wbg.__wbindgen_closure_wrapper1291 = function(arg0, arg1, arg2) {
-            const ret = makeMutClosure(arg0, arg1, 344, __wbg_adapter_25);
+        imports.wbg.__wbindgen_closure_wrapper1610 = function(arg0, arg1, arg2) {
+            const ret = makeMutClosure(arg0, arg1, 465, __wbg_adapter_25);
             return ret;
         };
-        imports.wbg.__wbindgen_closure_wrapper3837 = function(arg0, arg1, arg2) {
-            const ret = makeMutClosure(arg0, arg1, 693, __wbg_adapter_28);
+        imports.wbg.__wbindgen_closure_wrapper4413 = function(arg0, arg1, arg2) {
+            const ret = makeMutClosure(arg0, arg1, 791, __wbg_adapter_28);
             return ret;
         };
         imports.wbg.__wbindgen_init_externref_table = function() {
