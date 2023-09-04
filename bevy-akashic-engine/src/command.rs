@@ -1,15 +1,25 @@
 use std::marker::PhantomData;
+
 use auto_delegate::Delegate;
 use bevy::prelude::Bundle;
 use wasm_bindgen::JsValue;
 
-use akashic_rs::entity::E;
-
 use akashic_rs::prelude::{PointDownEvent, PointDownHandler, Trigger, UpdateHandler, Void};
+use akashic_rs::prelude::E;
 
+mod append;
+mod destroy;
+mod audio;
 
-pub mod append;
-pub mod destroy;
+pub mod prelude{
+    pub use crate::command::{
+        AsBundle,
+        append::*,
+        destroy::*,
+        audio::prelude::*,
+    };
+}
+
 
 pub trait AsBundle<B> {
     fn as_bundle(&self) -> B;
@@ -34,7 +44,7 @@ unsafe impl<T, B> Send for BoxedEntity<T, B> {}
 unsafe impl<T, B> Sync for BoxedEntity<T, B> {}
 
 impl<T, B> UpdateHandler for BoxedEntity<T, B>
-    where T: AsBundle<B> + E + 'static,
+    where T: UpdateHandler + 'static,
           B: Bundle
 {
     #[inline(always)]
@@ -45,7 +55,7 @@ impl<T, B> UpdateHandler for BoxedEntity<T, B>
 
 
 impl<T, B> PointDownHandler for BoxedEntity<T, B>
-    where T: AsBundle<B> + E + 'static,
+    where T: PointDownHandler + 'static,
           B: Bundle
 {
     #[inline(always)]
@@ -70,6 +80,7 @@ impl<T, B> E for BoxedEntity<T, B>
         self.0.as_js_value()
     }
 }
+
 
 impl<T, B> AsBundle<B> for BoxedEntity<T, B>
     where T: AsBundle<B> + E + 'static,

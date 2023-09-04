@@ -1,4 +1,5 @@
 use wasm_bindgen::prelude::wasm_bindgen;
+use crate::player::Player;
 
 use crate::trigger::Trigger;
 
@@ -6,11 +7,9 @@ pub trait PointDownHandler {
     fn on_point_down(&self) -> Trigger<PointDownEvent>;
 }
 
-#[macro_export]
-macro_rules! on_point_down {
-    ($entity_name: ident) => {
-        $crate::trigger!($entity_name, "onPointDown", on_point_down, $crate::trigger::prelude::PointDownHandler, $crate::trigger::on_point_down::PointDownEvent);
-    };
+
+pub trait PointDownCaptureHandler {
+    fn on_point_down_capture(&self) -> Trigger<PointDownEvent>;
 }
 
 
@@ -21,6 +20,10 @@ extern "C" {
 
     #[wasm_bindgen(js_namespace = g, getter, method)]
     pub fn point(this: &PointDownEvent) -> CommonOffset;
+
+
+    #[wasm_bindgen(js_namespace = g, getter, method)]
+    pub fn player(this: &PointDownEvent) -> Player;
 }
 
 

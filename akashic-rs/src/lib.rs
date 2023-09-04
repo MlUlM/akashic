@@ -1,20 +1,21 @@
-pub mod game;
-pub mod scene;
-
-pub mod filled_rect;
-
-pub mod entity;
+mod game;
+mod scene;
+mod entity;
 
 mod log;
 mod object_2d_parameter;
 mod trigger;
+mod asset;
+mod player;
 
 pub mod prelude {
     pub use crate::console_log;
-    pub use crate::filled_rect::{FilledRect, FilledRectParameter};
-    pub use crate::game::{Game, GAME};
-    pub use crate::scene::Scene;
-    pub use crate::log::log;
+    pub use crate::asset::*;
+    pub use crate::game::*;
+    pub use crate::scene::prelude::*;
+    pub use crate::log::*;
+    pub use crate::player::*;
     pub use crate::trigger::prelude::*;
-    pub use crate::entity::{E, Entity};
+    pub use crate::entity::prelude::*;
+    pub use crate::object_2d_parameter::*;
 }

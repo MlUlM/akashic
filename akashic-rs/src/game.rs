@@ -16,10 +16,10 @@ extern "C" {
     pub static GAME: Game;
 
     #[wasm_bindgen(js_namespace = g, getter, method)]
-    pub fn age(this: &Game) -> usize;
+    pub fn age(this: &Game) -> f32;
 
     #[wasm_bindgen(js_namespace = g, getter, method)]
-    pub fn fps(this: &Game) -> usize;
+    pub fn fps(this: &Game) -> f32;
 
     #[wasm_bindgen(js_namespace = g, method)]
     pub fn scene(this: &Game) -> Scene;

@@ -5,18 +5,21 @@ use wasm_bindgen::convert::FromWasmAbi;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-
-pub mod on_point_down;
+mod on_point_down;
 mod on_load;
 mod on_update;
 
 
 pub mod prelude {
-    pub use crate::trigger::on_load::OnLoadHandler;
-    pub use crate::trigger::on_update::UpdateHandler;
-    pub use crate::trigger::on_point_down::{PointDownHandler, PointDownEvent};
-    pub use crate::trigger::{Trigger, Void};
+    pub use crate::trigger::{
+        on_load::*,
+        on_point_down::*,
+        on_update::*,
+        Void,
+        Trigger,
+    };
 }
+
 
 
 pub struct Void;
@@ -45,12 +48,8 @@ macro_rules! trigger {
 }
 
 
-
-
-
-
-
 pub struct Trigger<T>(pub(crate) NativeTrigger, PhantomData<T>);
+
 
 impl<T> Trigger<T> {
     pub fn new(native: NativeTrigger) -> Trigger<T> {

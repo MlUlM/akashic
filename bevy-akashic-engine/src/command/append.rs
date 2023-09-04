@@ -1,24 +1,28 @@
-use bevy::ecs::system::Command;
+use bevy::ecs::system::{Command, EntityCommands};
 use bevy::math::Vec2;
 use bevy::prelude::{Bundle, Commands, World};
 
-use akashic_rs::entity::E;
-use akashic_rs::game::GAME;
+use akashic_rs::prelude::E;
+use akashic_rs::prelude::GAME;
+use akashic_rs::prelude::PointDownHandler;
 
 use crate::command::{AsBundle, BoxedEntity};
 use crate::component::AkashicEntityId;
-use crate::trigger::point_down::{PointDown, PointDownQueue};
+use crate::trigger::point_down::{AkashicEventQueue, PointDown};
 
-pub trait AkashicCommandEx {
-    fn append<B: Bundle>(&mut self, e: impl AsBundle<B> + E + 'static);
+pub trait AkashicEntityAppend<'w, 's> {
+    fn append<'a, B: Bundle>(&'a mut self, e: impl AsBundle<B> + E + PointDownHandler + 'static) -> EntityCommands<'w, 's, 'a>;
 }
 
-impl<'w, 's> AkashicCommandEx for Commands<'w, 's> {
+impl<'w, 's> AkashicEntityAppend<'w, 's> for Commands<'w, 's> {
     #[inline(always)]
-    fn append<B: Bundle>(&mut self, e: impl AsBundle<B> + E + 'static) {
+    fn append<'a, B: Bundle>(&'a mut self, e: impl AsBundle<B> + E + PointDownHandler + 'static) -> EntityCommands<'w, 's, 'a> {
+        let bundle = e.as_bundle();
         self.add(Append::new(e));
+        self.spawn(bundle)
     }
 }
+
 
 pub struct Append<T, B> {
     e: BoxedEntity<T, B>,
@@ -38,21 +42,18 @@ impl<T, B> Append<T, B>
 
 
 impl<T, B> Command for Append<T, B>
-    where T: AsBundle<B> + E + 'static,
+    where T: AsBundle<B> + E + PointDownHandler + 'static,
           B: Bundle
 {
     fn apply(self, world: &mut World) {
-        let bundle = self.e.as_bundle();
-        register_point_down(&self.e, world);
-
         GAME.scene().append(&self.e);
-        world.spawn(bundle);
+        register_point_down(&self.e, world);
     }
 }
 
 
-fn register_point_down(e: &impl E, world: &mut World) {
-    let point_down_queue = world.resource::<PointDownQueue>().clone();
+fn register_point_down<T: PointDownHandler + E>(e: &T, world: &mut World) {
+    let point_down_queue = world.resource::<AkashicEventQueue<PointDown>>().clone();
     let entity_id = AkashicEntityId(e.id());
 
     e.on_point_down().add(move |e| {

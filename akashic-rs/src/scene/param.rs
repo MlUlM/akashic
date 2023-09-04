@@ -5,7 +5,7 @@ use wasm_bindgen::prelude::wasm_bindgen;
 use crate::game::Game;
 
 #[wasm_bindgen(getter_with_clone)]
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct SceneParameterObject {
     pub game: Game,
 
@@ -25,35 +25,46 @@ pub struct SceneParameterObject {
 
 
 impl SceneParameterObject {
-    pub fn builder(game: Game) -> Builder{
-        Builder::new(game)
+    pub fn builder(game: Game) -> SceneParameterObjectBuilder {
+        SceneParameterObjectBuilder::new(game)
     }
 }
 
 #[derive(Default)]
-pub struct Builder{
-    pub game: Game,
-    pub asset_ids: Option<Vec<String>>,
-    pub asset_paths: Option<Vec<String>>,
-    pub storage_keys: Option<Vec<String>>,
-    pub local: bool,
-    pub name: Option<String>,
+pub struct SceneParameterObjectBuilder {
+    game: Game,
+    asset_ids: Option<Vec<&'static str>>,
+    asset_paths: Option<Vec<String>>,
+    storage_keys: Option<Vec<String>>,
+    local: bool,
+    name: Option<String>,
 }
 
 
-impl Builder {
-    pub fn new(game: Game) -> Self{
-        Self{
+impl SceneParameterObjectBuilder {
+    #[inline]
+    pub fn new(game: Game) -> Self {
+        Self {
             game,
             ..Default::default()
         }
     }
 
 
-    pub fn build(self) -> SceneParameterObject{
-        SceneParameterObject{
+    #[inline]
+    pub fn asset_ids(mut self, asset_ids: Vec<&'static str>) -> SceneParameterObjectBuilder {
+        self.asset_ids = Some(asset_ids);
+        self
+    }
+
+
+    #[inline]
+    pub fn build(self) -> SceneParameterObject {
+        SceneParameterObject {
             game: self.game,
-            asset_ids: self.asset_ids.map(|ids|ids.into_iter().map(JsString::from).collect()),
+            asset_ids: self.asset_ids.map(|ids| ids.into_iter().map(JsString::from).collect()),
+            asset_paths: self.asset_paths.map(|p|p.into_iter().map(JsString::from).collect()),
+            name: self.name.map(JsString::from),
             ..Default::default()
         }
     }

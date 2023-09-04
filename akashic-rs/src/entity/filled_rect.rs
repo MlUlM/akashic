@@ -1,10 +1,9 @@
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
-use akashic_macro::{AkashicEntity};
 
+use akashic_macro::AkashicEntity;
 
 use crate::scene::Scene;
-
 
 #[wasm_bindgen]
 extern "C" {
@@ -16,6 +15,7 @@ extern "C" {
 }
 
 
+#[allow(unused_variables)]
 #[wasm_bindgen(getter_with_clone)]
 pub struct FilledRectParameter {
     pub scene: Scene,
