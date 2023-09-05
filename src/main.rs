@@ -1,5 +1,23 @@
-use bevy::app::Update;
-use bevy::prelude::{App, Commands, Component, EventReader, OnEnter, Query, Res, Transform, With};
+use std::time::Duration;
+
+use bevy::a11y::AccessibilityPlugin;
+use bevy::app::{App, PluginGroup, PluginGroupBuilder, Update};
+use bevy::asset::AssetPlugin;
+use bevy::core::{FrameCountPlugin, TaskPoolPlugin, TypeRegistrationPlugin};
+use bevy::core_pipeline::CorePipelinePlugin;
+use bevy::DefaultPlugins;
+use bevy::diagnostic::DiagnosticsPlugin;
+use bevy::gizmos::GizmoPlugin;
+use bevy::hierarchy::HierarchyPlugin;
+use bevy::input::InputPlugin;
+use bevy::log::LogPlugin;
+use bevy::math::Vec2;
+use bevy::pbr::PbrPlugin;
+use bevy::prelude::{Camera2dBundle, Color, Commands, Component, Deref, DerefMut, EventReader, ImagePlugin, OnEnter, Query, Res, ResMut, Resource, TimerMode, Transform, TransformPlugin, WindowPlugin, With};
+use bevy::render::RenderPlugin;
+use bevy::sprite::{SpriteBundle, SpritePlugin};
+use bevy::time::{Time, TimePlugin, Timer};
+use bevy::utils::default;
 
 use bevy_akashic_engine::prelude::*;
 use bevy_akashic_engine::prelude::entity_size::AkashicEntitySize;
@@ -14,18 +32,48 @@ struct Player;
 #[derive(Component, Debug)]
 struct Shot;
 
+pub struct AkashicDefaultPlugin;
+
+impl PluginGroup for AkashicDefaultPlugin {
+    fn build(self) -> PluginGroupBuilder {
+        let mut group = PluginGroupBuilder::start::<Self>();
+        group
+            .add(LogPlugin::default())
+            .add(TaskPoolPlugin::default())
+            .add(TypeRegistrationPlugin)
+            .add(FrameCountPlugin)
+            .add(TimePlugin)
+            .add(TransformPlugin)
+            .add(HierarchyPlugin)
+            .add(DiagnosticsPlugin)
+            .add(InputPlugin)
+            .add(WindowPlugin::default())
+            .add(AccessibilityPlugin)
+            .add(AssetPlugin::default())
+            // .add(CorePipelinePlugin)
+            // .add(SpritePlugin)
+            // .add(RenderPlugin::default())
+            // .add(ImagePlugin::default())
+            // .add(GizmoPlugin)
+            // .add(PbrPlugin::default())
+    }
+}
 
 fn main() {
     App::new()
+
+        .add_plugins(AkashicDefaultPlugin)
         .add_plugins(AkashicPlugin::new(SceneParameterObject::builder(GAME.clone())
             .asset_ids(vec!["player", "shot", "se"])
             .build()
         ))
+        .insert_resource(PrintOnCompletionTimer(Timer::new(Duration::from_secs(1), TimerMode::Repeating)))
         .add_systems(OnEnter(SceneLoadState::Loaded), setup)
         .add_systems(Update, (
             player_hovering_system,
             read_scene_point_down_event,
-            shot_move_system
+            shot_move_system,
+            timer_sysyem
         ))
         .run();
 }
@@ -35,6 +83,15 @@ fn setup(
     server: Res<AkashicAssetServer>,
     game_size: Res<GameInfo>,
 ) {
+    commands.spawn(Camera2dBundle::default());
+    commands.spawn(SpriteBundle {
+        sprite: bevy::sprite::Sprite {
+            custom_size: Some(Vec2::new(30., 30.)),
+            color: Color::BEIGE,
+            ..default()
+        },
+        ..default()
+    });
     let player_image_asset = server.get_image_by_id("player").into_src();
     let player = Sprite::new(SpriteParameterObject::builder(GAME.scene().clone(), player_image_asset)
         .build()
@@ -46,6 +103,19 @@ fn setup(
     commands
         .append(player)
         .insert(Player);
+}
+
+#[derive(Resource, Deref, DerefMut)]
+pub struct PrintOnCompletionTimer(Timer);
+
+
+fn timer_sysyem(
+    time: Res<Time>,
+    mut timer: ResMut<PrintOnCompletionTimer>,
+) {
+    if timer.tick(time.delta()).just_finished() {
+        console_log!("tick");
+    }
 }
 
 fn player_hovering_system(

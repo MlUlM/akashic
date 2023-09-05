@@ -11,6 +11,7 @@ pub mod prelude {
     pub use crate::command::prelude::*;
     pub use crate::plugin::*;
     pub use crate::asset::*;
+
     pub use akashic_rs::prelude::*;
     pub use crate::trigger::*;
     pub use crate::component::*;

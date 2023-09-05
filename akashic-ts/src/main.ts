@@ -4,7 +4,7 @@ function main(param: g.GameMainParameterObject): void {
         // このシーンで利用するアセットのIDを列挙し、シーンに通知します
         assetIds: ["player", "shot", "se"]
     });
-
+    new g.
     scene.onLoad.add(() => {
         // ここからゲーム内容を記述します
 

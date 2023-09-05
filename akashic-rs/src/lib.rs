@@ -11,7 +11,7 @@ mod player;
 pub mod prelude {
     pub use crate::console_log;
     pub use crate::asset::*;
-    pub use crate::game::*;
+    pub use crate::game::prelude::*;
     pub use crate::scene::prelude::*;
     pub use crate::log::*;
     pub use crate::player::*;

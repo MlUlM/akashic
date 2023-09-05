@@ -6,6 +6,12 @@ use wasm_bindgen::prelude::wasm_bindgen;
 use crate::scene::Scene;
 use crate::trigger::NativeTrigger;
 
+
+pub mod prelude{
+    pub use crate::game::{GAME, Game};
+}
+
+
 #[wasm_bindgen]
 extern "C" {
     #[derive(Clone, Debug)]

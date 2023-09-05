@@ -26,11 +26,6 @@
       "type": "script",
       "path": "script/main.js",
       "global": true
-    },
-    "game": {
-      "type": "script",
-      "path": "script/game.js",
-      "global": true
     }
   },
   "moduleMainScripts": {},
