@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "build": "node index.js",
-    "sandbox": "akashic-sandbox akashic"
+    "sandbox": "akashic-sandbox akashic",
+       "serve": "akashic serve akashic"
   },
   "dependencies": {
     "@types/node": "^20.5.7",

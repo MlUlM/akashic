@@ -1,15 +1,27 @@
 const fs = require("fs")
 const js = fs.readFileSync("out/bevy-akashic.js")
 
+const mainJsPath = "./akashic/script/main.js"
+const wasmCode = js
+    .toString()
+    .replace("let script_src;", "let script_src = \"\";")
+    .replace("input = fetch(input);", "input = base64ToArrayBuffer(wasmBase64);")
+    .replace("wasm_bindgen = Object.assign(__wbg_init, { initSync }, __exports);", "Object.assign(__wbg_init, { initSync }, __exports)();")
 
-const l = `
-const process = undefined;
-const Buffer = undefined;
-const setImmediate = undefined;
-`
-
-const js2 = l + js.toString()
-const js3 = js2.replace("let script_src;", "let script_src = g.game._assetManager.configuration.wasm.path;")
-const js4 = js3.replace("wasm_bindgen = Object.assign(__wbg_init, { initSync }, __exports);", "wasm_bindgen = Object.assign(__wbg_init, { initSync }, __exports);module.exports = {wasm_bindgen,  locateFile: path => g.game._assetManager.configuration.wasm.path};")
-fs.writeFileSync("./akashic/script/game.js", js4)
-fs.renameSync("out/bevy-akashic_bg.wasm", "./akashic/script/game_bg.wasm")
+fs.writeFileSync(mainJsPath, `
+    const wasmBase64 = \"${Buffer.from(fs.readFileSync("out/bevy-akashic_bg.wasm")).toString("base64")}\"
+    
+    function base64ToArrayBuffer(base64) {
+        var binaryString = atob(base64);
+        var bytes = new Uint8Array(binaryString.length);
+        for (var i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes.buffer;
+    }
+    
+    // main function
+    module.exports = () => {
+        ${wasmCode}
+    }
+`)

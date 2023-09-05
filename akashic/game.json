@@ -31,10 +31,6 @@
       "type": "script",
       "path": "script/game.js",
       "global": true
-    },
-    "wasm": {
-      "type": "text",
-      "path": "script/game_bg.wasm"
     }
   },
   "moduleMainScripts": {},
