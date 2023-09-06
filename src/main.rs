@@ -83,15 +83,6 @@ fn setup(
     server: Res<AkashicAssetServer>,
     game_size: Res<GameInfo>,
 ) {
-    commands.spawn(Camera2dBundle::default());
-    commands.spawn(SpriteBundle {
-        sprite: bevy::sprite::Sprite {
-            custom_size: Some(Vec2::new(30., 30.)),
-            color: Color::BEIGE,
-            ..default()
-        },
-        ..default()
-    });
     let player_image_asset = server.get_image_by_id("player").into_src();
     let player = Sprite::new(SpriteParameterObject::builder(GAME.scene().clone(), player_image_asset)
         .build()
