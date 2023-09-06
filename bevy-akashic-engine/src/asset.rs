@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::ops::Deref;
 
 use bevy::prelude::Resource;
+use akashic_rs::console_log;
 
 use akashic_rs::prelude::{AudioAsset, GAME};
 use akashic_rs::prelude::ImageAsset;
@@ -64,8 +65,8 @@ impl Default for AkashicAssetServer {
         let assets = GAME.scene().asset();
 
         AkashicAssetServer {
-            images: asset_map(assets.get_all_images_map("assets/images/*")),
-            audios: asset_map(assets.get_all_audios_map("assets/audio/*")),
+            images: asset_map(assets.get_all_images_map("/image/*.png")),
+            audios: asset_map(assets.get_all_audios_map("/audio/*")),
         }
     }
 }

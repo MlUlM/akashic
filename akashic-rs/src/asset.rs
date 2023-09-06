@@ -32,7 +32,7 @@ impl AssetAccessor {
         self
             .get_all_images(path.into())
             .iter()
-            .map(|asset| (asset.path(), asset.clone()))
+            .map(|asset| (asset.id(), asset.clone()))
             .collect()
     }
 
@@ -41,7 +41,7 @@ impl AssetAccessor {
         self
             .get_all_audios(path.into())
             .iter()
-            .map(|asset| (asset.path(), asset.clone()))
+            .map(|asset| (asset.id(), asset.clone()))
             .collect()
     }
 }
@@ -50,6 +50,9 @@ impl AssetAccessor {
 extern "C" {
     #[derive(Clone, Debug)]
     pub type ImageAsset;
+
+    #[wasm_bindgen(js_namespace = g, method, getter)]
+    pub fn id(this: &ImageAsset) -> String;
 
     #[wasm_bindgen(js_namespace = g, method, getter)]
     pub fn path(this: &ImageAsset) -> String;
@@ -71,6 +74,9 @@ extern "C" {
 
     #[derive(Clone, Debug)]
     pub type AudioPlayer;
+
+    #[wasm_bindgen(js_namespace = g, method, getter)]
+    pub fn id(this: &AudioAsset) -> String;
 
     #[wasm_bindgen(js_namespace = g, method)]
     pub fn play(this: &AudioAsset) -> AudioPlayer;

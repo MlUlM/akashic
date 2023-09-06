@@ -2,18 +2,19 @@ use std::sync::atomic::{AtomicBool, Ordering};
 
 use bevy::app::{App, Plugin, PreUpdate};
 use bevy::math::Vec2;
-use bevy::prelude::{in_state, IntoSystemConfigs, NextState, ResMut, World};
+use bevy::prelude::{Commands, in_state, IntoSystemConfigs, NextState, ResMut, World};
 use wasm_bindgen::JsValue;
 
 use akashic_rs::prelude::{OnLoadHandler, PointDownCaptureHandler, UpdateHandler};
 use akashic_rs::prelude::GAME;
 use akashic_rs::prelude::Scene;
 
+use crate::asset::AkashicAssetServer;
 use crate::plugin::{SceneLoadState, SharedSceneParameter};
 use crate::trigger::point_down::{AkashicEventQueue, ScenePointDown};
 
-#[derive(Default)]
-pub struct AkashicSchedulerPlugin(pub(crate) SharedSceneParameter);
+pub struct AkashicSchedulerPlugin(
+    pub(crate) SharedSceneParameter);
 
 
 impl Plugin for AkashicSchedulerPlugin {
@@ -21,6 +22,9 @@ impl Plugin for AkashicSchedulerPlugin {
         let param = self.0.clone();
 
         app
+            .add_systems(PreUpdate, (
+                init_asset_server
+            ).run_if(in_state(SceneLoadState::Loaded)))
             .add_systems(
                 PreUpdate,
                 (
@@ -30,6 +34,7 @@ impl Plugin for AkashicSchedulerPlugin {
                 let scene = Scene::new(param.param());
 
                 on_point_down_capture(&scene, &mut app.world);
+
 
                 scene.on_load().add(|_| {
                     IS_LOADED.store(true, Ordering::Relaxed);
@@ -50,6 +55,14 @@ fn load_scene_event(mut state: ResMut<NextState<SceneLoadState>>) {
     if IS_LOADED.load(Ordering::Relaxed) {
         state.set(SceneLoadState::Loaded);
     }
+}
+
+fn init_asset_server(
+    mut state: ResMut<NextState<SceneLoadState>>,
+    mut commands: Commands,
+) {
+    commands.insert_resource(AkashicAssetServer::default());
+    state.set(SceneLoadState::Startup);
 }
 
 fn on_point_down_capture(

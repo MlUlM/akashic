@@ -13,7 +13,7 @@ members = [
 [dependencies]
 bevy = { workspace = true }
 bevy-akashic-engine = { path = "./bevy-akashic-engine" }
-
+console_error_panic_hook = "0.1.7"
 
 [workspace.dependencies]
 wasm-bindgen = { version = "0.2" }

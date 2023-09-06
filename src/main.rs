@@ -1,9 +1,10 @@
+use std::panic;
 use std::time::Duration;
 
 use bevy::a11y::AccessibilityPlugin;
 use bevy::app::{App, PluginGroup, PluginGroupBuilder, Update};
 use bevy::asset::AssetPlugin;
-use bevy::core::{FrameCountPlugin, TaskPoolPlugin, TypeRegistrationPlugin};
+use bevy::core::{FrameCount, FrameCountPlugin, TaskPoolPlugin, TypeRegistrationPlugin};
 use bevy::core_pipeline::CorePipelinePlugin;
 use bevy::DefaultPlugins;
 use bevy::diagnostic::DiagnosticsPlugin;
@@ -13,7 +14,7 @@ use bevy::input::InputPlugin;
 use bevy::log::LogPlugin;
 use bevy::math::Vec2;
 use bevy::pbr::PbrPlugin;
-use bevy::prelude::{Camera2dBundle, Color, Commands, Component, Deref, DerefMut, EventReader, ImagePlugin, OnEnter, Query, Res, ResMut, Resource, TimerMode, Transform, TransformPlugin, WindowPlugin, With};
+use bevy::prelude::{Camera2dBundle, Color, Commands, Component, Deref, DerefMut, EventReader, ImagePlugin, in_state, IntoSystemConfigs, OnEnter, Query, Res, ResMut, Resource, TimerMode, Transform, TransformPlugin, WindowPlugin, With};
 use bevy::render::RenderPlugin;
 use bevy::sprite::{SpriteBundle, SpritePlugin};
 use bevy::time::{Time, TimePlugin, Timer};
@@ -60,19 +61,21 @@ impl PluginGroup for AkashicDefaultPlugin {
 }
 
 fn main() {
-    App::new()
+    panic::set_hook(Box::new(console_error_panic_hook::hook));
 
-        .add_plugins(AkashicDefaultPlugin)
+    App::new()
+        .add_plugins(FrameCountPlugin)
+        .add_plugins(TimePlugin)
         .add_plugins(AkashicPlugin::new(SceneParameterObject::builder(GAME.clone())
             .asset_ids(vec!["player", "shot", "se"])
             .build()
         ))
-        .add_systems(OnEnter(SceneLoadState::Loaded), setup)
+        .add_systems(OnEnter(SceneLoadState::Startup), setup)
         .add_systems(Update, (
             player_hovering_system,
             read_scene_point_down_event,
             shot_move_system
-        ))
+        ).run_if(in_state(SceneLoadState::Startup)))
         .run();
 }
 
@@ -81,7 +84,8 @@ fn setup(
     server: Res<AkashicAssetServer>,
     game_size: Res<GameInfo>,
 ) {
-    let player_image_asset = server.get_image_by_id("player").into_src();
+
+    let player_image_asset = server.image_by_id("player").into_src();
     let player = Sprite::new(SpriteParameterObject::builder(GAME.scene().clone(), player_image_asset)
         .build()
     );
@@ -98,9 +102,11 @@ fn setup(
 fn player_hovering_system(
     mut player: Query<(&mut Transform, &AkashicEntitySize), With<Player>>,
     game_info: Res<GameInfo>,
+    frames: Res<FrameCount>,
 ) {
     let (mut transform, size) = player.single_mut();
-    transform.translation.y = (game_info.height - size.height()) / 2. + (game_info.age % (game_info.fps * 10.) / 4.).sin() * 10.;
+    transform.translation.y = (game_info.height - size.height()) / 2. + ((frames.0 as f32) % (game_info.fps * 10.) / 4.).sin() * 10.;
+
 }
 
 

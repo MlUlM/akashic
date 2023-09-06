@@ -1,6 +1,7 @@
 use bevy::app::{App, Last, Plugin, PostUpdate};
 use bevy::prelude::{Added, Entity, Event, EventReader, EventWriter, Query, RemovedComponents, ResMut, Resource, Transform};
 use bevy::utils::HashMap;
+use akashic_rs::console_log;
 
 use akashic_rs::prelude::{EntityDestroy, EntitySize};
 use akashic_rs::prelude::GAME;
@@ -63,7 +64,7 @@ fn entity_size_system(
 ) {
     for (AkashicEntityId(id), size) in size_queries.iter() {
         let Some(entity) = GAME.scene().find_child(*id) else { continue; };
-        if entity.y() != size.y || entity.x() != size.x {
+        if entity.height() != size.y || entity.width() != size.x {
             entity.set_width(size.width());
             entity.set_height(size.height());
             ew.send(RequestRenderingEvent);

@@ -21,6 +21,8 @@ pub enum SceneLoadState {
     Loading,
 
     Loaded,
+
+    Startup
 }
 
 
@@ -39,8 +41,8 @@ impl Plugin for AkashicPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_state::<SceneLoadState>()
-            .init_resource::<GameInfo>()
             .init_resource::<AkashicAssetServer>()
+            .init_resource::<GameInfo>()
             .add_plugins(PointDownPlugin)
             .add_plugins(AkashicRenderPlugin)
             .add_plugins(AkashicSchedulerPlugin(self.0.clone()));
