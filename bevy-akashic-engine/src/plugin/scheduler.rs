@@ -35,7 +35,6 @@ impl Plugin for AkashicSchedulerPlugin {
 
                 on_point_down_capture(&scene, &mut app.world);
 
-
                 scene.on_load().add(|_| {
                     IS_LOADED.store(true, Ordering::Relaxed);
                 });

@@ -44,3 +44,32 @@ impl DerefMut for AkashicEntitySize {
         &mut self.0
     }
 }
+
+
+#[derive(Component, Debug, Copy, Clone, PartialEq)]
+pub(crate) struct PreviousAkashicEntitySize(pub(crate) AkashicEntitySize);
+
+
+impl Deref for PreviousAkashicEntitySize {
+    type Target = AkashicEntitySize;
+
+    #[inline(always)]
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+
+impl PartialEq<AkashicEntitySize> for PreviousAkashicEntitySize {
+    #[inline(always)]
+    fn eq(&self, other: &AkashicEntitySize) -> bool {
+        &self.0 == other
+    }
+}
+
+
+impl From<AkashicEntitySize> for PreviousAkashicEntitySize {
+    fn from(value: AkashicEntitySize) -> Self {
+        Self(value)
+    }
+}

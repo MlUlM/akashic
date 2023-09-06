@@ -9,10 +9,12 @@ use crate::asset::game::GameInfo;
 use crate::plugin::point_down::PointDownPlugin;
 use crate::plugin::render::AkashicRenderPlugin;
 use crate::plugin::scheduler::AkashicSchedulerPlugin;
+use crate::plugin::transform::AkashicTransformPlugin;
 
 mod scheduler;
 mod point_down;
 mod render;
+pub mod transform;
 
 
 #[derive(Eq, PartialEq, Hash, States, Default, Debug, Clone)]
@@ -43,9 +45,12 @@ impl Plugin for AkashicPlugin {
             .add_state::<SceneLoadState>()
             .init_resource::<AkashicAssetServer>()
             .init_resource::<GameInfo>()
-            .add_plugins(PointDownPlugin)
-            .add_plugins(AkashicRenderPlugin)
-            .add_plugins(AkashicSchedulerPlugin(self.0.clone()));
+            .add_plugins((
+                PointDownPlugin,
+                AkashicRenderPlugin,
+                AkashicSchedulerPlugin(self.0.clone()),
+                AkashicTransformPlugin
+            ));
     }
 }
 

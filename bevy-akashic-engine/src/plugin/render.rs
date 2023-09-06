@@ -1,16 +1,15 @@
 use bevy::app::{App, Last, Plugin, PostUpdate};
-use bevy::prelude::{Added, Entity, Event, EventReader, EventWriter, Query, RemovedComponents, ResMut, Resource, Transform};
+use bevy::prelude::{Added, Entity, Event, EventReader, EventWriter, Query, RemovedComponents, ResMut, Resource};
 use bevy::utils::HashMap;
-use akashic_rs::console_log;
 
 use akashic_rs::prelude::{EntityDestroy, EntitySize};
 use akashic_rs::prelude::GAME;
 
 use crate::prelude::AkashicEntityId;
-use crate::prelude::entity_size::AkashicEntitySize;
+use crate::prelude::entity_size::{AkashicEntitySize, PreviousAkashicEntitySize};
 
 #[derive(Copy, Clone, Debug, Default, Event, Eq, PartialEq)]
-pub struct RequestRenderingEvent;
+pub(crate) struct SceneModifiedEvent;
 
 
 pub struct AkashicRenderPlugin;
@@ -19,10 +18,9 @@ impl Plugin for AkashicRenderPlugin {
     fn build(&self, app: &mut App) {
         app
             .init_resource::<AkashicEntityMap>()
-            .add_event::<RequestRenderingEvent>()
+            .add_event::<SceneModifiedEvent>()
             .add_systems(PostUpdate, (
                 register_akashic_entity_system,
-                transform_system,
                 entity_size_system,
                 akashic_entity_despawn_system
             ))
@@ -42,33 +40,26 @@ fn register_akashic_entity_system(
     }
 }
 
-fn transform_system(
-    transforms: Query<(&AkashicEntityId, &Transform)>,
-    mut ew: EventWriter<RequestRenderingEvent>,
-) {
-    for (AkashicEntityId(id), transform) in transforms.iter() {
-        let Some(entity) = GAME.scene().find_child(*id) else { continue; };
-        let pos = transform.translation;
-        if entity.x() != pos.x || entity.y() != pos.y {
-            entity.set_x(pos.x);
-            entity.set_y(pos.y);
-            ew.send(RequestRenderingEvent);
-        }
-    }
-}
-
 
 fn entity_size_system(
-    size_queries: Query<(&AkashicEntityId, &AkashicEntitySize)>,
-    mut ew: EventWriter<RequestRenderingEvent>,
+    mut size_queries: Query<(&AkashicEntityId, &AkashicEntitySize, &mut PreviousAkashicEntitySize)>,
+    mut ew: EventWriter<SceneModifiedEvent>,
 ) {
-    for (AkashicEntityId(id), size) in size_queries.iter() {
-        let Some(entity) = GAME.scene().find_child(*id) else { continue; };
-        if entity.height() != size.y || entity.width() != size.x {
-            entity.set_width(size.width());
-            entity.set_height(size.height());
-            ew.send(RequestRenderingEvent);
+    for (AkashicEntityId(id), size, mut previous) in size_queries.iter_mut() {
+        if previous.eq(size) {
+            continue;
         }
+
+        let Some(entity) = GAME.scene().find_child(*id) else { continue; };
+        if previous.x != size.x {
+            entity.set_width(size.width());
+        }
+        if previous.y != size.y {
+            entity.set_height(size.height());
+        }
+
+        *previous = PreviousAkashicEntitySize(*size);
+        ew.send(SceneModifiedEvent);
     }
 }
 
@@ -76,19 +67,19 @@ fn entity_size_system(
 fn akashic_entity_despawn_system(
     mut removed: RemovedComponents<AkashicEntityId>,
     mut akashic_entity_map: ResMut<AkashicEntityMap>,
-    mut ew: EventWriter<RequestRenderingEvent>,
+    mut ew: EventWriter<SceneModifiedEvent>,
 ) {
     for entity in &mut removed {
         let Some(akashic_entity_id) = akashic_entity_map.0.remove(&entity) else { continue; };
         let Some(akashic_entity) = GAME.scene().find_child(*akashic_entity_id) else { continue; };
         akashic_entity.destroy();
-        ew.send(RequestRenderingEvent);
+        ew.send(SceneModifiedEvent);
     }
 }
 
 
 fn rendering_system(
-    er: EventReader<RequestRenderingEvent>
+    er: EventReader<SceneModifiedEvent>
 ) {
     if !er.is_empty() {
         GAME.scene().modified();

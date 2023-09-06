@@ -1,8 +1,6 @@
 use std::collections::HashMap;
-use std::ops::Deref;
 
 use bevy::prelude::Resource;
-use akashic_rs::console_log;
 
 use akashic_rs::prelude::{AudioAsset, GAME};
 use akashic_rs::prelude::ImageAsset;
@@ -41,7 +39,7 @@ impl AkashicAssetServer {
     #[inline]
     pub fn audio_by_id(
         &self,
-        asset_id: &str
+        asset_id: &str,
     ) -> AudioAsset {
         self.get_audio_by_id(asset_id).unwrap()
     }
@@ -50,12 +48,12 @@ impl AkashicAssetServer {
     #[inline]
     pub fn get_audio_by_id(
         &self,
-        asset_id: &str
+        asset_id: &str,
     ) -> Option<AudioAsset> {
         self
             .audios
             .get(asset_id)
-            .map(|o|o.lock().clone())
+            .map(|o| o.lock().clone())
     }
 }
 
