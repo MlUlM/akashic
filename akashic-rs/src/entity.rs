@@ -2,8 +2,9 @@ use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 use akashic_macro::AkashicEntity;
 
-mod filled_rect;
-mod sprite;
+pub mod filled_rect;
+pub mod sprite;
+pub mod label;
 
 
 pub mod prelude {

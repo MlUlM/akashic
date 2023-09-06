@@ -18,7 +18,7 @@ pub mod prelude {
 }
 
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub(crate) struct SharedObject<T>(Arc<Mutex<T>>);
 
 

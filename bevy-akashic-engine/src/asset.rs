@@ -1,39 +1,80 @@
-pub mod game;
+use std::collections::HashMap;
+use std::ops::Deref;
 
 use bevy::prelude::Resource;
-use akashic_rs::prelude::{AssetAccessor, AudioAsset, GAME};
+
+use akashic_rs::prelude::{AudioAsset, GAME};
 use akashic_rs::prelude::ImageAsset;
 
-#[derive(Resource, Debug, Default, Eq, PartialEq)]
-pub struct AkashicAssetServer;
+use crate::SharedObject;
+
+pub mod game;
+
+#[derive(Resource, Debug)]
+pub struct AkashicAssetServer {
+    images: HashMap<String, SharedObject<ImageAsset>>,
+    audios: HashMap<String, SharedObject<AudioAsset>>,
+}
 
 
 impl AkashicAssetServer {
     #[inline]
+    pub fn image_by_id(
+        &self,
+        asset_id: &str,
+    ) -> ImageAsset {
+        self.get_image_by_id(asset_id).unwrap()
+    }
+
+    #[inline]
     pub fn get_image_by_id(
         &self,
-        asset_id: impl Into<String>,
-    ) -> ImageAsset {
-        self.accessor().get_image_by_id(asset_id.into())
+        asset_id: &str,
+    ) -> Option<ImageAsset> {
+        self
+            .images
+            .get(asset_id)
+            .map(|o| o.lock().clone())
+    }
+
+    #[inline]
+    pub fn audio_by_id(
+        &self,
+        asset_id: &str
+    ) -> AudioAsset {
+        self.get_audio_by_id(asset_id).unwrap()
     }
 
 
     #[inline]
     pub fn get_audio_by_id(
         &self,
-        asset_id: impl Into<String>,
-    ) -> AudioAsset {
-        self.accessor().get_audio_by_id(asset_id.into())
-    }
-
-
-    fn accessor(&self) -> AssetAccessor {
-        GAME
-            .scene()
-            .asset()
+        asset_id: &str
+    ) -> Option<AudioAsset> {
+        self
+            .audios
+            .get(asset_id)
+            .map(|o|o.lock().clone())
     }
 }
 
 
+impl Default for AkashicAssetServer {
+    fn default() -> Self {
+        let assets = GAME.scene().asset();
+
+        AkashicAssetServer {
+            images: asset_map(assets.get_all_images_map("assets/images/*")),
+            audios: asset_map(assets.get_all_audios_map("assets/audio/*")),
+        }
+    }
+}
 
 
+#[inline]
+fn asset_map<T>(map: HashMap<String, T>) -> HashMap<String, SharedObject<T>> {
+    map
+        .into_iter()
+        .map(|(path, asset)| (path, SharedObject::new(asset)))
+        .collect()
+}

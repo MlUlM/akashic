@@ -3,36 +3,28 @@ use bevy::prelude::Resource;
 use akashic_rs::prelude::GAME;
 
 
-#[derive(Resource, Default)]
-pub struct GameInfo;
+#[derive(Resource)]
+pub struct GameInfo{
+    pub size: Vec2,
+    pub width: f32,
+    pub height: f32,
+    pub age: f32,
+    pub fps: f32
+}
 
 
-impl GameInfo {
-    #[inline(always)]
-    pub fn size(&self) -> Vec2 {
-        Vec2::new(self.width(), self.height())
-    }
+impl Default for  GameInfo {
+    #[inline]
+    fn default() -> Self {
+        let width = GAME.width();
+        let height = GAME.height();
 
-
-    #[inline(always)]
-    pub fn width(&self) -> f32 {
-        GAME.width()
-    }
-
-
-    #[inline(always)]
-    pub fn height(&self) -> f32 {
-        GAME.height()
-    }
-
-
-    #[inline(always)]
-    pub fn age(&self) -> f32 {
-        GAME.age()
-    }
-
-    #[inline(always)]
-    pub fn fps(&self) -> f32 {
-        GAME.fps()
+        GameInfo{
+            size: Vec2::new(width, height),
+            width,
+            height,
+            age: GAME.age(),
+            fps: GAME.fps()
+        }
     }
 }
