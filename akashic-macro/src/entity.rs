@@ -31,12 +31,14 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
     let modify = expand_modify(entity_name);
     let size = expand_entity_size(entity_name);
     let destroy = expand_entity_destroy(entity_name);
+    let angle = expand_entity_angle(entity_name);
 
     quote! {
         #modify
         #children
         #size
         #destroy
+        #angle
 
         #[wasm_bindgen]
         extern "C"{
@@ -145,6 +147,23 @@ pub fn expand_entity_destroy(
             fn destroy_with_surface(&self){
                 self._destory(true)
             }
+        }
+    }
+}
+
+
+
+fn expand_entity_angle(
+    entity_name: &Ident
+) -> TokenStream2 {
+    quote! {
+        #[wasm_bindgen]
+        extern "C"{
+            #[wasm_bindgen(js_namespace = g, method, getter)]
+            pub fn angle(this: &#entity_name) -> f32;
+
+            #[wasm_bindgen(js_namespace = g, method, setter, js_name=angle)]
+            pub fn set_angle(this: &#entity_name, angle: f32);
         }
     }
 }

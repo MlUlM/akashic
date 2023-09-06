@@ -1,3 +1,4 @@
+use std::f32::consts::PI;
 use std::panic;
 
 use bevy::app::{App, PluginGroup, PluginGroupBuilder, Update};
@@ -77,6 +78,7 @@ fn setup(
         .build()
     );
 
+    player.set_angle(45.);
     player.set_x((game_size.width - player.width()) / 2.);
     player.set_y((game_size.height - player.height()) / 2.);
 

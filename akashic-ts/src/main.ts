@@ -26,6 +26,7 @@ function main(param: g.GameMainParameterObject): void {
         // プレイヤーの初期座標を、画面の中心に設定します
         player.x = (g.game.width - player.width) / 2;
         player.y = (g.game.height - player.height) / 2;
+        player.angle = 45;
 
         player.onUpdate.add(() => {
             // 毎フレームでY座標を再計算し、プレイヤーの飛んでいる動きを表現します
@@ -57,7 +58,6 @@ function main(param: g.GameMainParameterObject): void {
 
                 // 弾を右に動かし、弾の動きを表現します
                 shot.x += 10;
-
                 // 変更をゲームに通知します
                 shot.modified();
             });
