@@ -5,10 +5,11 @@ use bevy::core::{FrameCount, FrameCountPlugin, TypeRegistrationPlugin};
 use bevy::diagnostic::DiagnosticsPlugin;
 use bevy::hierarchy::HierarchyPlugin;
 use bevy::log::LogPlugin;
-use bevy::math::Quat;
-use bevy::prelude::{Commands, Component, EventReader, in_state, IntoSystemConfigs, OnEnter, Query, Res, Time, Transform, TransformPlugin, With};
+use bevy::prelude::{Commands, Component, EventReader, in_state, IntoSystemConfigs, OnEnter, Query, Res, Transform, TransformPlugin, With};
 use bevy::time::TimePlugin;
-
+use bevy_akashic_engine::akashic::entity::label::{Label, LabelParameterObjectBuilder};
+use bevy_akashic_engine::akashic::font::dynamic::{DynamicFont, DynamicFontParameterObjectBuilder};
+use bevy_akashic_engine::akashic::font::font_family::FontFamily;
 use bevy_akashic_engine::prelude::*;
 use bevy_akashic_engine::prelude::entity_size::AkashicEntitySize;
 use bevy_akashic_engine::prelude::game::GameInfo;
@@ -59,7 +60,10 @@ fn main() {
             .asset_ids(vec!["player", "shot", "se"])
             .build()
         ))
-        .add_systems(OnEnter(SceneLoadState::Startup), setup)
+        .add_systems(OnEnter(SceneLoadState::Startup), (
+            setup,
+            setup_text
+        ))
         .add_systems(Update, (
             player_hovering_system,
             read_scene_point_down_event,
@@ -74,13 +78,12 @@ fn setup(
     game_size: Res<GameInfo>,
 ) {
     let player_image_asset = server.image_by_id("player").into_src();
-    let a = SpriteParameterObjectBuilder::default()
+    let param = SpriteParameterObjectBuilder::default()
         .src(player_image_asset)
         .build()
         .unwrap();
-    
-    let player = Sprite::new(a);
 
+    let player = Sprite::new(param);
     player.set_x((game_size.width - player.width()) / 2.);
     player.set_y((game_size.height - player.height()) / 2.);
 
@@ -89,6 +92,19 @@ fn setup(
         .insert(Player);
 }
 
+fn setup_text(
+    mut commands: Commands,
+) {
+    let font = DynamicFont::new(DynamicFontParameterObjectBuilder::default()
+        .game(GAME.clone())
+        .font_family(FontFamily::new("sans-serif"))
+        .size(15.)
+        .build()
+        .unwrap()
+    );
+
+    commands.append(Label::new(LabelParameterObjectBuilder::new("Hello World", font).build()));
+}
 
 fn player_hovering_system(
     mut player: Query<(&mut Transform, &AkashicEntitySize), With<Player>>,

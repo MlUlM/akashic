@@ -35,7 +35,7 @@ pub fn object_2d_parameter(_: TokenStream, input: TokenStream) -> TokenStream {
 
 #[proc_macro_attribute]
 pub fn object_e_parameter(_: TokenStream, input: TokenStream) -> TokenStream {
-    expand_e_parameter(input)
+    expand_e_parameter(expand_object_2d_parameter(input))
 }
 
 #[proc_macro_derive(EParamSetters)]

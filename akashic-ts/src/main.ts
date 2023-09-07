@@ -53,7 +53,14 @@ function main(param: g.GameMainParameterObject): void {
                 width: shotImageAsset.width,
                 height: shotImageAsset.height
             });
+            new g.Label({
+                scene,
+                text : "",
+                font: new g.DynamicFont({
+                    fontFamily: undefined, game: undefined, size: 0
 
+                }),
+            })
             // 弾の初期座標を、プレイヤーの少し右に設定します
             shot.x = player.x + player.width;
             shot.y = player.y;

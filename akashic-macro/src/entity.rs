@@ -73,7 +73,7 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
             }
 
             #[inline(always)]
-            fn as_js_value(&self) -> JsValue{
+            fn as_js_value(&self) -> wasm_bindgen::JsValue{
                 self.obj.clone()
             }
         }
