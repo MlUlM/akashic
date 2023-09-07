@@ -14,3 +14,4 @@ serde-wasm-bindgen = { workspace = true }
 paste = { workspace = true }
 auto-delegate = { workspace = true }
 akashic-macro = { path = "../akashic-macro" }
+derive_builder = { workspace = true }

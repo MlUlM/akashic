@@ -74,11 +74,12 @@ fn setup(
     game_size: Res<GameInfo>,
 ) {
     let player_image_asset = server.image_by_id("player").into_src();
-    let player = Sprite::new(SpriteParameterObject::builder(GAME.scene().clone(), player_image_asset)
+    let player = Sprite::new(SpriteParameterObjectBuilder::default()
+        .src(player_image_asset)
         .build()
+        .unwrap()
     );
 
-    player.set_angle(45.);
     player.set_x((game_size.width - player.width()) / 2.);
     player.set_y((game_size.height - player.height()) / 2.);
 
@@ -109,10 +110,12 @@ fn read_scene_point_down_event(
         let player_pos = player_transform.translation;
         let shot_image_asset = server.image_by_id("shot").into_src();
         // 弾の初期座標を、プレイヤーの少し右に設定します
-        let shot = Sprite::new(SpriteParameterObject::builder(GAME.scene(), shot_image_asset)
+        let shot = Sprite::new(SpriteParameterObjectBuilder::default()
+            .src(shot_image_asset)
             .x(player_pos.x + player_size.width())
             .y(player_pos.y)
             .build()
+            .unwrap()
         );
 
         commands.append(shot).insert(Shot);

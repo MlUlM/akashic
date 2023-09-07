@@ -6,7 +6,7 @@ pub trait IntoSrc{
 
 
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Src {
     Surface(Surface),
     ImageAsset(ImageAsset),

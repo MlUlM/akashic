@@ -56,6 +56,12 @@ impl Scene {
               child.id() == id  
             })
     }
+
+
+    #[inline(always)]
+    pub(crate) fn obj(&self) -> JsValue{
+        self.obj.clone()
+    }
 }
 
 

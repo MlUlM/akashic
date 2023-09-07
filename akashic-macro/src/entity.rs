@@ -4,9 +4,9 @@ use proc_macro2::Ident;
 use quote::quote;
 use syn::__private::TokenStream2;
 use syn::ItemStruct;
+
 use crate::children::expand_children;
 use crate::modified::expand_modify;
-
 use crate::trigger::expand_entity_triggers;
 
 #[inline]
@@ -81,11 +81,10 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
 }
 
 
-
 pub fn expand_entity_size(
     entity_name: &Ident
-) -> TokenStream2{
-    quote!{
+) -> TokenStream2 {
+    quote! {
         #[wasm_bindgen]
         extern "C"{
             #[doc(hidden)]
@@ -132,11 +131,10 @@ pub fn expand_entity_size(
 }
 
 
-
 pub fn expand_entity_destroy(
     entity_name: &Ident
-) -> TokenStream2{
-    quote!{
+) -> TokenStream2 {
+    quote! {
         #[wasm_bindgen]
         extern "C"{
             #[doc(hidden)]
@@ -158,7 +156,6 @@ pub fn expand_entity_destroy(
         }
     }
 }
-
 
 
 fn expand_entity_angle(
