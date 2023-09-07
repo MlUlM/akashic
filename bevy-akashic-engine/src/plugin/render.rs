@@ -1,12 +1,12 @@
-use bevy::app::{App, Last, Plugin, PostUpdate};
+use bevy::app::{App, Last, Plugin};
 use bevy::prelude::{Added, Entity, Event, EventReader, EventWriter, Query, RemovedComponents, ResMut, Resource};
 use bevy::utils::HashMap;
 
-use akashic_rs::prelude::{EntityDestroy, EntitySize};
+use akashic_rs::prelude::EntityDestroy;
 use akashic_rs::prelude::GAME;
 
+use crate::plugin::transform::transform_system;
 use crate::prelude::AkashicEntityId;
-use crate::prelude::entity_size::{AkashicEntitySize, PreviousAkashicEntitySize};
 
 #[derive(Copy, Clone, Debug, Default, Event, Eq, PartialEq)]
 pub(crate) struct SceneModifiedEvent;
@@ -19,12 +19,12 @@ impl Plugin for AkashicRenderPlugin {
         app
             .init_resource::<AkashicEntityMap>()
             .add_event::<SceneModifiedEvent>()
-            .add_systems(PostUpdate, (
+            .add_systems(Last, (
                 register_akashic_entity_system,
-                entity_size_system,
-                akashic_entity_despawn_system
-            ))
-            .add_systems(Last, rendering_system);
+                akashic_entity_despawn_system,
+                transform_system,
+                rendering_system
+            ));
     }
 }
 
@@ -37,29 +37,6 @@ fn register_akashic_entity_system(
 ) {
     for (entity, id) in entities.iter() {
         akashic_entity_map.0.insert(entity, *id);
-    }
-}
-
-
-fn entity_size_system(
-    mut size_queries: Query<(&AkashicEntityId, &AkashicEntitySize, &mut PreviousAkashicEntitySize)>,
-    mut ew: EventWriter<SceneModifiedEvent>,
-) {
-    for (AkashicEntityId(id), size, mut previous) in size_queries.iter_mut() {
-        if previous.eq(size) {
-            continue;
-        }
-
-        let Some(entity) = GAME.scene().find_child(*id) else { continue; };
-        if previous.x != size.x {
-            entity.set_width(size.width());
-        }
-        if previous.y != size.y {
-            entity.set_height(size.height());
-        }
-
-        *previous = PreviousAkashicEntitySize(*size);
-        ew.send(SceneModifiedEvent);
     }
 }
 
@@ -82,6 +59,6 @@ fn rendering_system(
     er: EventReader<SceneModifiedEvent>
 ) {
     if !er.is_empty() {
-        GAME.scene().modified();
+        GAME.modified();
     }
 }

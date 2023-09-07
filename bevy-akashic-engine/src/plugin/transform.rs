@@ -1,10 +1,12 @@
-use bevy::app::{App, Plugin, PostUpdate, PreUpdate};
-use bevy::prelude::{Added, Commands, Entity, EventWriter, Query, Transform};
+use std::f32::consts::PI;
+
+use bevy::app::{App, Plugin, PreUpdate};
+use bevy::prelude::{Added, Commands, Entity, Query, Transform};
 
 use akashic_rs::prelude::GAME;
 
+use crate::component::entity_size::{AkashicEntitySize, PreviousAkashicEntitySize};
 use crate::component::previous_transform::PreviousTransform;
-use crate::plugin::render::SceneModifiedEvent;
 use crate::prelude::AkashicEntityId;
 
 pub struct AkashicTransformPlugin;
@@ -12,8 +14,7 @@ pub struct AkashicTransformPlugin;
 impl Plugin for AkashicTransformPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(PreUpdate, insert_previous_transform_system)
-            .add_systems(PostUpdate, transform_system);
+            .add_systems(PreUpdate, insert_previous_transform_system);
     }
 }
 
@@ -28,48 +29,40 @@ fn insert_previous_transform_system(
 }
 
 
-fn transform_system(
-    mut transforms: Query<(&AkashicEntityId, &Transform, &mut PreviousTransform)>,
-    mut ew: EventWriter<SceneModifiedEvent>,
+pub(crate) fn transform_system(
+    mut transforms: Query<(
+        &AkashicEntityId,
+        &Transform,
+        &AkashicEntitySize,
+        &mut PreviousTransform,
+        &mut PreviousAkashicEntitySize
+    )>
 ) {
-    for (AkashicEntityId(id), transform, mut previous_transform) in transforms.iter_mut() {
-        if previous_transform.eq(transform) {
+    for (
+        AkashicEntityId(id),
+        transform,
+        size,
+        mut prev_transform,
+        mut prev_size
+    ) in transforms.iter_mut() {
+        if prev_transform.eq(transform) && prev_size.eq(size) {
             continue;
         }
 
         let Some(entity) = GAME.scene().find_child(*id) else { continue; };
-        let previous = &previous_transform.0;
-        update_positions(&entity, previous, transform);
-        update_angle(&entity, previous, transform);
+        let (_, rad) = transform.rotation.to_axis_angle();
+        let angle = rad * 180. / PI;
 
-        *previous_transform = PreviousTransform(*transform);
-        ew.send(SceneModifiedEvent);
+        *prev_transform = PreviousTransform(*transform);
+        *prev_size = PreviousAkashicEntitySize(*size);
+
+        entity.update(
+            transform.translation.x,
+            transform.translation.y,
+            angle,
+            size.x,
+            size.y,
+        );
     }
 }
 
-
-fn update_positions(
-    entity: &akashic_rs::prelude::Entity,
-    previous: &Transform,
-    current: &Transform,
-) {
-    let pos = &current.translation;
-    if previous.translation.x != pos.x {
-        entity.set_x(pos.x);
-    }
-    if previous.translation.y != pos.y {
-        entity.set_y(pos.y);
-    }
-}
-
-
-fn update_angle(
-    _entity: &akashic_rs::prelude::Entity,
-    previous: &Transform,
-    current: &Transform,
-) {
-    let (_, previous) = previous.rotation.to_axis_angle();
-    let (_, current) = current.rotation.to_axis_angle();
-
-    if previous != current {}
-}

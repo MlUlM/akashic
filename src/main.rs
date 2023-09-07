@@ -1,4 +1,3 @@
-use std::f32::consts::PI;
 use std::panic;
 
 use bevy::app::{App, PluginGroup, PluginGroupBuilder, Update};
@@ -6,7 +5,8 @@ use bevy::core::{FrameCount, FrameCountPlugin, TypeRegistrationPlugin};
 use bevy::diagnostic::DiagnosticsPlugin;
 use bevy::hierarchy::HierarchyPlugin;
 use bevy::log::LogPlugin;
-use bevy::prelude::{Commands, Component, EventReader, in_state, IntoSystemConfigs, OnEnter, Query, Res, Transform, TransformPlugin, With};
+use bevy::math::Quat;
+use bevy::prelude::{Commands, Component, EventReader, in_state, IntoSystemConfigs, OnEnter, Query, Res, Time, Transform, TransformPlugin, With};
 use bevy::time::TimePlugin;
 
 use bevy_akashic_engine::prelude::*;

@@ -1,13 +1,11 @@
 use std::fmt::Debug;
-
 use wasm_bindgen::JsValue;
-use wasm_bindgen::prelude::wasm_bindgen;
 
-use crate::scene::Scene;
+use wasm_bindgen::prelude::wasm_bindgen;
+use crate::prelude::Scene;
 use crate::trigger::NativeTrigger;
 
-
-pub mod prelude{
+pub mod prelude {
     pub use crate::game::{GAME, Game};
 }
 
@@ -38,9 +36,10 @@ extern "C" {
 
     #[wasm_bindgen(js_namespace = g, method, js_name = pushScene)]
     pub fn push_scene(this: &Game, scene: Scene, options: JsValue) -> NativeTrigger;
+
+    #[wasm_bindgen(js_namespace = g, method)]
+    pub fn modified(this: &Game);
 }
-
-
 
 
 impl Default for Game {

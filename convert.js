@@ -22,6 +22,15 @@ fs.writeFileSync(mainJsPath, `
     
     // main function
     module.exports = () => {
+        g.Sprite.prototype.updateAll = function(x, y, angle, width, height){
+            this.x = x;
+            this.y = y;
+            this.angle = angle;
+            this.width = width;
+            this.height = height;
+            this.modified();
+        }
+        
         ${wasmCode}
     }
 `)

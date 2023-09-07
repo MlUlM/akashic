@@ -26,6 +26,7 @@ fn try_expand_entity(input: TokenStream) -> syn::Result<TokenStream> {
     }.into())
 }
 
+
 fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
     let children = expand_children(entity_name);
     let modify = expand_modify(entity_name);
@@ -39,6 +40,13 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
         #size
         #destroy
         #angle
+
+         #[wasm_bindgen]
+        extern "C"{
+            #[allow(clippy::type_complexity)]
+            #[wasm_bindgen(js_namespace = g, method, js_name=updateAll)]
+            pub fn update(this: &#entity_name, x: f32, y: f32, angle: f32, width: f32, height: f32);
+        }
 
         #[wasm_bindgen]
         extern "C"{
