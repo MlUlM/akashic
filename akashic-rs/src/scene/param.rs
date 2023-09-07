@@ -4,10 +4,6 @@ use wasm_bindgen::prelude::wasm_bindgen;
 
 use crate::game::Game;
 
-
-
-
-
 #[wasm_bindgen(getter_with_clone)]
 #[derive(Default, Clone)]
 pub struct SceneParameterObject {
@@ -67,7 +63,7 @@ impl SceneParameterObjectBuilder {
         SceneParameterObject {
             game: self.game,
             asset_ids: self.asset_ids.map(|ids| ids.into_iter().map(JsString::from).collect()),
-            asset_paths: self.asset_paths.map(|p|p.into_iter().map(JsString::from).collect()),
+            asset_paths: self.asset_paths.map(|p| p.into_iter().map(JsString::from).collect()),
             name: self.name.map(JsString::from),
             ..Default::default()
         }

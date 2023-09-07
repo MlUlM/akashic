@@ -29,19 +29,19 @@ pub struct SpriteParameterObject {
     pub src: JsValue,
 
     #[wasm_bindgen(js_name = srcWidth)]
-    #[builder(default)]
+    #[builder(setter(into, strip_option), default)]
     pub src_width: crate::param::OptionNumber,
 
     #[wasm_bindgen(js_name = srcHeight)]
-    #[builder(default)]
+    #[builder(setter(into, strip_option), default)]
     pub src_height: crate::param::OptionNumber,
 
     #[wasm_bindgen(js_name = srcX)]
-    #[builder(default)]
+    #[builder(setter(into, strip_option), default)]
     pub src_x: crate::param::OptionNumber,
 
     #[wasm_bindgen(js_name = srcY)]
-    #[builder(default)]
+    #[builder(setter(into, strip_option), default)]
     pub src_y: crate::param::OptionNumber,
 }
 

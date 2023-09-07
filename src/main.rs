@@ -78,7 +78,7 @@ fn setup(
         .src(player_image_asset)
         .build()
         .unwrap();
-    console_log!("{a:?}");
+    
     let player = Sprite::new(a);
 
     player.set_x((game_size.width - player.width()) / 2.);
