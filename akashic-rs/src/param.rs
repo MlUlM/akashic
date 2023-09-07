@@ -1,5 +1,4 @@
-use wasm_bindgen::{JsCast, JsValue};
-use wasm_bindgen::prelude::wasm_bindgen;
+use wasm_bindgen::JsValue;
 
 use crate::entity::E;
 use crate::scene::Scene;
@@ -20,6 +19,5 @@ impl<T: E> Parent<T> {
 }
 
 
-
-pub type  OptionNumber = Option<f32>;
+pub type OptionNumber = Option<f32>;
 

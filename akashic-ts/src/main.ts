@@ -53,9 +53,11 @@ function main(param: g.GameMainParameterObject): void {
                 width: shotImageAsset.width,
                 height: shotImageAsset.height
             });
+        
+            new g.BitmapFont({})
             new g.Label({
                 scene,
-                text : "",
+                text: "",
                 font: new g.DynamicFont({
                     fontFamily: undefined, game: undefined, size: 0
 

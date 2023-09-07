@@ -2,7 +2,7 @@ use derive_builder::Builder;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::{AkashicEntity, EParamSetters,  object_2d_parameter, object_e_parameter};
+use akashic_macro::{AkashicEntity, EParamSetters, object_e_parameter};
 
 #[wasm_bindgen]
 extern "C" {
@@ -14,7 +14,6 @@ extern "C" {
 }
 
 
-#[object_2d_parameter]
 #[object_e_parameter]
 #[allow(unused_variables)]
 #[wasm_bindgen(getter_with_clone)]

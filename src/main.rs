@@ -95,12 +95,9 @@ fn setup(
 fn setup_text(
     mut commands: Commands,
 ) {
-    let font = DynamicFont::new(DynamicFontParameterObjectBuilder::default()
-        .game(GAME.clone())
-        .font_family(FontFamily::new("sans-serif"))
-        .size(15.)
+    let font = DynamicFont::new(DynamicFontParameterObjectBuilder::new(FontFamily::new("sans-serif"), 30.)
+        .font_color("blue")
         .build()
-        .unwrap()
     );
 
     commands.append(Label::new(LabelParameterObjectBuilder::new("Hello World", font).build()));

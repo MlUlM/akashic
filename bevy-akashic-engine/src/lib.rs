@@ -6,6 +6,9 @@ mod plugin;
 mod trigger;
 mod component;
 mod asset;
+pub mod akashic{
+    pub use akashic_rs::*;
+}
 
 pub mod prelude {
     pub use crate::command::prelude::*;

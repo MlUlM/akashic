@@ -1,13 +1,14 @@
-mod game;
-mod scene;
-mod entity;
+pub mod game;
+pub mod scene;
+pub mod entity;
 
-mod log;
-mod trigger;
-mod asset;
-mod player;
+pub mod log;
+pub mod trigger;
+pub mod asset;
+pub mod player;
 pub mod shader;
 pub mod param;
+pub mod font;
 
 pub mod prelude {
     pub use crate::asset::*;
