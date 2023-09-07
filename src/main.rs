@@ -74,11 +74,12 @@ fn setup(
     game_size: Res<GameInfo>,
 ) {
     let player_image_asset = server.image_by_id("player").into_src();
-    let player = Sprite::new(SpriteParameterObjectBuilder::default()
+    let a = SpriteParameterObjectBuilder::default()
         .src(player_image_asset)
         .build()
-        .unwrap()
-    );
+        .unwrap();
+    console_log!("{a:?}");
+    let player = Sprite::new(a);
 
     player.set_x((game_size.width - player.width()) / 2.);
     player.set_y((game_size.height - player.height()) / 2.);

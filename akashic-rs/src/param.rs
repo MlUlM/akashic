@@ -20,19 +20,6 @@ impl<T: E> Parent<T> {
 }
 
 
-#[wasm_bindgen]
-#[derive(Clone, Debug)]
-pub struct OptionNumber(Option<f32>);
 
+pub type  OptionNumber = Option<f32>;
 
-impl From<f32> for OptionNumber {
-    fn from(value: f32) -> Self {
-        Self(Some(value))
-    }
-}
-
-impl Default for OptionNumber {
-    fn default() -> Self {
-        Self(None)
-    }
-}

@@ -14,7 +14,12 @@ function main(param: g.GameMainParameterObject): void {
         const seAudioAsset = scene.asset.getAudioById("se");
         console.log(seAudioAsset.id)
         seAudioAsset.play();
-
+        const p = {
+            scene: scene,
+            src: playerImageAsset,
+            width: playerImageAsset.width,
+            height: playerImageAsset.height
+        }
         // プレイヤーを生成します
         const player = new g.Sprite({
             scene: scene,
@@ -22,7 +27,7 @@ function main(param: g.GameMainParameterObject): void {
             width: playerImageAsset.width,
             height: playerImageAsset.height
         });
-  
+
         // プレイヤーの初期座標を、画面の中心に設定します
         player.x = (g.game.width - player.width) / 2;
         player.y = (g.game.height - player.height) / 2;

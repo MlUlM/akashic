@@ -44,10 +44,7 @@ pub fn object_e_setter(input: TokenStream) -> TokenStream {
 }
 
 
-#[proc_macro_derive(Object2dParamSetters)]
-pub fn object_2d_setter(input: TokenStream) -> TokenStream {
-    param::object_2d_parameter::expand_param_setters(input)
-}
+
 
 
 #[inline(always)]

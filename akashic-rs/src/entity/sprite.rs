@@ -2,7 +2,7 @@ use derive_builder::Builder;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::{EParamSetters, Object2dParamSetters, object_2d_parameter, object_e_parameter};
+use akashic_macro::{EParamSetters,  object_2d_parameter, object_e_parameter};
 
 use crate::asset::src::Src;
 
@@ -23,21 +23,25 @@ extern "C" {
 #[object_2d_parameter]
 #[object_e_parameter]
 #[wasm_bindgen(getter_with_clone)]
-#[derive(Debug, Builder, Default, EParamSetters, Object2dParamSetters)]
+#[derive(Debug, Builder, Default, EParamSetters)]
 pub struct SpriteParameterObject {
-    #[builder(setter(custom))]
+    #[builder(setter(custom), default)]
     pub src: JsValue,
 
     #[wasm_bindgen(js_name = srcWidth)]
+    #[builder(default)]
     pub src_width: crate::param::OptionNumber,
 
     #[wasm_bindgen(js_name = srcHeight)]
+    #[builder(default)]
     pub src_height: crate::param::OptionNumber,
 
     #[wasm_bindgen(js_name = srcX)]
+    #[builder(default)]
     pub src_x: crate::param::OptionNumber,
 
     #[wasm_bindgen(js_name = srcY)]
+    #[builder(default)]
     pub src_y: crate::param::OptionNumber,
 }
 
