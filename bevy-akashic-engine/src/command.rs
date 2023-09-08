@@ -26,30 +26,14 @@ pub trait AsBundle<B> {
 }
 
 
-
-
 #[derive(Delegate)]
-#[to(E, UpdateHandler, PointUpHandler, PointDownHandler, PointMoveHandler)]
+#[to(E)]
 pub struct BoxedEntity<T, B>(T, PhantomData<B>)
-    where T:
-    AsBundle<B> +
-    E +
-    UpdateHandler +
-    PointUpHandler +
-    PointDownHandler +
-    PointMoveHandler +
-    'static;
+    where T: AsBundle<B> + E + 'static;
 
 
 impl<T, B> AsBundle<B> for BoxedEntity<T, B>
-    where T:
-    AsBundle<B> +
-    E +
-    UpdateHandler +
-    PointUpHandler +
-    PointDownHandler +
-    PointMoveHandler +
-    'static
+    where T: AsBundle<B> + E + 'static
 {
     #[inline]
     fn as_bundle(&self) -> B {
@@ -59,14 +43,7 @@ impl<T, B> AsBundle<B> for BoxedEntity<T, B>
 
 
 impl<T, B> BoxedEntity<T, B>
-    where T:
-    AsBundle<B> +
-    E +
-    UpdateHandler +
-    PointUpHandler +
-    PointDownHandler +
-    PointMoveHandler +
-    'static
+    where T: AsBundle<B> + E + 'static
 {
     #[inline(always)]
     pub const fn new(akashic_entity: T) -> BoxedEntity<T, B> {
@@ -75,22 +52,10 @@ impl<T, B> BoxedEntity<T, B>
 }
 
 
-unsafe impl<T, B> Sync for BoxedEntity<T, B> where T:
-AsBundle<B> +
-E +
-UpdateHandler +
-PointUpHandler +
-PointDownHandler +
-PointMoveHandler +
-'static
+unsafe impl<T, B> Sync for BoxedEntity<T, B>
+    where T: AsBundle<B> + E + 'static
 {}
 
-unsafe impl<T, B> Send for BoxedEntity<T, B> where T:
-AsBundle<B> +
-E +
-UpdateHandler +
-PointUpHandler +
-PointDownHandler +
-PointMoveHandler +
-'static
+unsafe impl<T, B> Send for BoxedEntity<T, B>
+    where T: AsBundle<B> + E + 'static
 {}

@@ -1,8 +1,8 @@
 use auto_delegate::delegate;
 use wasm_bindgen::prelude::wasm_bindgen;
-use crate::entity::Entity;
+use akashic_macro::AkashicEventBase;
 
-use crate::prelude::{CommonOffset, Trigger};
+use crate::prelude::Trigger;
 
 #[delegate]
 pub trait PointUpHandler {
@@ -21,14 +21,8 @@ extern "C" {
     /// ポインティング操作の終了を表すイベント。 PointDownEvent後にのみ発生する。
     //
     // PointUpEvent#startDeltaによってPointDownEvent時からの移動量が、 PointUpEvent#prevDeltaによって直近のPointMoveEventからの移動量が取得出来る。 PointUpEvent#pointにはPointDownEvent#pointと同じ値が格納される。
-    #[derive(Clone, Debug)]
+    #[derive(Clone, Debug, AkashicEventBase)]
     pub type PointUpEvent;
-
-    #[wasm_bindgen(method, getter)]
-    pub fn target(this: &PointUpEvent) -> Option<Entity>;
-
-    #[wasm_bindgen(method, getter)]
-    pub fn point(this: &PointUpEvent) -> CommonOffset;
 }
 
 // #[wasm_bindgen(getter_with_clone)]

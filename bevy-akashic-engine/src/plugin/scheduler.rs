@@ -19,7 +19,7 @@ use crate::event::AkashicEventQueue;
 use crate::event::point_down::ScenePointDown;
 use crate::event::point_move::PointMoveEvent;
 use crate::event::point_up::ScenePointUpEvent;
-use crate::extensions::AsVec2;
+use crate::extensions::AsVec3;
 use crate::plugin::{SceneLoadState, SharedSceneParameter};
 use crate::prelude::point_move::ScenePointMoveEvent;
 
@@ -116,15 +116,15 @@ fn on_point_move_capture(
         if let Some(akashic_entity) = e.target() {
             queue.push(PointMoveEvent {
                 entity_id: AkashicEntityId(akashic_entity.id()),
-                point: point.as_vec2(),
-                start_delta: e.start_delta().as_vec2(),
-                prev_delta: e.prev_delta().as_vec2(),
+                point: point.as_vec3(),
+                start_delta: e.start_delta().as_vec3(),
+                prev_delta: e.prev_delta().as_vec3(),
             });
         } else {
             point_down_queue.push(ScenePointMoveEvent {
-                point: point.as_vec2(),
-                start_delta: e.start_delta().as_vec2(),
-                prev_delta: e.prev_delta().as_vec2(),
+                point: point.as_vec3(),
+                start_delta: e.start_delta().as_vec3(),
+                prev_delta: e.prev_delta().as_vec3(),
             })
         }
     });

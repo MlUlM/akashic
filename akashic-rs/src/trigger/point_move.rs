@@ -1,5 +1,6 @@
 use auto_delegate::delegate;
 use wasm_bindgen::prelude::wasm_bindgen;
+use akashic_macro::AkashicEventBase;
 
 use crate::prelude::{CommonOffset, Entity, Trigger};
 
@@ -22,14 +23,8 @@ extern "C" {
     // PointMoveEvent#startDeltaによってPointDownEvent時からの移動量が、 PointMoveEvent#prevDeltaによって直近のPointMoveEventからの移動量が取得出来る。 PointMoveEvent#pointにはPointMoveEvent#pointと同じ値が格納される。
     //
     // 本イベントは、プレイヤーがポインティングデバイスを移動していなくても、 カメラの移動等視覚的にポイントが変化している場合にも発生する。
-    #[derive(Clone, Debug)]
+    #[derive(Clone, Debug, AkashicEventBase)]
     pub type PointMoveEvent;
-
-    #[wasm_bindgen(method, getter)]
-    pub fn target(this: &PointMoveEvent) -> Option<Entity>;
-
-    #[wasm_bindgen(method, getter)]
-    pub fn point(this: &PointMoveEvent) -> CommonOffset;
 
     #[wasm_bindgen(method, getter, js_name = prevDelta)]
     pub fn prev_delta(this: &PointMoveEvent) -> CommonOffset;

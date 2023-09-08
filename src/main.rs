@@ -1,12 +1,15 @@
 use std::panic;
 
-use bevy::app::{App, PluginGroup, PluginGroupBuilder, Update};
+use bevy::app::{App, PluginGroup, PluginGroupBuilder, ScheduleRunnerPlugin, Update};
 use bevy::core::{FrameCount, FrameCountPlugin, TypeRegistrationPlugin};
+use bevy::DefaultPlugins;
 use bevy::diagnostic::DiagnosticsPlugin;
 use bevy::hierarchy::HierarchyPlugin;
 use bevy::log::LogPlugin;
 use bevy::prelude::{Commands, Component, EventReader, in_state, IntoSystemConfigs, OnEnter, Query, Res, Transform, TransformPlugin, With};
+use bevy::render::RenderPlugin;
 use bevy::time::TimePlugin;
+use bevy::winit::WinitPlugin;
 
 use bevy_akashic_engine::akashic::entity::label::{Label, LabelParameterObjectBuilder};
 use bevy_akashic_engine::akashic::font::dynamic::{DynamicFont, DynamicFontParameterObjectBuilder};
@@ -56,8 +59,6 @@ fn main() {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
 
     App::new()
-        .add_plugins(FrameCountPlugin)
-        .add_plugins(TimePlugin)
         .add_plugins(AkashicPlugin::new(SceneParameterObject::builder(GAME.clone())
             .asset_ids(vec!["player", "shot", "se"])
             .build()
@@ -170,6 +171,6 @@ fn move_player_system(
     for e in er.iter() {
         let Some((_, mut transform)) = player.iter_mut().find(|(id, _)| e.entity_id.eq(id)) else { continue; };
         console_log!("{e:?}");
-        transform.translation += e.prev_delta.extend(0.);
+        transform.translation += e.prev_delta;
     }
 }

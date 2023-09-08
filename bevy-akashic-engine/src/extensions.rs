@@ -1,14 +1,14 @@
-use bevy::math::Vec2;
+use bevy::math::{Vec3};
 use akashic_rs::prelude::CommonOffset;
 
-pub trait AsVec2{
-    fn as_vec2(&self) -> Vec2;
+pub trait AsVec3 {
+    fn as_vec3(&self) -> Vec3;
 }
 
 
-impl AsVec2 for CommonOffset {
+impl AsVec3 for CommonOffset {
     #[inline(always)]
-    fn as_vec2(&self) -> Vec2 {
-        Vec2::new(self.x(), self.y())
+    fn as_vec3(&self) -> Vec3 {
+        Vec3::new(self.x(), self.y(), 0.)
     }
 }

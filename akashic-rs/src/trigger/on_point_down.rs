@@ -1,6 +1,7 @@
 use auto_delegate::delegate;
 use wasm_bindgen::prelude::wasm_bindgen;
-use crate::player::Player;
+
+use akashic_macro::AkashicEventBase;
 
 use crate::trigger::Trigger;
 
@@ -17,14 +18,8 @@ pub trait PointDownCaptureHandler {
 
 #[wasm_bindgen]
 extern "C" {
-    #[derive(Clone)]
+    #[derive(Clone, Debug, AkashicEventBase)]
     pub type PointDownEvent;
-
-    #[wasm_bindgen(js_namespace = g, getter, method)]
-    pub fn point(this: &PointDownEvent) -> CommonOffset;
-
-    #[wasm_bindgen(js_namespace = g, getter, method)]
-    pub fn player(this: &PointDownEvent) -> Player;
 }
 
 
