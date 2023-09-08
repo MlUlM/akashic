@@ -5,16 +5,25 @@ use bevy::math::Vec2;
 use bevy::prelude::{Commands, in_state, IntoSystemConfigs, NextState, ResMut, World};
 use wasm_bindgen::JsValue;
 
+use akashic_rs::console_log;
+use akashic_rs::entity::E;
 use akashic_rs::prelude::{OnLoadHandler, PointDownCaptureHandler, UpdateHandler};
 use akashic_rs::prelude::GAME;
 use akashic_rs::prelude::Scene;
+use akashic_rs::trigger::point_move::PointMoveCaptureHandler;
+use akashic_rs::trigger::point_up::PointUpCaptureHandler;
 
 use crate::asset::AkashicAssetServer;
+use crate::component::AkashicEntityId;
+use crate::event::AkashicEventQueue;
+use crate::event::point_down::ScenePointDown;
+use crate::event::point_move::PointMoveEvent;
+use crate::event::point_up::ScenePointUpEvent;
+use crate::extensions::AsVec2;
 use crate::plugin::{SceneLoadState, SharedSceneParameter};
-use crate::trigger::point_down::{AkashicEventQueue, ScenePointDown};
+use crate::prelude::point_move::ScenePointMoveEvent;
 
-pub struct AkashicSchedulerPlugin(
-    pub(crate) SharedSceneParameter);
+pub struct AkashicSchedulerPlugin(pub(crate) SharedSceneParameter);
 
 
 impl Plugin for AkashicSchedulerPlugin {
@@ -34,10 +43,13 @@ impl Plugin for AkashicSchedulerPlugin {
                 let scene = Scene::new(param.param());
 
                 on_point_down_capture(&scene, &mut app.world);
+                on_point_up_capture(&scene, &mut app.world);
+                on_point_move_capture(&scene, &mut app.world);
 
                 scene.on_load().add(|_| {
                     IS_LOADED.store(true, Ordering::Relaxed);
                 });
+
                 scene.on_update().add(move || {
                     app.update();
                 });
@@ -75,5 +87,45 @@ fn on_point_down_capture(
         point_down_queue.push(ScenePointDown {
             point: Vec2::new(point.x(), point.y())
         })
+    });
+}
+
+
+fn on_point_up_capture(
+    scene: &impl PointUpCaptureHandler,
+    world: &mut World,
+) {
+    let point_down_queue = world.resource::<AkashicEventQueue<ScenePointUpEvent>>().clone();
+    scene.on_point_up_capture().add(move |e| {
+        let point = e.point();
+        point_down_queue.push(ScenePointUpEvent {
+            point: Vec2::new(point.x(), point.y()),
+        })
+    });
+}
+
+
+fn on_point_move_capture(
+    scene: &impl PointMoveCaptureHandler,
+    world: &mut World,
+) {
+    let point_down_queue = world.resource::<AkashicEventQueue<ScenePointMoveEvent>>().clone();
+    let queue = world.resource::<AkashicEventQueue<PointMoveEvent>>().clone();
+    scene.on_point_move_capture().add(move |e| {
+        let point = e.point();
+        if let Some(akashic_entity) = e.target() {
+            queue.push(PointMoveEvent {
+                entity_id: AkashicEntityId(akashic_entity.id()),
+                point: point.as_vec2(),
+                start_delta: e.start_delta().as_vec2(),
+                prev_delta: e.prev_delta().as_vec2(),
+            });
+        } else {
+            point_down_queue.push(ScenePointMoveEvent {
+                point: point.as_vec2(),
+                start_delta: e.start_delta().as_vec2(),
+                prev_delta: e.prev_delta().as_vec2(),
+            })
+        }
     });
 }

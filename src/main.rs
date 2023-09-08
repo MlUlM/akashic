@@ -7,9 +7,11 @@ use bevy::hierarchy::HierarchyPlugin;
 use bevy::log::LogPlugin;
 use bevy::prelude::{Commands, Component, EventReader, in_state, IntoSystemConfigs, OnEnter, Query, Res, Transform, TransformPlugin, With};
 use bevy::time::TimePlugin;
+
 use bevy_akashic_engine::akashic::entity::label::{Label, LabelParameterObjectBuilder};
 use bevy_akashic_engine::akashic::font::dynamic::{DynamicFont, DynamicFontParameterObjectBuilder};
 use bevy_akashic_engine::akashic::font::font_family::FontFamily;
+use bevy_akashic_engine::event::point_move::PointMoveEvent;
 use bevy_akashic_engine::prelude::*;
 use bevy_akashic_engine::prelude::entity_size::AkashicEntitySize;
 use bevy_akashic_engine::prelude::game::GameInfo;
@@ -65,9 +67,10 @@ fn main() {
             setup_text
         ))
         .add_systems(Update, (
-            player_hovering_system,
             read_scene_point_down_event,
-            shot_move_system
+            shot_move_system,
+            point_up_event_system,
+            move_player_system
         ).run_if(in_state(SceneLoadState::Startup)))
         .run();
 }
@@ -78,16 +81,14 @@ fn setup(
     game_size: Res<GameInfo>,
 ) {
     let player_image_asset = server.image_by_id("player").into_src();
-    let param = SpriteParameterObjectBuilder::default()
-        .src(player_image_asset)
-        .build()
-        .unwrap();
+    let param = SpriteParameterObjectBuilder::new(player_image_asset)
+        .touchable(true)
+        .build();
 
     let player = Sprite::new(param);
     player.set_x((game_size.width - player.width()) / 2.);
     player.set_y((game_size.height - player.height()) / 2.);
     player.set_angle(45.);
-
     commands
         .append(player)
         .insert(Player);
@@ -110,7 +111,8 @@ fn player_hovering_system(
     frames: Res<FrameCount>,
 ) {
     let (mut transform, size) = player.single_mut();
-    transform.translation.y = (game_info.height - size.height()) / 2. + ((frames.0 as f32) % (game_info.fps * 10.) / 4.).sin() * 10.;
+    console_log!("{transform:?}");
+    // transform.translation.y = (game_info.height - size.height()) / 2. + ((frames.0 as f32) % (game_info.fps * 10.) / 4.).sin() * 10.;
 }
 
 
@@ -125,12 +127,10 @@ fn read_scene_point_down_event(
         let player_pos = player_transform.translation;
         let shot_image_asset = server.image_by_id("shot").into_src();
         // 弾の初期座標を、プレイヤーの少し右に設定します
-        let shot = Sprite::new(SpriteParameterObjectBuilder::default()
-            .src(shot_image_asset)
+        let shot = Sprite::new(SpriteParameterObjectBuilder::new(shot_image_asset)
             .x(player_pos.x + player_size.width())
             .y(player_pos.y)
             .build()
-            .unwrap()
         );
 
         commands.append(shot).insert(Shot);
@@ -150,5 +150,26 @@ fn shot_move_system(
         }
 
         shot.translation.x += 10.;
+    }
+}
+
+
+fn point_up_event_system(
+    mut er: EventReader<bevy_akashic_engine::event::point_up::PointUpEvent>
+) {
+    for e in er.iter() {
+        console_log!("{e:?}");
+    }
+}
+
+
+fn move_player_system(
+    mut er: EventReader<PointMoveEvent>,
+    mut player: Query<(&AkashicEntityId, &mut Transform), With<Player>>,
+) {
+    for e in er.iter() {
+        let Some((_, mut transform)) = player.iter_mut().find(|(id, _)| e.entity_id.eq(id)) else { continue; };
+        console_log!("{e:?}");
+        transform.translation += e.prev_delta.extend(0.);
     }
 }

@@ -6,8 +6,8 @@
   "assets": {
     "player": {
       "type": "image",
-      "width": 32,
-      "height": 32,
+      "width": 80,
+      "height": 80,
       "path": "image/player.png"
     },
     "shot": {

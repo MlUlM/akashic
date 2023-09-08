@@ -5,9 +5,11 @@ use wasm_bindgen::convert::FromWasmAbi;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-mod on_point_down;
-mod on_load;
-mod on_update;
+pub mod on_point_down;
+pub mod on_load;
+pub mod on_update;
+pub mod point_up;
+pub mod point_move;
 
 
 pub mod prelude {

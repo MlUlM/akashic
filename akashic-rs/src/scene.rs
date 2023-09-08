@@ -8,7 +8,7 @@ use akashic_macro::AkashicScene;
 use crate::entity::{E, Entity};
 use crate::game::GAME;
 
- mod param;
+pub mod param;
 
 
 pub mod prelude{

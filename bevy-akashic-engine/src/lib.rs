@@ -2,10 +2,12 @@ use std::sync::{Arc, Mutex, MutexGuard};
 
 mod command;
 
-pub mod plugin;
-mod trigger;
+mod plugin;
+pub mod event;
 mod component;
 mod asset;
+mod extensions;
+
 pub mod akashic{
     pub use akashic_rs::*;
 }
@@ -16,7 +18,7 @@ pub mod prelude {
     pub use crate::asset::*;
 
     pub use akashic_rs::prelude::*;
-    pub use crate::trigger::*;
+    pub use crate::event::*;
     pub use crate::component::*;
 }
 

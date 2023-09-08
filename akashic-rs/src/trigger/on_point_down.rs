@@ -1,8 +1,10 @@
+use auto_delegate::delegate;
 use wasm_bindgen::prelude::wasm_bindgen;
 use crate::player::Player;
 
 use crate::trigger::Trigger;
 
+#[delegate]
 pub trait PointDownHandler {
     fn on_point_down(&self) -> Trigger<PointDownEvent>;
 }
@@ -20,7 +22,6 @@ extern "C" {
 
     #[wasm_bindgen(js_namespace = g, getter, method)]
     pub fn point(this: &PointDownEvent) -> CommonOffset;
-
 
     #[wasm_bindgen(js_namespace = g, getter, method)]
     pub fn player(this: &PointDownEvent) -> Player;
