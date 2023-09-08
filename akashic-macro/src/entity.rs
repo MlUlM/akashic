@@ -33,6 +33,7 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
     let size = expand_entity_size(entity_name);
     let destroy = expand_entity_destroy(entity_name);
     let angle = expand_entity_angle(entity_name);
+    let impl_into_entity = expand_impl_into_entity(entity_name);
 
     quote! {
         #modify
@@ -40,6 +41,7 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
         #size
         #destroy
         #angle
+        #impl_into_entity
 
          #[wasm_bindgen]
         extern "C"{
@@ -77,8 +79,14 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
                 self.obj.clone()
             }
         }
+
+
+
     }
 }
+
+
+
 
 
 pub fn expand_entity_size(
@@ -170,5 +178,22 @@ fn expand_entity_angle(
             #[wasm_bindgen(js_namespace = g, method, setter, js_name=angle)]
             pub fn set_angle(this: &#entity_name, angle: f32);
         }
+    }
+}
+
+
+fn expand_impl_into_entity(entity_name: &Ident) -> Option<proc_macro2::TokenStream> {
+    if *entity_name == "Entity"{
+        None
+    }else{
+        Some(quote!{
+            impl Into<crate::entity::Entity> for #entity_name{
+                #[inline(always)]
+                fn into(self) -> crate::entity::Entity{
+                    use wasm_bindgen::JsCast;
+                    self.unchecked_into()
+                }
+            }
+        })
     }
 }

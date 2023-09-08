@@ -1,11 +1,10 @@
 use bevy::prelude::{Bundle, Transform};
-use akashic_rs::entity::label::Label;
 
+use akashic_rs::entity::label::Label;
 use akashic_rs::prelude::E;
 
 use crate::command::AsBundle;
 use crate::component::entity_size::AkashicEntitySize;
-use crate::component::previous_transform::PreviousTransform;
 use crate::prelude::AkashicEntityId;
 use crate::prelude::entity_size::PreviousAkashicEntitySize;
 

@@ -1,13 +1,12 @@
 use std::f32::consts::PI;
 
 use bevy::app::{App, Plugin, PreUpdate};
-use bevy::prelude::{Added, Commands, Entity, Query, Transform};
-
-use akashic_rs::prelude::GAME;
+use bevy::prelude::{Added, Commands, Entity, Query, Res, Transform};
 
 use crate::component::entity_size::{AkashicEntitySize, PreviousAkashicEntitySize};
 use crate::component::previous_transform::PreviousTransform;
 use crate::prelude::AkashicEntityId;
+use crate::prelude::render::AkashicEntityMap;
 
 pub struct AkashicTransformPlugin;
 
@@ -31,15 +30,16 @@ fn insert_previous_transform_system(
 
 pub(crate) fn transform_system(
     mut transforms: Query<(
-        &AkashicEntityId,
+        Entity,
         &Transform,
         &AkashicEntitySize,
         &mut PreviousTransform,
         &mut PreviousAkashicEntitySize
-    )>
+    )>,
+    entity_map: Res<AkashicEntityMap>,
 ) {
     for (
-        AkashicEntityId(id),
+        entity,
         transform,
         size,
         mut prev_transform,
@@ -49,14 +49,14 @@ pub(crate) fn transform_system(
             continue;
         }
 
-        let Some(entity) = GAME.scene().find_child(*id) else { continue; };
+        let Some(akashic_entity) = entity_map.0.get(&entity) else { continue; };
         let (_, rad) = transform.rotation.to_axis_angle();
         let angle = rad * 180. / PI;
 
         *prev_transform = PreviousTransform(*transform);
         *prev_size = PreviousAkashicEntitySize(*size);
 
-        entity.update(
+        akashic_entity.update(
             transform.translation.x,
             transform.translation.y,
             angle,

@@ -4,8 +4,7 @@ use akashic_rs::prelude::E;
 
 use crate::command::AsBundle;
 use crate::component::entity_size::AkashicEntitySize;
-use crate::component::previous_transform::PreviousTransform;
-use crate::prelude::AkashicEntityId;
+use crate::prelude::{AddAkashicEntity, AkashicEntityId};
 use crate::prelude::entity_size::PreviousAkashicEntitySize;
 
 #[derive(Debug, Bundle)]
@@ -14,6 +13,7 @@ pub struct AkashicSpriteBundle {
     transform: Transform,
     size: AkashicEntitySize,
     previous_size: PreviousAkashicEntitySize,
+    add: AddAkashicEntity,
 }
 
 
@@ -27,6 +27,7 @@ impl AsBundle<AkashicSpriteBundle> for akashic_rs::prelude::Sprite {
             transform,
             size,
             previous_size: PreviousAkashicEntitySize::from(size),
+            add: AddAkashicEntity(self.clone().into()),
         }
     }
 } 

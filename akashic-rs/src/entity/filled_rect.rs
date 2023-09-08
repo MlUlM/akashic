@@ -1,5 +1,4 @@
 use derive_builder::Builder;
-use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
 use akashic_macro::{AkashicEntity, EParamSetters, object_e_parameter};

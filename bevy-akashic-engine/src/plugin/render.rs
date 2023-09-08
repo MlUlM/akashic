@@ -6,7 +6,7 @@ use akashic_rs::prelude::EntityDestroy;
 use akashic_rs::prelude::GAME;
 
 use crate::plugin::transform::transform_system;
-use crate::prelude::AkashicEntityId;
+use crate::prelude::{AddAkashicEntity, AkashicEntityId};
 
 #[derive(Copy, Clone, Debug, Default, Event, Eq, PartialEq)]
 pub(crate) struct SceneModifiedEvent;
@@ -29,14 +29,19 @@ impl Plugin for AkashicRenderPlugin {
 }
 
 #[derive(Resource, Default)]
-struct AkashicEntityMap(HashMap<bevy::prelude::Entity, AkashicEntityId>);
+pub(crate) struct AkashicEntityMap(pub(crate) HashMap<Entity, akashic_rs::entity::Entity>);
+
+
+unsafe impl Send for AkashicEntityMap{}
+unsafe impl Sync for AkashicEntityMap{}
+
 
 fn register_akashic_entity_system(
     mut akashic_entity_map: ResMut<AkashicEntityMap>,
-    entities: Query<(Entity, &AkashicEntityId), Added<AkashicEntityId>>,
+    entities: Query<(Entity, &AddAkashicEntity),  Added<AddAkashicEntity>>,
 ) {
-    for (entity, id) in entities.iter() {
-        akashic_entity_map.0.insert(entity, *id);
+    for (entity, AddAkashicEntity(akashic_entity)) in entities.iter() {
+        akashic_entity_map.0.insert(entity, akashic_entity.clone());
     }
 }
 
@@ -47,8 +52,8 @@ fn akashic_entity_despawn_system(
     mut ew: EventWriter<SceneModifiedEvent>,
 ) {
     for entity in &mut removed {
-        let Some(akashic_entity_id) = akashic_entity_map.0.remove(&entity) else { continue; };
-        let Some(akashic_entity) = GAME.scene().find_child(*akashic_entity_id) else { continue; };
+        let Some(akashic_entity) = akashic_entity_map.0.remove(&entity) else { continue; };
+
         akashic_entity.destroy();
         ew.send(SceneModifiedEvent);
     }
@@ -59,6 +64,6 @@ fn rendering_system(
     er: EventReader<SceneModifiedEvent>
 ) {
     if !er.is_empty() {
-        GAME.modified();
+        GAME.scene().modified();
     }
 }

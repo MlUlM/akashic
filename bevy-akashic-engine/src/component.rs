@@ -15,4 +15,10 @@ pub mod prelude {
 pub struct AkashicEntityId(pub(crate) usize);
 
 
+#[derive(Component, Clone, Debug)]
+pub(crate) struct AddAkashicEntity(pub(crate) akashic_rs::entity::Entity);
+
+
+unsafe impl Send for AddAkashicEntity{}
+unsafe impl Sync for AddAkashicEntity{}
 

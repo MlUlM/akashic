@@ -20,7 +20,7 @@ pub mod prelude {
 
 #[wasm_bindgen]
 extern "C" {
-    #[derive(Clone, AkashicEntity)]
+    #[derive(Clone, AkashicEntity, Debug)]
     pub type Entity;
 }
 

@@ -86,6 +86,7 @@ fn setup(
     let player = Sprite::new(param);
     player.set_x((game_size.width - player.width()) / 2.);
     player.set_y((game_size.height - player.height()) / 2.);
+    player.set_angle(45.);
 
     commands
         .append(player)

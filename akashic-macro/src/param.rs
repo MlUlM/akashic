@@ -1,7 +1,6 @@
 use proc_macro2::{Ident, Span};
-use quote::__private::ext::RepToTokensExt;
 use quote::quote;
-use syn::{FieldsNamed, ItemStruct};
+use syn::FieldsNamed;
 use syn::__private::TokenStream2;
 use syn::parse::Parser;
 

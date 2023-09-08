@@ -6,7 +6,7 @@ use akashic_rs::prelude::{E, FilledRect};
 
 use crate::command::AsBundle;
 use crate::component::AkashicEntityId;
-use crate::prelude::previous_transform::PreviousTransform;
+
 
 #[derive(Bundle)]
 pub struct FilledRectBundle {

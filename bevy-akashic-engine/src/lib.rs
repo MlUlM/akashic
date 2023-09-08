@@ -2,7 +2,7 @@ use std::sync::{Arc, Mutex, MutexGuard};
 
 mod command;
 
-mod plugin;
+pub mod plugin;
 mod trigger;
 mod component;
 mod asset;

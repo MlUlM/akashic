@@ -13,7 +13,7 @@ use crate::plugin::transform::AkashicTransformPlugin;
 
 mod scheduler;
 mod point_down;
-mod render;
+pub mod render;
 pub mod transform;
 
 
