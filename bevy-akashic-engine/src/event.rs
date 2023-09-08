@@ -5,6 +5,7 @@ use bevy::prelude::{Event, Resource};
 pub mod point_down;
 pub mod point_up;
 pub mod point_move;
+pub(crate) mod event_inner;
 
 
 #[derive(Resource,Clone)]

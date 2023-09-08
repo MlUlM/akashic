@@ -5,6 +5,8 @@ use wasm_bindgen::convert::FromWasmAbi;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
+use crate::entity::Entity;
+
 pub mod on_point_down;
 pub mod on_load;
 pub mod on_update;
@@ -17,11 +19,26 @@ pub mod prelude {
         on_load::*,
         on_point_down::*,
         on_update::*,
-        Void,
         Trigger,
+        Void,
     };
 }
 
+pub trait AkashicEventBase {
+    fn button(&self) -> u8;
+
+    fn event_flags(&self) -> u8;
+
+    fn local(&self) -> bool;
+
+    fn target(&self) -> Option<Entity>;
+
+    fn player(&self) -> Option<crate::player::Player>;
+
+    fn point(&self) -> crate::prelude::CommonOffset;
+
+    fn pointer_id(&self) -> f32;
+}
 
 
 pub struct Void;
