@@ -1,11 +1,14 @@
 use std::sync::{Arc, RwLock};
 
 use bevy::app::{App, Plugin};
-use bevy::prelude::States;
+use bevy::prelude::{Event, States};
+use serde::de::DeserializeOwned;
+use serde::Serialize;
 use akashic_rs::prelude::SceneParameterObject;
 
 use crate::asset::AkashicAssetServer;
 use crate::asset::game::GameInfo;
+use crate::event::message::{add_akashic_message_event, RegisterAkashicMessageFn};
 use crate::plugin::event::{PointDownPlugin, PointMovePlugin, PointUpPlugin};
 use crate::plugin::render::AkashicRenderPlugin;
 use crate::plugin::scheduler::AkashicSchedulerPlugin;
@@ -25,18 +28,33 @@ pub enum SceneLoadState {
 
     Loaded,
 
-    Startup
+    Startup,
 }
 
 
 #[derive(Default)]
-pub struct AkashicPlugin(SharedSceneParameter);
+pub struct AkashicPlugin {
+    scene_param: SharedSceneParameter,
+    message_event_registers: Vec<RegisterAkashicMessageFn>,
+}
 
 
 impl AkashicPlugin {
     #[inline]
     pub fn new(scene_param: SceneParameterObject) -> Self {
-        Self(SharedSceneParameter::new(scene_param))
+        Self {
+            scene_param: SharedSceneParameter::new(scene_param),
+            message_event_registers: Vec::new(),
+        }
+    }
+
+
+    #[inline]
+    pub fn add_message_event<E>(mut self) -> Self
+        where E: Event + Serialize + DeserializeOwned
+    {
+        self.message_event_registers.push(add_akashic_message_event::<E>());
+        self
     }
 }
 
@@ -51,7 +69,7 @@ impl Plugin for AkashicPlugin {
                 PointUpPlugin,
                 PointMovePlugin,
                 AkashicRenderPlugin,
-                AkashicSchedulerPlugin(self.0.clone()),
+                AkashicSchedulerPlugin(self.scene_param.clone(), self.message_event_registers.clone()),
                 AkashicTransformPlugin
             ));
     }

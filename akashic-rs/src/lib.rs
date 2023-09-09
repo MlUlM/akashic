@@ -9,6 +9,7 @@ pub mod player;
 pub mod shader;
 pub mod param;
 pub mod font;
+pub mod event;
 
 pub mod prelude {
     pub use crate::asset::*;

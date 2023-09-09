@@ -92,6 +92,16 @@ pub fn expand_point_move(entity_name: &Ident) -> syn::Result<TokenStream2> {
 }
 
 
+
+pub fn expand_message_trigger(entity_name: &Ident) -> syn::Result<TokenStream2> {
+    expand_trigger(
+        entity_name,
+        ident("onMessage"),
+        quote!(crate::trigger::message::MessageHandler),
+        quote!(crate::event::message::MessageEvent),
+    )
+}
+
 fn expand_trigger(
     entity_name: &Ident,
     fn_name: Ident,

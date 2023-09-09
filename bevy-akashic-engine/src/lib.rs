@@ -1,4 +1,7 @@
 use std::sync::{Arc, Mutex, MutexGuard};
+use wasm_bindgen::JsValue;
+use akashic_rs::game::GAME;
+use akashic_rs::prelude::{Scene, SceneParameterObject};
 
 mod command;
 
@@ -8,7 +11,7 @@ mod component;
 mod asset;
 mod extensions;
 
-pub mod akashic{
+pub mod akashic {
     pub use akashic_rs::*;
 }
 
@@ -44,3 +47,10 @@ unsafe impl<T> Send for SharedObject<T> {}
 
 unsafe impl<T> Sync for SharedObject<T> {}
 
+
+pub fn register_scene(param: SceneParameterObject) {
+    GAME.push_scene(
+        Scene::new(param),
+        JsValue::UNDEFINED,
+    );
+}

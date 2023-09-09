@@ -31,7 +31,7 @@ pub fn expand_event_base(input: TokenStream) -> TokenStream {
               fn _target(this: &#name) -> Option<crate::entity::Entity>;
             }
 
-            impl crate::trigger::AkashicEventBase for #name{
+            impl crate::trigger::PointEventBase for #name{
                 #[inline(always)]
                 fn button(&self) -> u8{
                     self._button()

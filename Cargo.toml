@@ -14,6 +14,8 @@ members = [
 bevy = { version = "0.11", default-features = false }
 bevy-akashic-engine = { path = "./bevy-akashic-engine" }
 console_error_panic_hook = "0.1.7"
+serde = { workspace = true }
+
 
 [workspace.dependencies]
 wasm-bindgen = { version = "0.2" }

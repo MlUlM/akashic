@@ -5,19 +5,23 @@ use bevy::core::{FrameCount, FrameCountPlugin, TypeRegistrationPlugin};
 use bevy::diagnostic::DiagnosticsPlugin;
 use bevy::hierarchy::HierarchyPlugin;
 use bevy::log::LogPlugin;
-use bevy::prelude::{Commands, Component, EventReader, in_state, IntoSystemConfigs, OnEnter, Query, Res, Transform, TransformPlugin, With};
+use bevy::prelude::{Commands, Component, Event, EventReader, EventWriter, in_state, IntoSystemConfigs, OnEnter, Query, Res, Transform, TransformPlugin, With};
+use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
 use bevy::time::TimePlugin;
+use bevy::utils::default;
 
 use bevy_akashic_engine::akashic::entity::label::{Label, LabelParameterObjectBuilder};
 use bevy_akashic_engine::akashic::font::dynamic::{DynamicFont, DynamicFontParameterObjectBuilder};
 use bevy_akashic_engine::akashic::font::font_family::FontFamily;
-use bevy_akashic_engine::event::point_move::PointMoveEvent;
+use bevy_akashic_engine::event::message::{AkashicRaiseEvent};
+use bevy_akashic_engine::event::point_down::PointDown;
 use bevy_akashic_engine::prelude::*;
 use bevy_akashic_engine::prelude::entity_size::AkashicEntitySize;
 use bevy_akashic_engine::prelude::game::GameInfo;
 use bevy_akashic_engine::prelude::point_down::ScenePointDown;
 use bevy_akashic_engine::prelude::SceneParameterObject;
 use bevy_akashic_engine::prelude::src::IntoSrc;
+
 
 #[derive(Component, Debug)]
 struct Player;
@@ -52,15 +56,22 @@ impl PluginGroup for AkashicDefaultPlugin {
     }
 }
 
+
+#[derive(Serialize, Deserialize, Event, Default, Debug)]
+pub struct TestMessageEvent {
+    message: String,
+}
+
 fn main() {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
 
+    let scene_param = SceneParameterObject::builder(GAME.clone())
+        .asset_ids(vec!["player", "shot", "se"])
+        .build();
     App::new()
         .add_plugins(FrameCountPlugin)
-        .add_plugins(AkashicPlugin::new(SceneParameterObject::builder(GAME.clone())
-            .asset_ids(vec!["player", "shot", "se"])
-            .build()
-        ))
+
+        .add_plugins(AkashicPlugin::new(scene_param).add_message_event::<TestMessageEvent>())
         .add_systems(OnEnter(SceneLoadState::Startup), (
             setup,
             setup_text
@@ -69,7 +80,8 @@ fn main() {
             read_scene_point_down_event,
             shot_move_system,
             point_up_event_system,
-            player_hovering_system
+            player_hovering_system,
+            read_raise_event_system
         ).run_if(in_state(SceneLoadState::Startup)))
         .run();
 }
@@ -81,6 +93,7 @@ fn setup(
 ) {
     let player_image_asset = server.image_by_id("player").into_src();
     let param = SpriteParameterObjectBuilder::new(player_image_asset)
+        .local(true)
         .touchable(true)
         .build();
 
@@ -114,11 +127,19 @@ fn player_hovering_system(
 
 fn read_scene_point_down_event(
     mut commands: Commands,
-    mut er: EventReader<ScenePointDown>,
+    mut ew: EventWriter<AkashicRaiseEvent<TestMessageEvent>>,
+    mut er: EventReader<PointDown>,
     server: Res<AkashicAssetServer>,
     player: Query<(&Transform, &AkashicEntitySize), With<Player>>,
 ) {
     for _ in er.iter() {
+        ew.send(AkashicRaiseEvent {
+            data: TestMessageEvent {
+                message: "TEST HELLO !!".to_string()
+            },
+            ..default()
+        });
+
         let (player_transform, player_size) = player.single();
         let player_pos = player_transform.translation;
         let shot_image_asset = server.image_by_id("shot").into_src();
@@ -159,13 +180,10 @@ fn point_up_event_system(
 }
 
 
-fn move_player_system(
-    mut er: EventReader<PointMoveEvent>,
-    mut player: Query<(&AkashicEntityId, &mut Transform), With<Player>>,
+fn read_raise_event_system(
+    mut er: EventReader<TestMessageEvent>
 ) {
     for e in er.iter() {
-        let Some((_, mut transform)) = player.iter_mut().find(|(id, _)| e.entity_id.eq(id)) else { continue; };
         console_log!("{e:?}");
-        transform.translation += e.prev_delta;
     }
 }

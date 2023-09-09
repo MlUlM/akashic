@@ -29,7 +29,7 @@ pub fn akashic_scene(input: TokenStream) -> TokenStream {
 }
 
 
-#[proc_macro_derive(AkashicEventBase)]
+#[proc_macro_derive(PointEventBase)]
 pub fn akashic_event_base(input: TokenStream) -> TokenStream {
     expand_event_base(input)
 }
@@ -50,9 +50,6 @@ pub fn object_e_parameter(_: TokenStream, input: TokenStream) -> TokenStream {
 pub fn object_e_setter(input: TokenStream) -> TokenStream {
     param::e_parameter::expand_param_setters(input)
 }
-
-
-
 
 
 #[inline(always)]

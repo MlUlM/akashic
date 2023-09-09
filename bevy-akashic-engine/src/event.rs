@@ -6,10 +6,18 @@ pub mod point_down;
 pub mod point_up;
 pub mod point_move;
 pub(crate) mod event_inner;
+pub mod message;
 
 
-#[derive(Resource,Clone)]
+#[derive(Resource)]
 pub(crate) struct AkashicEventQueue<T>(pub Arc<Mutex<VecDeque<T>>>);
+
+
+impl<T> Clone for AkashicEventQueue<T> {
+    fn clone(&self) -> Self {
+        Self(Arc::clone(&self.0))
+    }
+}
 
 
 impl<T: Event> AkashicEventQueue<T> {
@@ -26,8 +34,7 @@ impl<T: Event> AkashicEventQueue<T> {
 }
 
 
-
-impl<T> Default for AkashicEventQueue<T>{
+impl<T> Default for AkashicEventQueue<T> {
     fn default() -> Self {
         Self(Arc::new(Mutex::new(VecDeque::new())))
     }

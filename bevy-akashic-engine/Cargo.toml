@@ -7,7 +7,9 @@ edition = "2021"
 [lib]
 
 [dependencies]
-akashic-rs = {path = "../akashic-rs"}
+akashic-rs = { path = "../akashic-rs" }
 bevy = { workspace = true }
 wasm-bindgen = { workspace = true }
 auto-delegate = { workspace = true }
+serde-wasm-bindgen = { workspace = true }
+serde = { workspace = true }

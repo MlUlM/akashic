@@ -31,7 +31,7 @@ trigger_plugin!(PointDownPlugin, PointDown, ScenePointDown);
 trigger_plugin!(PointUpPlugin, PointUpEvent, ScenePointUpEvent);
 trigger_plugin!(PointMovePlugin, PointMoveEvent, ScenePointMoveEvent);
 
-fn read_event_system<T: Event>(
+pub(crate) fn read_event_system<T: Event>(
     mut ew: EventWriter<T>,
     queue: Res<AkashicEventQueue<T>>,
 ) {

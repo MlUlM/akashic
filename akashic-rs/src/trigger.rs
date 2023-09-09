@@ -1,4 +1,5 @@
 use std::marker::PhantomData;
+use auto_delegate::delegate;
 
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::convert::FromWasmAbi;
@@ -12,10 +13,12 @@ pub mod on_load;
 pub mod on_update;
 pub mod point_up;
 pub mod point_move;
+pub mod message;
 
 
 pub mod prelude {
     pub use crate::trigger::{
+        message::MessageHandler,
         on_load::*,
         on_point_down::*,
         on_update::*,
@@ -24,7 +27,8 @@ pub mod prelude {
     };
 }
 
-pub trait AkashicEventBase {
+#[delegate]
+pub trait PointEventBase {
     fn button(&self) -> u8;
 
     fn event_flags(&self) -> u8;

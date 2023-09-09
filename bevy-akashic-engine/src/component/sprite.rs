@@ -1,3 +1,4 @@
+use bevy::math::Quat;
 use bevy::prelude::{Bundle, Transform};
 
 use akashic_rs::prelude::E;
@@ -20,7 +21,8 @@ pub struct AkashicSpriteBundle {
 impl AsBundle<AkashicSpriteBundle> for akashic_rs::prelude::Sprite {
     fn as_bundle(&self) -> AkashicSpriteBundle {
         let size = AkashicEntitySize::new(self);
-        let transform = Transform::from_xyz(self.x(), self.y(), 0.);
+        let mut transform = Transform::from_xyz(self.x(), self.y(), 0.);
+        transform.rotation = Quat::from_rotation_z(self.angle());
 
         AkashicSpriteBundle {
             id: AkashicEntityId(self.id()),

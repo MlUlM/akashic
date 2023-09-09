@@ -6,7 +6,7 @@ use syn::ItemStruct;
 use crate::asset::expand_asset;
 use crate::children::expand_children;
 use crate::modified::expand_modify;
-use crate::trigger::{expand_on_load, expand_on_point_down_capture, expand_on_update, expand_point_move_capture, expand_point_up_capture};
+use crate::trigger::{expand_message_trigger, expand_on_load, expand_on_point_down_capture, expand_on_update, expand_point_move_capture, expand_point_up_capture};
 
 #[inline(always)]
 pub fn expand_scene(input: TokenStream) -> TokenStream {
@@ -23,7 +23,8 @@ fn try_expand_scene(input: TokenStream) -> syn::Result<TokenStream> {
     let asset = expand_asset(&entity_name);
     let on_point_down_capture = expand_on_point_down_capture(&entity_name)?;
     let point_up = expand_point_up_capture(&entity_name)?;
-    let point_move =expand_point_move_capture(&entity_name)?;
+    let point_move = expand_point_move_capture(&entity_name)?;
+    let message = expand_message_trigger(&entity_name)?;
 
     Ok(quote! {
         #on_update
@@ -34,5 +35,7 @@ fn try_expand_scene(input: TokenStream) -> syn::Result<TokenStream> {
         #on_point_down_capture
         #point_up
         #point_move
-    }.into())
+        #message
+    }
+        .into())
 }
