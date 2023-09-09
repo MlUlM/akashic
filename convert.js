@@ -22,6 +22,7 @@ fs.writeFileSync(mainJsPath, `
     
     // main function
     module.exports = () => {
+    
         g.Sprite.prototype.updateAll = function(x, y, angle, width, height){
             this.x = x;
             this.y = y;
@@ -29,8 +30,17 @@ fs.writeFileSync(mainJsPath, `
             this.width = width;
             this.height = height;
             this.modified();
+            // g.game.modified(true);
         }
-        
-        ${wasmCode}
+
+    if (typeof window == 'undefined') {
+        globalThis.crypto = {
+            getRandomValues: (args) => new Uint8Array(args.map(_ => Math.floor(g.game.random.generate() * 255)))
+                
+       }
+    }
+    
+    ${wasmCode}
+       
     }
 `)

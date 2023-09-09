@@ -48,7 +48,7 @@ pub fn expand_event_base(input: TokenStream) -> TokenStream {
                 }
 
                 #[inline(always)]
-                fn target(&self) -> Option<Entity>{
+                fn target(&self) -> Option<crate::entity::Entity>{
                     self._target()
                 }
 

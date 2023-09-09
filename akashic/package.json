@@ -14,5 +14,6 @@
   "devDependencies": {
     "@akashic/akashic-sandbox": "^0.24.0",
     "eslint": "^8.24.0"
-  }
+  },
+  "dependencies": {}
 }

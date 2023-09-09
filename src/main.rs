@@ -1,15 +1,12 @@
 use std::panic;
 
-use bevy::app::{App, PluginGroup, PluginGroupBuilder, ScheduleRunnerPlugin, Update};
+use bevy::app::{App, PluginGroup, PluginGroupBuilder, Update};
 use bevy::core::{FrameCount, FrameCountPlugin, TypeRegistrationPlugin};
-use bevy::DefaultPlugins;
 use bevy::diagnostic::DiagnosticsPlugin;
 use bevy::hierarchy::HierarchyPlugin;
 use bevy::log::LogPlugin;
 use bevy::prelude::{Commands, Component, EventReader, in_state, IntoSystemConfigs, OnEnter, Query, Res, Transform, TransformPlugin, With};
-use bevy::render::RenderPlugin;
 use bevy::time::TimePlugin;
-use bevy::winit::WinitPlugin;
 
 use bevy_akashic_engine::akashic::entity::label::{Label, LabelParameterObjectBuilder};
 use bevy_akashic_engine::akashic::font::dynamic::{DynamicFont, DynamicFontParameterObjectBuilder};
@@ -59,6 +56,7 @@ fn main() {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
 
     App::new()
+        .add_plugins(FrameCountPlugin)
         .add_plugins(AkashicPlugin::new(SceneParameterObject::builder(GAME.clone())
             .asset_ids(vec!["player", "shot", "se"])
             .build()
@@ -71,7 +69,7 @@ fn main() {
             read_scene_point_down_event,
             shot_move_system,
             point_up_event_system,
-            move_player_system
+            player_hovering_system
         ).run_if(in_state(SceneLoadState::Startup)))
         .run();
 }
@@ -90,9 +88,7 @@ fn setup(
     player.set_x((game_size.width - player.width()) / 2.);
     player.set_y((game_size.height - player.height()) / 2.);
     player.set_angle(45.);
-    commands
-        .append(player)
-        .insert(Player);
+    commands.append(player).insert(Player);
 }
 
 fn setup_text(
@@ -112,8 +108,7 @@ fn player_hovering_system(
     frames: Res<FrameCount>,
 ) {
     let (mut transform, size) = player.single_mut();
-    console_log!("{transform:?}");
-    // transform.translation.y = (game_info.height - size.height()) / 2. + ((frames.0 as f32) % (game_info.fps * 10.) / 4.).sin() * 10.;
+    transform.translation.y = (game_info.height - size.height()) / 2. + ((frames.0 as f32) % (game_info.fps * 10.) / 4.).sin() * 10.;
 }
 
 

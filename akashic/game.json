@@ -26,10 +26,22 @@
       "type": "script",
       "path": "script/main.js",
       "global": true
+    },
+    "crypto": {
+      "type": "script",
+      "path": "script/crypto.js",
+      "global": true
     }
   },
-  "moduleMainScripts": {},
+  "moduleMainScripts": {
+    "crypto": "node_modules/crypto/index.js"
+  },
   "environment": {
-    "sandbox-runtime": "3"
+    "sandbox-runtime": "3",
+    "niconico": {
+      "supportedModes": [
+        "multi_admission"
+      ]
+    }
   }
 }
