@@ -1,4 +1,3 @@
-use std::ops::Deref;
 use std::panic;
 
 use bevy::app::{App, PluginGroup, PluginGroupBuilder, Update};
@@ -6,7 +5,10 @@ use bevy::core::{FrameCount, FrameCountPlugin, TypeRegistrationPlugin};
 use bevy::diagnostic::DiagnosticsPlugin;
 use bevy::hierarchy::HierarchyPlugin;
 use bevy::log::LogPlugin;
-use bevy::prelude::{Commands, Condition, Component, Event, EventReader, EventWriter, in_state, IntoSystemConfigs, OnEnter, Query, Res, Resource, Transform, TransformPlugin, With};
+use bevy::prelude::{
+    in_state, Commands, Component, Event, EventReader, EventWriter, IntoSystemConfigs, OnEnter,
+    Query, Res, Transform, TransformPlugin, With,
+};
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
 use bevy::time::TimePlugin;
 use bevy::utils::default;
@@ -14,17 +16,15 @@ use bevy::utils::default;
 use bevy_akashic_engine::akashic::entity::label::{Label, LabelParameterObjectBuilder};
 use bevy_akashic_engine::akashic::font::dynamic::{DynamicFont, DynamicFontParameterObjectBuilder};
 use bevy_akashic_engine::akashic::font::font_family::FontFamily;
-use bevy_akashic_engine::event::message::{AkashicRaiseEvent};
-use bevy_akashic_engine::event::point_down::PointDown;
-use bevy_akashic_engine::prelude::*;
+use bevy_akashic_engine::event::message::AkashicRaiseEvent;
 use bevy_akashic_engine::prelude::entity_size::AkashicEntitySize;
-use bevy_akashic_engine::resource::game::GameInfo;
 use bevy_akashic_engine::prelude::point_down::ScenePointDown;
-use bevy_akashic_engine::prelude::SceneParameterObject;
 use bevy_akashic_engine::prelude::src::IntoSrc;
+use bevy_akashic_engine::prelude::SceneParameterObject;
+use bevy_akashic_engine::prelude::*;
+use bevy_akashic_engine::resource::game::GameInfo;
 use bevy_akashic_engine::resource::join::{JoinedAsListener, JoinedAsStreamer};
-use bevy_akashic_engine::run_criteria::{joined_as_listener, joined_as_streamer};
-
+use bevy_akashic_engine::run_criteria::{add_joined_as_listener, add_joined_as_streamer};
 
 #[derive(Component, Debug)]
 struct Player;
@@ -59,7 +59,6 @@ impl PluginGroup for AkashicDefaultPlugin {
     }
 }
 
-
 #[derive(Serialize, Deserialize, Event, Default, Debug)]
 pub struct TestMessageEvent {
     message: String,
@@ -75,28 +74,32 @@ fn main() {
     App::new()
         .add_plugins(FrameCountPlugin)
         .add_plugins(AkashicPlugin::new(scene_param).add_message_event::<TestMessageEvent>())
-        .add_systems(OnEnter(SceneLoadState::Startup), (
-            setup,
-            setup_streamer.run_if(joined_as_streamer()),
-            setup_listener.run_if(joined_as_listener())
-        ))
-        .add_systems(Update, (
-            player_hovering_system,
-            read_scene_point_down_event,
-            shot_move_system,
-            point_up_event_system,
-            read_raise_event_system
-        ).run_if(joined_as_streamer().and_then(in_state(SceneLoadState::Startup))))
-
+        .add_systems(OnEnter(SceneLoadState::Startup), (setup,))
+        .add_systems(
+            Update,
+            (
+                setup_streamer.run_if(add_joined_as_streamer()),
+                setup_listener.run_if(add_joined_as_listener()),
+            ),
+        )
+        .add_systems(
+            Update,
+            (
+                player_hovering_system,
+                read_scene_point_down_event,
+                shot_move_system,
+                point_up_event_system,
+                read_raise_event_system,
+            )
+                .run_if(in_state(SceneLoadState::Startup)),
+        )
         .run();
 }
 
-fn setup(
-    mut commands: Commands,
-    server: Res<AkashicAssetServer>,
-    game_size: Res<GameInfo>,
-) {
-    let player_image_asset = server.image_by_id("player").into_src();
+fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res<GameInfo>) {
+    let player_image_asset = server
+        .image_by_id("player")
+        .into_src();
     let param = SpriteParameterObjectBuilder::new(player_image_asset)
         .local(true)
         .touchable(true)
@@ -106,40 +109,38 @@ fn setup(
     player.set_x((game_size.width() - player.width()) / 2.);
     player.set_y((game_size.height() - player.height()) / 2.);
     player.set_angle(45.);
-    commands.append(player).insert(Player);
+    commands
+        .append(player)
+        .insert(Player);
 }
 
-fn setup_streamer(
-    mut commands: Commands,
-    joined: Res<JoinedAsStreamer>
-) {
-    let font = DynamicFont::new(DynamicFontParameterObjectBuilder::new(FontFamily::new("sans-serif"), 30.)
-        .font_color("blue")
-        .build()
+fn setup_streamer(mut commands: Commands, joined: Res<JoinedAsStreamer>) {
+    let font = DynamicFont::new(
+        DynamicFontParameterObjectBuilder::new(FontFamily::new("sans-serif"), 30.)
+            .font_color("blue")
+            .build(),
     );
 
-    let text = format!("あなたは放送主です。 ID = {}",joined.player_id_as_str());
-    commands.append(Label::new(LabelParameterObjectBuilder::new(text, font)
-        .local(true)
-        .build()
+    let text = format!("あなたは放送主です。 ID = {}", joined.player_id_as_str());
+    commands.append(Label::new(
+        LabelParameterObjectBuilder::new(text, font)
+            .local(true)
+            .build(),
     ));
 }
 
-
-
-fn setup_listener(
-    mut commands: Commands,
-    joined: Res<JoinedAsListener>
-){
-     let font = DynamicFont::new(DynamicFontParameterObjectBuilder::new(FontFamily::new("sans-serif"), 30.)
-        .font_color("blue")
-        .build()
+fn setup_listener(mut commands: Commands, joined: Res<JoinedAsListener>) {
+    let font = DynamicFont::new(
+        DynamicFontParameterObjectBuilder::new(FontFamily::new("sans-serif"), 30.)
+            .font_color("blue")
+            .build(),
     );
 
-    let text = format!("あなたは参加者です。 ID = {}",joined.player_id_as_str());
-    commands.append(Label::new(LabelParameterObjectBuilder::new(text, font)
-        .local(true)
-        .build()
+    let text = format!("あなたは参加者です。 ID = {}", joined.player_id_as_str());
+    commands.append(Label::new(
+        LabelParameterObjectBuilder::new(text, font)
+            .local(true)
+            .build(),
     ));
 }
 
@@ -149,40 +150,44 @@ fn player_hovering_system(
     frames: Res<FrameCount>,
 ) {
     let (mut transform, size) = player.single_mut();
-    transform.translation.y = (game_info.height() - size.height()) / 2. + ((frames.0 as f32) % (game_info.fps() * 10.) / 4.).sin() * 10.;
+    transform.translation.y = (game_info.height() - size.height()) / 2.
+        + ((frames.0 as f32) % (game_info.fps() * 10.) / 4.).sin() * 10.;
 }
-
 
 fn read_scene_point_down_event(
     mut commands: Commands,
     mut ew: EventWriter<AkashicRaiseEvent<TestMessageEvent>>,
-    mut er: EventReader<PointDown>,
+    mut er: EventReader<ScenePointDown>,
     server: Res<AkashicAssetServer>,
     player: Query<(&Transform, &AkashicEntitySize), With<Player>>,
 ) {
     for _ in er.iter() {
         ew.send(AkashicRaiseEvent {
             data: TestMessageEvent {
-                message: "TEST HELLO !!".to_string()
+                message: "TEST HELLO !!".to_string(),
             },
             ..default()
         });
 
         let (player_transform, player_size) = player.single();
         let player_pos = player_transform.translation;
-        let shot_image_asset = server.image_by_id("shot").into_src();
+        let shot_image_asset = server
+            .image_by_id("shot")
+            .into_src();
         // 弾の初期座標を、プレイヤーの少し右に設定します
-        let shot = Sprite::new(SpriteParameterObjectBuilder::new(shot_image_asset)
-            .x(player_pos.x + player_size.width())
-            .y(player_pos.y)
-            .build()
+        let shot = Sprite::new(
+            SpriteParameterObjectBuilder::new(shot_image_asset)
+                .x(player_pos.x + player_size.width())
+                .y(player_pos.y)
+                .build(),
         );
 
-        commands.append(shot).insert(Shot);
+        commands
+            .append(shot)
+            .insert(Shot);
         commands.play_audio(server.audio_by_id("se"));
     }
 }
-
 
 fn shot_move_system(
     mut commands: Commands,
@@ -191,26 +196,22 @@ fn shot_move_system(
 ) {
     for (entity, mut shot) in shots.iter_mut() {
         if game_info.width() < shot.translation.x {
-            commands.entity(entity).despawn();
+            commands
+                .entity(entity)
+                .despawn();
         }
 
         shot.translation.x += 10.;
     }
 }
 
-
-fn point_up_event_system(
-    mut er: EventReader<bevy_akashic_engine::event::point_up::PointUpEvent>
-) {
+fn point_up_event_system(mut er: EventReader<bevy_akashic_engine::event::point_up::PointUpEvent>) {
     for e in er.iter() {
         console_log!("{e:?}");
     }
 }
 
-
-fn read_raise_event_system(
-    mut er: EventReader<TestMessageEvent>
-) {
+fn read_raise_event_system(mut er: EventReader<TestMessageEvent>) {
     for e in er.iter() {
         console_log!("{e:?}");
     }

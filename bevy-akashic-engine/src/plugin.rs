@@ -10,6 +10,7 @@ use crate::asset::AkashicAssetServer;
 use crate::resource::game::GameInfo;
 use crate::event::message::{add_akashic_message_event, RegisterAkashicMessageFn};
 use crate::plugin::event::{PointDownPlugin, PointMovePlugin, PointUpPlugin};
+use crate::plugin::join::AkashicJoinEventPlugin;
 use crate::plugin::render::AkashicRenderPlugin;
 use crate::plugin::scheduler::AkashicSchedulerPlugin;
 use crate::plugin::transform::AkashicTransformPlugin;
@@ -19,6 +20,7 @@ mod scheduler;
 pub mod render;
 pub mod transform;
 pub mod event;
+pub mod join;
 
 
 #[derive(Eq, PartialEq, Hash, States, Default, Debug, Clone)]
@@ -70,7 +72,8 @@ impl Plugin for AkashicPlugin {
                 PointMovePlugin,
                 AkashicRenderPlugin,
                 AkashicSchedulerPlugin(self.scene_param.clone(), self.message_event_registers.clone()),
-                AkashicTransformPlugin
+                AkashicTransformPlugin,
+                AkashicJoinEventPlugin
             ));
     }
 }

@@ -6,7 +6,7 @@ const wasmCode = js
     .toString()
     .replace("let script_src;", "let script_src = \"\";")
     .replace("input = fetch(input);", "input = base64ToArrayBuffer(wasmBase64);")
-    .replace("wasm_bindgen = Object.assign(__wbg_init, { initSync }, __exports);", "Object.assign(__wbg_init, { initSync }, __exports)();")
+    .replace("Object.assign(__wbg_init, { initSync }, __exports);", "Object.assign(__wbg_init, { initSync }, __exports)();")
 
 fs.writeFileSync(mainJsPath, `
     const wasmBase64 = \"${Buffer.from(fs.readFileSync("out/bevy-akashic_bg.wasm")).toString("base64")}\"
@@ -21,8 +21,12 @@ fs.writeFileSync(mainJsPath, `
     }
     
     // main function
-    module.exports = () => {
-    
+    module.exports = () => {  
+        const scene = new g.Scene({
+          game: g.game
+        }) 
+        g.game.pushScene(scene)
+        
         g.Sprite.prototype.updateAll = function(x, y, angle, width, height){
             this.x = x;
             this.y = y;
@@ -40,7 +44,6 @@ fs.writeFileSync(mainJsPath, `
        }
     }
     
-    ${wasmCode}
-       
+     ${wasmCode}
     }
 `)

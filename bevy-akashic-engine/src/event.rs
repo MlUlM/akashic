@@ -7,6 +7,7 @@ pub mod point_up;
 pub mod point_move;
 pub(crate) mod event_inner;
 pub mod message;
+pub mod join;
 
 
 #[derive(Resource)]

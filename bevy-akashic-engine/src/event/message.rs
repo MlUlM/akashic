@@ -12,7 +12,7 @@ use akashic_rs::player::Player;
 use akashic_rs::prelude::{MessageHandler, OnLoadHandler};
 use akashic_rs::scene::Scene;
 use crate::event::AkashicEventQueue;
-use crate::plugin::event::read_event_system;
+use crate::plugin::event::read_akashic_event_queue_system;
 
 
 #[derive(Event, Debug, Default)]
@@ -41,7 +41,7 @@ pub(crate) fn add_akashic_message_event<E>() -> RegisterAkashicMessageFn
         app.add_event::<AkashicRaiseEvent<E>>();
         app.add_systems(Update, (
             raise_event_system::<E>,
-            read_event_system::<E>
+            read_akashic_event_queue_system::<E>
         ));
 
         scene.on_message().add(move |event| {

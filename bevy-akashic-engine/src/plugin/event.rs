@@ -18,8 +18,8 @@ macro_rules! trigger_plugin {
                     .add_event::<$event>()
                     $(.add_event::<$scene_event>())?
                     .add_systems(bevy::prelude::Update, (
-                        read_event_system::<$event>,
-                        $(read_event_system::<$scene_event>)?
+                        read_akashic_event_queue_system::<$event>,
+                        $(read_akashic_event_queue_system::<$scene_event>)?
                     ));
             }
         }
@@ -31,7 +31,7 @@ trigger_plugin!(PointDownPlugin, PointDown, ScenePointDown);
 trigger_plugin!(PointUpPlugin, PointUpEvent, ScenePointUpEvent);
 trigger_plugin!(PointMovePlugin, PointMoveEvent, ScenePointMoveEvent);
 
-pub(crate) fn read_event_system<T: Event>(
+pub(crate) fn read_akashic_event_queue_system<T: Event>(
     mut ew: EventWriter<T>,
     queue: Res<AkashicEventQueue<T>>,
 ) {
