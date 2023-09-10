@@ -14,6 +14,7 @@ pub mod on_update;
 pub mod point_up;
 pub mod point_move;
 pub mod message;
+pub mod join;
 
 
 pub mod prelude {

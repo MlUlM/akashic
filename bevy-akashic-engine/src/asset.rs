@@ -7,8 +7,6 @@ use akashic_rs::prelude::ImageAsset;
 
 use crate::SharedObject;
 
-pub mod game;
-
 #[derive(Resource, Debug)]
 pub struct AkashicAssetServer {
     images: HashMap<String, SharedObject<ImageAsset>>,

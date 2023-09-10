@@ -7,7 +7,7 @@ use serde::Serialize;
 use akashic_rs::prelude::SceneParameterObject;
 
 use crate::asset::AkashicAssetServer;
-use crate::asset::game::GameInfo;
+use crate::resource::game::GameInfo;
 use crate::event::message::{add_akashic_message_event, RegisterAkashicMessageFn};
 use crate::plugin::event::{PointDownPlugin, PointMovePlugin, PointUpPlugin};
 use crate::plugin::render::AkashicRenderPlugin;

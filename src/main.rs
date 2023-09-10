@@ -1,3 +1,4 @@
+use std::ops::Deref;
 use std::panic;
 
 use bevy::app::{App, PluginGroup, PluginGroupBuilder, Update};
@@ -5,7 +6,7 @@ use bevy::core::{FrameCount, FrameCountPlugin, TypeRegistrationPlugin};
 use bevy::diagnostic::DiagnosticsPlugin;
 use bevy::hierarchy::HierarchyPlugin;
 use bevy::log::LogPlugin;
-use bevy::prelude::{Commands, Component, Event, EventReader, EventWriter, in_state, IntoSystemConfigs, OnEnter, Query, Res, Transform, TransformPlugin, With};
+use bevy::prelude::{Commands, Condition, Component, Event, EventReader, EventWriter, in_state, IntoSystemConfigs, OnEnter, Query, Res, Resource, Transform, TransformPlugin, With};
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
 use bevy::time::TimePlugin;
 use bevy::utils::default;
@@ -17,10 +18,12 @@ use bevy_akashic_engine::event::message::{AkashicRaiseEvent};
 use bevy_akashic_engine::event::point_down::PointDown;
 use bevy_akashic_engine::prelude::*;
 use bevy_akashic_engine::prelude::entity_size::AkashicEntitySize;
-use bevy_akashic_engine::prelude::game::GameInfo;
+use bevy_akashic_engine::resource::game::GameInfo;
 use bevy_akashic_engine::prelude::point_down::ScenePointDown;
 use bevy_akashic_engine::prelude::SceneParameterObject;
 use bevy_akashic_engine::prelude::src::IntoSrc;
+use bevy_akashic_engine::resource::join::{JoinedAsListener, JoinedAsStreamer};
+use bevy_akashic_engine::run_criteria::{joined_as_listener, joined_as_streamer};
 
 
 #[derive(Component, Debug)]
@@ -68,21 +71,23 @@ fn main() {
     let scene_param = SceneParameterObject::builder(GAME.clone())
         .asset_ids(vec!["player", "shot", "se"])
         .build();
+
     App::new()
         .add_plugins(FrameCountPlugin)
-
         .add_plugins(AkashicPlugin::new(scene_param).add_message_event::<TestMessageEvent>())
         .add_systems(OnEnter(SceneLoadState::Startup), (
             setup,
-            setup_text
+            setup_streamer.run_if(joined_as_streamer()),
+            setup_listener.run_if(joined_as_listener())
         ))
         .add_systems(Update, (
+            player_hovering_system,
             read_scene_point_down_event,
             shot_move_system,
             point_up_event_system,
-            player_hovering_system,
             read_raise_event_system
-        ).run_if(in_state(SceneLoadState::Startup)))
+        ).run_if(joined_as_streamer().and_then(in_state(SceneLoadState::Startup))))
+
         .run();
 }
 
@@ -98,21 +103,44 @@ fn setup(
         .build();
 
     let player = Sprite::new(param);
-    player.set_x((game_size.width - player.width()) / 2.);
-    player.set_y((game_size.height - player.height()) / 2.);
+    player.set_x((game_size.width() - player.width()) / 2.);
+    player.set_y((game_size.height() - player.height()) / 2.);
     player.set_angle(45.);
     commands.append(player).insert(Player);
 }
 
-fn setup_text(
+fn setup_streamer(
     mut commands: Commands,
+    joined: Res<JoinedAsStreamer>
 ) {
     let font = DynamicFont::new(DynamicFontParameterObjectBuilder::new(FontFamily::new("sans-serif"), 30.)
         .font_color("blue")
         .build()
     );
 
-    commands.append(Label::new(LabelParameterObjectBuilder::new("Hello World", font).build()));
+    let text = format!("あなたは放送主です。 ID = {}",joined.player_id_as_str());
+    commands.append(Label::new(LabelParameterObjectBuilder::new(text, font)
+        .local(true)
+        .build()
+    ));
+}
+
+
+
+fn setup_listener(
+    mut commands: Commands,
+    joined: Res<JoinedAsListener>
+){
+     let font = DynamicFont::new(DynamicFontParameterObjectBuilder::new(FontFamily::new("sans-serif"), 30.)
+        .font_color("blue")
+        .build()
+    );
+
+    let text = format!("あなたは参加者です。 ID = {}",joined.player_id_as_str());
+    commands.append(Label::new(LabelParameterObjectBuilder::new(text, font)
+        .local(true)
+        .build()
+    ));
 }
 
 fn player_hovering_system(
@@ -121,7 +149,7 @@ fn player_hovering_system(
     frames: Res<FrameCount>,
 ) {
     let (mut transform, size) = player.single_mut();
-    transform.translation.y = (game_info.height - size.height()) / 2. + ((frames.0 as f32) % (game_info.fps * 10.) / 4.).sin() * 10.;
+    transform.translation.y = (game_info.height() - size.height()) / 2. + ((frames.0 as f32) % (game_info.fps() * 10.) / 4.).sin() * 10.;
 }
 
 
@@ -162,7 +190,7 @@ fn shot_move_system(
     game_info: Res<GameInfo>,
 ) {
     for (entity, mut shot) in shots.iter_mut() {
-        if game_info.width < shot.translation.x {
+        if game_info.width() < shot.translation.x {
             commands.entity(entity).despawn();
         }
 

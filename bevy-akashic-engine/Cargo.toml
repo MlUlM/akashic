@@ -13,3 +13,4 @@ wasm-bindgen = { workspace = true }
 auto-delegate = { workspace = true }
 serde-wasm-bindgen = { workspace = true }
 serde = { workspace = true }
+once_cell = { workspace = true }

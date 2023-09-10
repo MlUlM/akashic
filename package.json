@@ -7,7 +7,7 @@
   "scripts": {
     "build": "node index.js",
     "sandbox": "akashic-sandbox akashic",
-    "serve": "akashic serve akashic"
+    "serve": "akashic serve akashic --target-service nicolive"
   },
   "dependencies": {
     "@types/node": "^20.5.7",

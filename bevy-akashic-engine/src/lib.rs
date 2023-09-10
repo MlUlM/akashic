@@ -1,4 +1,5 @@
 use std::sync::{Arc, Mutex, MutexGuard};
+use bevy::prelude::Deref;
 use wasm_bindgen::JsValue;
 use akashic_rs::game::GAME;
 use akashic_rs::prelude::{Scene, SceneParameterObject};
@@ -9,7 +10,9 @@ mod plugin;
 pub mod event;
 mod component;
 mod asset;
-mod extensions;
+pub mod extensions;
+pub mod resource;
+pub mod run_criteria;
 
 pub mod akashic {
     pub use akashic_rs::*;
@@ -26,7 +29,7 @@ pub mod prelude {
 }
 
 
-#[derive(Clone, Debug)]
+#[derive(Debug, Default, Deref)]
 pub(crate) struct SharedObject<T>(Arc<Mutex<T>>);
 
 
@@ -46,6 +49,13 @@ impl<T> SharedObject<T> {
 unsafe impl<T> Send for SharedObject<T> {}
 
 unsafe impl<T> Sync for SharedObject<T> {}
+
+impl<T> Clone for SharedObject<T>{
+    #[inline(always)]
+    fn clone(&self) -> Self {
+        Self(Arc::clone(&self.0))
+    }
+}
 
 
 pub fn register_scene(param: SceneParameterObject) {

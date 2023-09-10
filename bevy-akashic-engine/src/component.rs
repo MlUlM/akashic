@@ -5,6 +5,7 @@ pub mod sprite;
 pub mod entity_size;
 pub(crate) mod previous_transform;
 pub mod label;
+pub mod player_id;
 
 pub mod prelude {
     pub use crate::component::AkashicEntityId;

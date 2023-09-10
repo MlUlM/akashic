@@ -148,6 +148,7 @@ dependencies = [
  "bevy",
  "bevy-akashic-engine",
  "console_error_panic_hook",
+ "once_cell",
  "serde",
 ]
 
@@ -158,6 +159,7 @@ dependencies = [
  "akashic-rs",
  "auto-delegate",
  "bevy",
+ "once_cell",
  "serde",
  "serde-wasm-bindgen",
  "wasm-bindgen",

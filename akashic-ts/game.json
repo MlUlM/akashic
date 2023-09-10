@@ -30,7 +30,12 @@
 	},
 	"moduleMainScripts": {},
 	"environment": {
-		"sandbox-runtime": "3"
+		"sandbox-runtime": "3",
+		"niconico": {
+			"supportedModes": [
+				"ranking"
+			]
+		}
 	},
 	"globalScripts": []
 }

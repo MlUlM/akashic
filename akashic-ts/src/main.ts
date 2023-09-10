@@ -1,9 +1,14 @@
+import {JoinEvent} from "@akashic/akashic-engine";
+
 function main(param: g.GameMainParameterObject): void {
     const scene = new g.Scene({
         game: g.game,
         // このシーンで利用するアセットのIDを列挙し、シーンに通知します
         assetIds: ["player", "shot", "se"]
     });
+    g.game.onJoin.add((player) => {
+        console.log(player.player.id)
+    })
 
     scene.onLoad.add(() => {
         // ここからゲーム内容を記述します
@@ -12,14 +17,13 @@ function main(param: g.GameMainParameterObject): void {
         const playerImageAsset = scene.asset.getImageById("player");
         const shotImageAsset = scene.asset.getImageById("shot");
         const seAudioAsset = scene.asset.getAudioById("se");
-        console.log(seAudioAsset.id)
+ 
         seAudioAsset.play();
-        const p = {
-            scene: scene,
-            src: playerImageAsset,
-            width: playerImageAsset.width,
-            height: playerImageAsset.height
-        }
+        g.game.onJoin.add((event: JoinEvent) => {
+            event.player.id
+            console.log(event.eventFlags)
+        })
+
         // プレイヤーを生成します
         const player = new g.Sprite({
             scene: scene,
@@ -31,7 +35,6 @@ function main(param: g.GameMainParameterObject): void {
         // プレイヤーの初期座標を、画面の中心に設定します
         player.x = (g.game.width - player.width) / 2;
         player.y = (g.game.height - player.height) / 2;
-        player.angle = 45;
 
         player.onUpdate.add(() => {
             // 毎フレームでY座標を再計算し、プレイヤーの飛んでいる動きを表現します
@@ -53,16 +56,8 @@ function main(param: g.GameMainParameterObject): void {
                 width: shotImageAsset.width,
                 height: shotImageAsset.height
             });
-        
-            new g.BitmapFont({})
-            new g.Label({
-                scene,
-                text: "",
-                font: new g.DynamicFont({
-                    fontFamily: undefined, game: undefined, size: 0
 
-                }),
-            })
+
             // 弾の初期座標を、プレイヤーの少し右に設定します
             shot.x = player.x + player.width;
             shot.y = player.y;

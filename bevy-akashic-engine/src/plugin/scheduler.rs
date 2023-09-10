@@ -1,14 +1,16 @@
 use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::MutexGuard;
 
 use bevy::app::{App, Plugin, PreUpdate};
 use bevy::math::Vec2;
-use bevy::prelude::{Commands, in_state, IntoSystemConfigs, NextState, ResMut, World};
+use bevy::prelude::{Commands, Component, Deref, DerefMut, in_state, IntoSystemConfigs, NextState, Res, ResMut, Resource, World};
 use wasm_bindgen::JsValue;
 
 use akashic_rs::entity::E;
 use akashic_rs::prelude::{OnLoadHandler, PointDownCaptureHandler, UpdateHandler};
 use akashic_rs::prelude::GAME;
 use akashic_rs::prelude::Scene;
+use akashic_rs::trigger::join::JoinHandler;
 use akashic_rs::trigger::point_move::PointMoveCaptureHandler;
 use akashic_rs::trigger::point_up::PointUpCaptureHandler;
 use akashic_rs::trigger::PointEventBase;
@@ -17,13 +19,15 @@ use crate::asset::AkashicAssetServer;
 use crate::component::AkashicEntityId;
 use crate::event::AkashicEventQueue;
 use crate::event::message::RegisterAkashicMessageFn;
-
 use crate::event::point_down::{PointDown, ScenePointDown};
 use crate::event::point_move::PointMoveEvent;
 use crate::event::point_up::ScenePointUpEvent;
 use crate::extensions::AsVec3;
 use crate::plugin::{SceneLoadState, SharedSceneParameter};
+use crate::prelude::player_id::PlayerId;
 use crate::prelude::point_move::ScenePointMoveEvent;
+use crate::resource::join::{JoinedAsListener, JoinedAsStreamer, JoinStatus, JoinStatusResource};
+
 
 pub struct AkashicSchedulerPlugin(pub(crate) SharedSceneParameter, pub(crate) Vec<RegisterAkashicMessageFn>);
 
@@ -32,15 +36,17 @@ impl Plugin for AkashicSchedulerPlugin {
     fn build(&self, app: &mut App) {
         let param = self.0.clone();
         let fs = self.1.clone();
+        let join_status = JoinStatusResource::default();
 
         app
+            .insert_resource(join_status.clone())
             .add_systems(PreUpdate, (
                 init_asset_server
             ).run_if(in_state(SceneLoadState::Loaded)))
             .add_systems(
                 PreUpdate,
                 (
-                    load_scene_event
+                    loading_scene_system
                 ).run_if(in_state(SceneLoadState::Loading)))
             .set_runner(move |mut app| {
                 let scene = Scene::new(param.param());
@@ -48,6 +54,7 @@ impl Plugin for AkashicSchedulerPlugin {
                 on_point_down_capture(&scene, &mut app.world);
                 on_point_up_capture(&scene, &mut app.world);
                 on_point_move_capture(&scene, &mut app.world);
+                register_on_join(join_status);
 
                 for f in fs.iter() {
                     f(&mut app, &scene);
@@ -69,8 +76,22 @@ impl Plugin for AkashicSchedulerPlugin {
 
 static IS_LOADED: AtomicBool = AtomicBool::new(false);
 
-fn load_scene_event(mut state: ResMut<NextState<SceneLoadState>>) {
-    if IS_LOADED.load(Ordering::Relaxed) {
+fn loading_scene_system(
+    mut state: ResMut<NextState<SceneLoadState>>,
+    mut commands: Commands,
+    join_status: Res<JoinStatusResource>,
+) {
+    if IS_LOADED.load(Ordering::Relaxed) && join_status.lock().not_undefined() {
+        match join_status.lock().clone() {
+            JoinStatus::Streamer(player_id) => {
+                commands.insert_resource(JoinedAsStreamer(PlayerId(player_id)));
+            }
+            JoinStatus::Listener(player_id) => {
+                commands.insert_resource(JoinedAsListener(PlayerId(player_id)));
+            }
+            _ => {}
+        }
+
         state.set(SceneLoadState::Loaded);
     }
 }
@@ -145,4 +166,20 @@ fn on_point_move_capture(
     });
 }
 
-
+fn register_on_join(status: JoinStatusResource) {
+    GAME.on_join().add(move |join_event| {
+        let Some(streamer_id) = join_event.player().id() else { return; };
+        if let Some(self_id) = GAME.self_id() {
+            // JoinEventが発火されるのはニコ生の場合配信者だけらしいため、
+            // 自身のIDと同じ場合は配信者となる
+            if self_id == streamer_id {
+                *status.lock() = JoinStatus::Streamer(self_id);
+            } else {
+                *status.lock() = JoinStatus::Listener(self_id);
+            }
+        } else {
+            // 自身のIDが存在しない場合Node側
+            *status.lock() = JoinStatus::NodeServer;
+        }
+    });
+}

@@ -6,7 +6,7 @@ extern "C"{
     pub type Player;
 
     #[wasm_bindgen(js_namespace = g, method, getter)]
-    pub fn id(this: &Player) -> usize;
+    pub fn id(this: &Player) -> Option<String>;
 }
 
 
