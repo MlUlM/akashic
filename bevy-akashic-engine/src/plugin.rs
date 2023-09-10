@@ -15,13 +15,22 @@ use crate::plugin::render::AkashicRenderPlugin;
 use crate::plugin::scheduler::AkashicSchedulerPlugin;
 use crate::plugin::transform::AkashicTransformPlugin;
 
-mod scheduler;
-
+pub mod scheduler;
 pub mod render;
 pub mod transform;
 pub mod event;
 pub mod join;
 
+
+pub mod prelude{
+    pub use crate::plugin::{
+        AkashicPlugin,
+        join::AkashicJoinEventPlugin,
+        render::AkashicRenderPlugin,
+        transform::AkashicTransformPlugin,
+        scheduler::AkashicSchedulerPlugin
+    };
+}
 
 #[derive(Eq, PartialEq, Hash, States, Default, Debug, Clone)]
 pub enum SceneLoadState {

@@ -7,7 +7,7 @@
     "start": "akashic-sandbox .",
     "lint": "eslint \"script/**/*.js\" --fix",
     "test": "npm run lint",
-    "export-zip": "akashic export zip --nicolive"
+    "export-zip": "rimraf game.zip && akashic export zip --nicolive"
   },
   "keywords": [],
   "author": "",

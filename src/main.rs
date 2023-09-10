@@ -17,6 +17,7 @@ use bevy_akashic_engine::akashic::entity::label::{Label, LabelParameterObjectBui
 use bevy_akashic_engine::akashic::font::dynamic::{DynamicFont, DynamicFontParameterObjectBuilder};
 use bevy_akashic_engine::akashic::font::font_family::FontFamily;
 use bevy_akashic_engine::event::message::AkashicRaiseEvent;
+use bevy_akashic_engine::plugin::SceneLoadState;
 use bevy_akashic_engine::prelude::entity_size::AkashicEntitySize;
 use bevy_akashic_engine::prelude::point_down::ScenePointDown;
 use bevy_akashic_engine::prelude::src::IntoSrc;

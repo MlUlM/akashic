@@ -4,12 +4,12 @@ use wasm_bindgen::JsValue;
 use akashic_rs::game::GAME;
 use akashic_rs::prelude::{Scene, SceneParameterObject};
 
-mod command;
+pub mod command;
 
-mod plugin;
+pub mod plugin;
 pub mod event;
-mod component;
-mod asset;
+pub mod component;
+pub mod asset;
 pub mod extensions;
 pub mod resource;
 pub mod run_criteria;
@@ -20,9 +20,8 @@ pub mod akashic {
 
 pub mod prelude {
     pub use crate::command::prelude::*;
-    pub use crate::plugin::*;
+    pub use crate::plugin::prelude::*;
     pub use crate::asset::*;
-
     pub use akashic_rs::prelude::*;
     pub use crate::event::*;
     pub use crate::component::*;

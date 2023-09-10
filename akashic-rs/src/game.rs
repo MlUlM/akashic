@@ -1,18 +1,16 @@
 use std::fmt::Debug;
-use js_sys::JsString;
 use wasm_bindgen::JsValue;
 
-use wasm_bindgen::prelude::wasm_bindgen;
 use crate::event::join::JoinEvent;
 use crate::event::message::MessageEvent;
 use crate::prelude::{Scene, Trigger};
 use crate::trigger::join::JoinHandler;
 use crate::trigger::NativeTrigger;
+use wasm_bindgen::prelude::wasm_bindgen;
 
 pub mod prelude {
-    pub use crate::game::{GAME, Game};
+    pub use crate::game::{Game, GAME};
 }
-
 
 #[wasm_bindgen(js_namespace = g)]
 extern "C" {
@@ -38,10 +36,8 @@ extern "C" {
     #[wasm_bindgen(getter, method)]
     pub fn height(this: &Game) -> f32;
 
-
     #[wasm_bindgen(method, getter, js_name = selfId)]
     pub fn self_id(this: &Game) -> Option<String>;
-
 
     #[wasm_bindgen(method, js_name = pushScene)]
     pub fn push_scene(this: &Game, scene: Scene, options: JsValue) -> NativeTrigger;
@@ -52,11 +48,9 @@ extern "C" {
     #[wasm_bindgen(method, js_name = raiseEvent)]
     pub fn raise_event(this: &Game, event: MessageEvent);
 
-
     #[wasm_bindgen(method, getter, js_name = onJoin)]
     fn _on_join(this: &Game) -> NativeTrigger;
 }
-
 
 impl JoinHandler for Game {
     #[inline(always)]
@@ -65,16 +59,8 @@ impl JoinHandler for Game {
     }
 }
 
-
-
 impl Default for Game {
     fn default() -> Self {
         GAME.clone()
     }
 }
-
-
-
-
-
-

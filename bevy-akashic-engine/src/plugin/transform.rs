@@ -6,7 +6,9 @@ use bevy::prelude::{Added, Commands, Entity, Query, Res, Transform};
 use crate::component::entity_size::{AkashicEntitySize, PreviousAkashicEntitySize};
 use crate::component::previous_transform::PreviousTransform;
 use crate::prelude::AkashicEntityId;
-use crate::prelude::render::AkashicEntityMap;
+
+use super::render::AkashicEntityMap;
+
 
 pub struct AkashicTransformPlugin;
 

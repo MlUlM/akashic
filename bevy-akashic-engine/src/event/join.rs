@@ -1,6 +1,5 @@
 use bevy::prelude::Event;
 use akashic_rs::player::Player;
-use akashic_rs::trigger::PointEventBase;
 use crate::SharedObject;
 
 #[derive(Event, Debug)]

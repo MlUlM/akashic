@@ -30,6 +30,10 @@ impl SceneParameterObject {
     }
 }
 
+
+
+// TODO: SCENEのパラメータを定義しなおす
+#[allow(unused)]
 #[derive(Default)]
 pub struct SceneParameterObjectBuilder {
     game: Game,
