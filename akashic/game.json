@@ -27,9 +27,9 @@
       "path": "script/main.js",
       "global": true
     },
-    "crypto": {
-      "type": "script",
-      "path": "script/crypto.js",
+    "wasm": {
+      "type": "text",
+      "path": "script/bevy-akashic.wasm",
       "global": true
     }
   },
