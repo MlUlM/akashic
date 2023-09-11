@@ -34,6 +34,7 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
     let destroy = expand_entity_destroy(entity_name);
     let angle = expand_entity_angle(entity_name);
     let impl_into_entity = expand_impl_into_entity(entity_name);
+    let append = expand_append(entity_name);
 
     quote! {
         #modify
@@ -41,6 +42,7 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
         #size
         #destroy
         #angle
+        #append
         #impl_into_entity
 
          #[wasm_bindgen]
@@ -177,6 +179,27 @@ fn expand_entity_angle(
 
             #[wasm_bindgen(js_namespace = g, method, setter, js_name=angle)]
             pub fn set_angle(this: &#entity_name, angle: f32);
+        }
+    }
+}
+
+
+fn expand_append(
+    entity_name: &Ident
+) -> TokenStream2 {
+    quote! {
+        #[wasm_bindgen]
+        extern "C"{
+            #[wasm_bindgen(js_namespace = g, method)]
+            fn _append(this: &#entity_name, entity: crate::entity::Entity);
+        }
+
+
+        impl crate::entity::AppendEntity for #entity_name{
+            #[inline(always)]
+            fn append(&self, child: impl Into<crate::entity::Entity>){
+                self._append(child.into());
+            }
         }
     }
 }

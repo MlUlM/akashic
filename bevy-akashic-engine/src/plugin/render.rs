@@ -32,6 +32,14 @@ impl Plugin for AkashicRenderPlugin {
 pub(crate) struct AkashicEntityMap(pub(crate) HashMap<Entity, akashic_rs::entity::Entity>);
 
 
+impl AkashicEntityMap {
+    #[inline(always)]
+    pub fn get(&self, entity: &Entity) -> Option<&akashic_rs::entity::Entity> {
+        self.0.get(entity)
+    }
+}
+
+
 unsafe impl Send for AkashicEntityMap{}
 unsafe impl Sync for AkashicEntityMap{}
 

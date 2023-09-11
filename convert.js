@@ -34,16 +34,14 @@ fs.writeFileSync(mainJsPath, `
             this.width = width;
             this.height = height;
             this.modified();
-            // g.game.modified(true);
         }
 
-    if (typeof window == 'undefined') {
-        globalThis.crypto = {
-            getRandomValues: (args) => new Uint8Array(args.map(_ => Math.floor(g.game.random.generate() * 255)))
-                
-       }
-    }
-    
-     ${wasmCode}
+        if (typeof window == 'undefined') {
+            globalThis.crypto = {
+                getRandomValues: (args) => new Uint8Array(args.map(_ => Math.floor(g.game.random.generate() * 255)))      
+            }
+        }
+         
+        ${wasmCode}
     }
 `)

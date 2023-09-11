@@ -50,3 +50,8 @@ pub trait EntityDestroy{
 
     fn destroy_with_surface(&self);
 }
+
+
+pub trait AppendEntity{
+    fn append(&self, child: impl Into<Entity>);
+}

@@ -5,12 +5,12 @@ use akashic_rs::prelude::AudioAsset;
 use crate::command::audio::SharedAudioAsset;
 use crate::SharedObject;
 
-pub trait AudioPlay{
+pub trait PlayAudio {
     fn play_audio(&mut self, audio_asset: AudioAsset);
 }
 
 
-impl<'w, 's> AudioPlay for Commands<'w, 's>{
+impl<'w, 's> PlayAudio for Commands<'w, 's>{
     fn play_audio(&mut self, audio_asset: AudioAsset) {
         self.add(PlayAudioCommand(SharedObject::new(audio_asset)))
     }

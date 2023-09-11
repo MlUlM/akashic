@@ -15,11 +15,13 @@ impl Plugin for AkashicJoinEventPlugin {
     fn build(&self, app: &mut App) {
         let join_event_queue = AkashicEventQueue::<JoinEvent>::default();
 
-        app.add_event::<JoinEvent>()
+        app
+            .add_event::<JoinEvent>()
             .insert_resource(join_event_queue.clone())
             .add_systems(Update, read_join_event_queue_system);
 
-        GAME.on_join()
+        GAME
+            .on_join()
             .add(move |event| {
                 join_event_queue.push(JoinEvent::new(event));
             });

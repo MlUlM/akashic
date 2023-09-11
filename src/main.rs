@@ -1,16 +1,12 @@
 use std::panic;
 
-use bevy::app::{App, PluginGroup, PluginGroupBuilder, Update};
-use bevy::core::{FrameCount, FrameCountPlugin, TypeRegistrationPlugin};
-use bevy::diagnostic::DiagnosticsPlugin;
-use bevy::hierarchy::HierarchyPlugin;
-use bevy::log::LogPlugin;
+use bevy::app::{App, Update};
+use bevy::core::{FrameCount, FrameCountPlugin};
 use bevy::prelude::{
-    in_state, Commands, Component, Event, EventReader, EventWriter, IntoSystemConfigs, OnEnter,
-    Query, Res, Transform, TransformPlugin, With,
+    Commands, Component, Event, EventReader, EventWriter, in_state, IntoSystemConfigs, OnEnter,
+    Query, Res, Transform, With,
 };
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
-use bevy::time::TimePlugin;
 use bevy::utils::default;
 
 use bevy_akashic_engine::akashic::entity::label::{Label, LabelParameterObjectBuilder};
@@ -18,11 +14,11 @@ use bevy_akashic_engine::akashic::font::dynamic::{DynamicFont, DynamicFontParame
 use bevy_akashic_engine::akashic::font::font_family::FontFamily;
 use bevy_akashic_engine::event::message::AkashicRaiseEvent;
 use bevy_akashic_engine::plugin::SceneLoadState;
+use bevy_akashic_engine::prelude::*;
 use bevy_akashic_engine::prelude::entity_size::AkashicEntitySize;
 use bevy_akashic_engine::prelude::point_down::ScenePointDown;
-use bevy_akashic_engine::prelude::src::IntoSrc;
 use bevy_akashic_engine::prelude::SceneParameterObject;
-use bevy_akashic_engine::prelude::*;
+use bevy_akashic_engine::prelude::src::IntoSrc;
 use bevy_akashic_engine::resource::game::GameInfo;
 use bevy_akashic_engine::resource::join::{JoinedAsListener, JoinedAsStreamer};
 use bevy_akashic_engine::run_criteria::{add_joined_as_listener, add_joined_as_streamer};
@@ -33,32 +29,6 @@ struct Player;
 #[derive(Component, Debug)]
 struct Shot;
 
-pub struct AkashicDefaultPlugin;
-
-impl PluginGroup for AkashicDefaultPlugin {
-    fn build(self) -> PluginGroupBuilder {
-        let group = PluginGroupBuilder::start::<Self>();
-        group
-            .add(LogPlugin::default())
-            .add(TypeRegistrationPlugin)
-            .add(FrameCountPlugin)
-            .add(TimePlugin)
-            .add(TransformPlugin)
-            .add(HierarchyPlugin)
-            .add(DiagnosticsPlugin)
-        //   .add(AccessibilityPlugin)
-        // .add(InputPlugin)
-        //        .add(TaskPoolPlugin::default())
-        //     .add(AssetPlugin::default())
-        // .add(WindowPlugin::default())
-        // .add(CorePipelinePlugin)
-        // .add(SpritePlugin)
-        // .add(RenderPlugin::default())
-        // .add(ImagePlugin::default())
-        // .add(GizmoPlugin)
-        // .add(PbrPlugin::default())
-    }
-}
 
 #[derive(Serialize, Deserialize, Event, Default, Debug)]
 pub struct TestMessageEvent {
@@ -75,7 +45,7 @@ fn main() {
     App::new()
         .add_plugins(FrameCountPlugin)
         .add_plugins(AkashicPlugin::new(scene_param).add_message_event::<TestMessageEvent>())
-        .add_systems(OnEnter(SceneLoadState::Startup), (setup,))
+        .add_systems(OnEnter(SceneLoadState::Startup), (setup, ))
         .add_systems(
             Update,
             (
@@ -138,10 +108,9 @@ fn setup_listener(mut commands: Commands, joined: Res<JoinedAsListener>) {
     );
 
     let text = format!("あなたは参加者です。 ID = {}", joined.player_id_as_str());
-    commands.append(Label::new(
-        LabelParameterObjectBuilder::new(text, font)
-            .local(true)
-            .build(),
+    commands.append(Label::new(LabelParameterObjectBuilder::new(text, font)
+                                   .local(true)
+                                   .build(),
     ));
 }
 
