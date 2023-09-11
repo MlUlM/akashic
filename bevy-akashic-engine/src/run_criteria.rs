@@ -9,7 +9,7 @@ pub fn joined_as_streamer() -> impl FnMut(Option<Res<JoinedAsStreamer>>) -> bool
 
 
 #[inline]
-pub fn add_joined_as_streamer() -> impl FnMut(Option<Res<JoinedAsStreamer>>) -> bool + Clone + Sized {
+pub fn added_joined_as_streamer() -> impl FnMut(Option<Res<JoinedAsStreamer>>) -> bool + Clone + Sized {
     resource_added::<JoinedAsStreamer>()
 }
 
@@ -20,6 +20,6 @@ pub fn joined_as_listener() -> impl FnMut(Option<Res<JoinedAsListener>>) -> bool
 }
 
 #[inline]
-pub fn add_joined_as_listener() -> impl FnMut(Option<Res<JoinedAsListener>>) -> bool + Clone + Sized {
+pub fn added_joined_as_listener() -> impl FnMut(Option<Res<JoinedAsListener>>) -> bool + Clone + Sized {
     resource_added::<JoinedAsListener>()
 }

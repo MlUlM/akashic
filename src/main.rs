@@ -2,10 +2,8 @@ use std::panic;
 
 use bevy::app::{App, Update};
 use bevy::core::{FrameCount, FrameCountPlugin};
-use bevy::prelude::{
-    Commands, Component, Event, EventReader, EventWriter, in_state, IntoSystemConfigs, OnEnter,
-    Query, Res, Transform, With,
-};
+use bevy::DefaultPlugins;
+use bevy::prelude::{Commands, Component, Event, EventReader, EventWriter, in_state, IntoSystemConfigs, OnEnter, Query, Res, States, Transform, With};
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
 use bevy::utils::default;
 
@@ -13,7 +11,7 @@ use bevy_akashic_engine::akashic::entity::label::{Label, LabelParameterObjectBui
 use bevy_akashic_engine::akashic::font::dynamic::{DynamicFont, DynamicFontParameterObjectBuilder};
 use bevy_akashic_engine::akashic::font::font_family::FontFamily;
 use bevy_akashic_engine::event::message::AkashicRaiseEvent;
-use bevy_akashic_engine::plugin::SceneLoadState;
+use bevy_akashic_engine::plugin::asset::AkashicAssetServer;
 use bevy_akashic_engine::prelude::*;
 use bevy_akashic_engine::prelude::entity_size::AkashicEntitySize;
 use bevy_akashic_engine::prelude::point_down::ScenePointDown;
@@ -21,7 +19,7 @@ use bevy_akashic_engine::prelude::SceneParameterObject;
 use bevy_akashic_engine::prelude::src::IntoSrc;
 use bevy_akashic_engine::resource::game::GameInfo;
 use bevy_akashic_engine::resource::join::{JoinedAsListener, JoinedAsStreamer};
-use bevy_akashic_engine::run_criteria::{add_joined_as_listener, add_joined_as_streamer};
+use bevy_akashic_engine::run_criteria::{added_joined_as_listener, added_joined_as_streamer};
 
 #[derive(Component, Debug)]
 struct Player;
@@ -35,6 +33,14 @@ pub struct TestMessageEvent {
     message: String,
 }
 
+#[derive(States, Copy, Clone, Default, Debug, Hash, Eq, PartialEq)]
+enum SceneLoadState{
+    #[default]
+    Loading,
+    Startup
+}
+
+
 fn main() {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
 
@@ -43,14 +49,19 @@ fn main() {
         .build();
 
     App::new()
-        .add_plugins(FrameCountPlugin)
-        .add_plugins(AkashicPlugin::new(scene_param).add_message_event::<TestMessageEvent>())
-        .add_systems(OnEnter(SceneLoadState::Startup), (setup, ))
+        .add_state::<SceneLoadState>()
+        .add_plugins(DefaultPlugins)
+        .add_plugins(AkashicMinimumPlugins)
+        .add_plugins(AkashicSchedulerPlugin::new(SceneLoadState::Loading, SceneLoadState::Startup)
+            .with_scene_param(scene_param)
+            .with_message_event::<TestMessageEvent>()
+        )
+        .add_systems(OnEnter(SceneLoadState::Startup), setup)
         .add_systems(
             Update,
             (
-                setup_streamer.run_if(add_joined_as_streamer()),
-                setup_listener.run_if(add_joined_as_listener()),
+                setup_streamer.run_if(added_joined_as_streamer()),
+                setup_listener.run_if(added_joined_as_listener()),
             ),
         )
         .add_systems(
@@ -68,6 +79,7 @@ fn main() {
 }
 
 fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res<GameInfo>) {
+
     let player_image_asset = server
         .image_by_id("player")
         .into_src();
@@ -110,7 +122,7 @@ fn setup_listener(mut commands: Commands, joined: Res<JoinedAsListener>) {
     let text = format!("あなたは参加者です。 ID = {}", joined.player_id_as_str());
     commands.append(Label::new(LabelParameterObjectBuilder::new(text, font)
                                    .local(true)
-                                   .build(),
+                                   .build()
     ));
 }
 
@@ -120,8 +132,7 @@ fn player_hovering_system(
     frames: Res<FrameCount>,
 ) {
     let (mut transform, size) = player.single_mut();
-    transform.translation.y = (game_info.height() - size.height()) / 2.
-        + ((frames.0 as f32) % (game_info.fps() * 10.) / 4.).sin() * 10.;
+    transform.translation.y = (game_info.height() - size.height()) / 2. + ((frames.0 as f32) % (game_info.fps() * 10.) / 4.).sin() * 10.;
 }
 
 fn read_scene_point_down_event(

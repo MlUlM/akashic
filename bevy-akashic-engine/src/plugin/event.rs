@@ -17,7 +17,7 @@ macro_rules! trigger_plugin {
                     $(.init_resource::<AkashicEventQueue<$scene_event>>())?
                     .add_event::<$event>()
                     $(.add_event::<$scene_event>())?
-                    .add_systems(bevy::prelude::Update, (
+                    .add_systems(bevy::prelude::PreUpdate, (
                         read_akashic_event_queue_system::<$event>,
                         $(read_akashic_event_queue_system::<$scene_event>)?
                     ));

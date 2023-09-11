@@ -1,18 +1,15 @@
 use std::sync::{Arc, RwLock};
 
-use bevy::app::{App, Plugin};
-use bevy::prelude::{Event, States};
-use serde::de::DeserializeOwned;
-use serde::Serialize;
+use bevy::app::{Plugin, PluginGroup, PluginGroupBuilder};
+
 use akashic_rs::prelude::SceneParameterObject;
 
-use crate::asset::AkashicAssetServer;
-use crate::resource::game::GameInfo;
-use crate::event::message::{add_akashic_message_event, RegisterAkashicMessageFn};
+use crate::plugin::asset::AkashicAssetPlugin;
 use crate::plugin::event::{PointDownPlugin, PointMovePlugin, PointUpPlugin};
+use crate::plugin::game_info::GameInfoPlugin;
 use crate::plugin::join::AkashicJoinEventPlugin;
+use crate::plugin::player_id::PlayerIdPlugin;
 use crate::plugin::render::AkashicRenderPlugin;
-use crate::plugin::scheduler::AkashicSchedulerPlugin;
 use crate::plugin::transform::AkashicTransformPlugin;
 
 pub mod scheduler;
@@ -20,70 +17,38 @@ pub mod render;
 pub mod transform;
 pub mod event;
 pub mod join;
+pub mod player_id;
+pub mod game_info;
+pub mod asset;
 
 
-pub mod prelude{
+pub mod prelude {
     pub use crate::plugin::{
-        AkashicPlugin,
+        AkashicMinimumPlugins,
         join::AkashicJoinEventPlugin,
         render::AkashicRenderPlugin,
+        scheduler::AkashicSchedulerPlugin,
         transform::AkashicTransformPlugin,
-        scheduler::AkashicSchedulerPlugin
     };
-}
-
-#[derive(Eq, PartialEq, Hash, States, Default, Debug, Clone)]
-pub enum SceneLoadState {
-    #[default]
-    Loading,
-
-    Loaded,
-
-    Startup,
 }
 
 
 #[derive(Default)]
-pub struct AkashicPlugin {
-    scene_param: SharedSceneParameter,
-    message_event_registers: Vec<RegisterAkashicMessageFn>,
-}
+pub struct AkashicMinimumPlugins;
 
 
-impl AkashicPlugin {
-    #[inline]
-    pub fn new(scene_param: SceneParameterObject) -> Self {
-        Self {
-            scene_param: SharedSceneParameter::new(scene_param),
-            message_event_registers: Vec::new(),
-        }
-    }
-
-
-    #[inline]
-    pub fn add_message_event<E>(mut self) -> Self
-        where E: Event + Serialize + DeserializeOwned
-    {
-        self.message_event_registers.push(add_akashic_message_event::<E>());
-        self
-    }
-}
-
-impl Plugin for AkashicPlugin {
-    fn build(&self, app: &mut App) {
-        app
-            .add_state::<SceneLoadState>()
-            .init_resource::<AkashicAssetServer>()
-            .init_resource::<GameInfo>()
-            .add_plugins((
-                PointDownPlugin,
-                PointUpPlugin,
-                PointMovePlugin,
-                AkashicRenderPlugin,
-                AkashicSchedulerPlugin(self.scene_param.clone(), self.message_event_registers.clone()),
-                AkashicTransformPlugin,
-                AkashicJoinEventPlugin
-            ));
+impl PluginGroup for AkashicMinimumPlugins {
+    fn build(self) -> PluginGroupBuilder {
+        PluginGroupBuilder::start::<Self>()
+            .add(AkashicAssetPlugin)
+            .add(GameInfoPlugin)
+            .add(PlayerIdPlugin)
+            .add(PointDownPlugin)
+            .add(PointMovePlugin)
+            .add(PointUpPlugin)
+            .add(AkashicRenderPlugin)
+            .add(AkashicTransformPlugin)
+            .add(AkashicJoinEventPlugin)
     }
 }
 

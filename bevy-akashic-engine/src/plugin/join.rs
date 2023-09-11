@@ -1,13 +1,13 @@
-use bevy::app::{App, Plugin, Update};
-use bevy::prelude::{Commands, EventWriter, Res};
+use bevy::app::{App, Plugin};
+use bevy::prelude::{Commands, EventWriter, PreUpdate, Res};
 
-use crate::event::join::JoinEvent;
-use crate::event::AkashicEventQueue;
-
-use crate::prelude::player_id::PlayerId;
-use crate::resource::join::{JoinedAsListener, JoinedAsStreamer};
 use akashic_rs::game::GAME;
 use akashic_rs::trigger::join::JoinHandler;
+
+use crate::event::AkashicEventQueue;
+use crate::event::join::JoinEvent;
+use crate::prelude::player_id::PlayerId;
+use crate::resource::join::{JoinedAsListener, JoinedAsStreamer};
 
 pub struct AkashicJoinEventPlugin;
 
@@ -18,7 +18,7 @@ impl Plugin for AkashicJoinEventPlugin {
         app
             .add_event::<JoinEvent>()
             .insert_resource(join_event_queue.clone())
-            .add_systems(Update, read_join_event_queue_system);
+            .add_systems(PreUpdate, read_join_event_queue_system);
 
         GAME
             .on_join()
@@ -34,20 +34,20 @@ fn read_join_event_queue_system(
     queue: Res<AkashicEventQueue<JoinEvent>>,
 ) {
     while let Some(event) = queue.pop_front() {
-        register_on_join(&mut commands, &event);
+        insert_joined_resource_target_with_nicolive(&mut commands, &event);
         ew.send(event);
     }
 }
 
-fn register_on_join(commands: &mut Commands, join_event: &JoinEvent) {
+fn insert_joined_resource_target_with_nicolive(commands: &mut Commands, join_event: &JoinEvent) {
     let Some(streamer_id) = join_event.player().id() else { return; };
-    if let Some(self_id) = GAME.self_id() {
-        // JoinEventが発火されるのはニコ生の場合配信者だけらしいため、
-        // 自身のIDと同じ場合は配信者となる
-        if self_id == streamer_id {
-            commands.insert_resource(JoinedAsStreamer(PlayerId(self_id)));
-        } else {
-            commands.insert_resource(JoinedAsListener(PlayerId(self_id)));
-        }
+    let Some(self_id) = GAME.self_id() else { return; };
+
+    // JoinEventが発火されるのはニコ生の場合配信者だけらしいため、
+    // 自身のIDと同じ場合は配信者となる
+    if self_id == streamer_id {
+        commands.insert_resource(JoinedAsStreamer(PlayerId(self_id)));
+    } else {
+        commands.insert_resource(JoinedAsListener(PlayerId(self_id)));
     }
 }

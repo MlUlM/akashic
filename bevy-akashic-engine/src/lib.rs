@@ -9,7 +9,6 @@ pub mod command;
 pub mod plugin;
 pub mod event;
 pub mod component;
-pub mod asset;
 pub mod extensions;
 pub mod resource;
 pub mod run_criteria;
@@ -21,7 +20,6 @@ pub mod akashic {
 pub mod prelude {
     pub use crate::command::prelude::*;
     pub use crate::plugin::prelude::*;
-    pub use crate::asset::*;
     pub use akashic_rs::prelude::*;
     pub use crate::event::*;
     pub use crate::component::*;
