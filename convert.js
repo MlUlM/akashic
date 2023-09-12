@@ -46,6 +46,8 @@ fs.writeFileSync(mainJsPath, `
             globalThis.crypto = {
                 getRandomValues: (args) => new Uint8Array(args.map(_ => Math.floor(g.game.random.generate() * 255)))      
             }
+        }else{
+            g.game.renderers[0].surface.canvas.id = "bevy"
         }
          
         ${wasmCode}

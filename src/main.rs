@@ -1,13 +1,15 @@
 use std::panic;
 
-use bevy::app::{App, Update};
-use bevy::core::{FrameCount, FrameCountPlugin};
-use bevy::DefaultPlugins;
-use bevy::prelude::{Commands, Component, Event, EventReader, EventWriter, in_state, IntoSystemConfigs, OnEnter, Query, Res, States, Transform, With};
+use bevy::app::{App, PluginGroup};
+use bevy::core::FrameCount;
+use bevy::math::Vec2;
+use bevy::prelude::{Camera2dBundle, Color, Commands, Component, Event, EventReader, EventWriter, OnEnter, Query, Res, States, Transform, With};
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
+use bevy::sprite::SpriteBundle;
 use bevy::utils::default;
 
 use bevy_akashic_engine::akashic::entity::label::{Label, LabelParameterObjectBuilder};
+use bevy_akashic_engine::akashic::font::bitmap::{BitmapFont, BitmapFontParameterBuilder};
 use bevy_akashic_engine::akashic::font::dynamic::{DynamicFont, DynamicFontParameterObjectBuilder};
 use bevy_akashic_engine::akashic::font::font_family::FontFamily;
 use bevy_akashic_engine::event::message::AkashicRaiseEvent;
@@ -19,7 +21,6 @@ use bevy_akashic_engine::prelude::SceneParameterObject;
 use bevy_akashic_engine::prelude::src::IntoSrc;
 use bevy_akashic_engine::resource::game::GameInfo;
 use bevy_akashic_engine::resource::join::{JoinedAsListener, JoinedAsStreamer};
-use bevy_akashic_engine::run_criteria::{added_joined_as_listener, added_joined_as_streamer};
 
 #[derive(Component, Debug)]
 struct Player;
@@ -34,10 +35,10 @@ pub struct TestMessageEvent {
 }
 
 #[derive(States, Copy, Clone, Default, Debug, Hash, Eq, PartialEq)]
-enum SceneLoadState{
+enum SceneLoadState {
     #[default]
     Loading,
-    Startup
+    Startup,
 }
 
 
@@ -45,40 +46,49 @@ fn main() {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
 
     let scene_param = SceneParameterObject::builder(GAME.clone())
-        .asset_ids(vec!["player", "shot", "se"])
+        .asset_ids(vec!["player", "shot", "se", "font", "font_glyphs"])
         .build();
 
     App::new()
         .add_state::<SceneLoadState>()
-        .add_plugins(DefaultPlugins)
+
         .add_plugins(AkashicMinimumPlugins)
         .add_plugins(AkashicSchedulerPlugin::new(SceneLoadState::Loading, SceneLoadState::Startup)
             .with_scene_param(scene_param)
-            .with_message_event::<TestMessageEvent>()
         )
         .add_systems(OnEnter(SceneLoadState::Startup), setup)
-        .add_systems(
-            Update,
-            (
-                setup_streamer.run_if(added_joined_as_streamer()),
-                setup_listener.run_if(added_joined_as_listener()),
-            ),
-        )
-        .add_systems(
-            Update,
-            (
-                player_hovering_system,
-                read_scene_point_down_event,
-                shot_move_system,
-                point_up_event_system,
-                read_raise_event_system,
-            )
-                .run_if(in_state(SceneLoadState::Startup)),
-        )
         .run();
 }
 
+fn set(
+    mut commands: Commands
+) {
+    commands.spawn(Camera2dBundle::default());
+    commands.spawn(SpriteBundle {
+        sprite: bevy::prelude::Sprite {
+            custom_size: Some(Vec2::new(30., 30.)),
+            color: Color::RED,
+            ..default()
+        },
+        ..default()
+    });
+}
+
 fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res<GameInfo>) {
+    console_log!("SETUP");
+
+    let src = server.image_by_id("font");
+    let font_glyphs = server.text_by_id("font_glyphs");
+
+    let label = Label::new(LabelParameterObjectBuilder::new(
+        "あだだだｄ",
+        BitmapFont::new(BitmapFontParameterBuilder::new(src.into_src())
+            .glyph_info(&font_glyphs.data())
+            .build()),
+    )
+        .build());
+
+    commands.append(label);
 
     let player_image_asset = server
         .image_by_id("player")
@@ -121,8 +131,8 @@ fn setup_listener(mut commands: Commands, joined: Res<JoinedAsListener>) {
 
     let text = format!("あなたは参加者です。 ID = {}", joined.player_id_as_str());
     commands.append(Label::new(LabelParameterObjectBuilder::new(text, font)
-                                   .local(true)
-                                   .build()
+        .local(true)
+        .build()
     ));
 }
 

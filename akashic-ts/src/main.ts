@@ -17,7 +17,7 @@ function main(param: g.GameMainParameterObject): void {
         const playerImageAsset = scene.asset.getImageById("player");
         const shotImageAsset = scene.asset.getImageById("shot");
         const seAudioAsset = scene.asset.getAudioById("se");
- 
+
         seAudioAsset.play();
         g.game.onJoin.add((event: JoinEvent) => {
             event.player.id
@@ -45,10 +45,12 @@ function main(param: g.GameMainParameterObject): void {
             player.modified();
         });
 
+        scene.asset.getAllTexts()
+
         // 画面をタッチしたとき、SEを鳴らします
         scene.onPointDownCapture.add(() => {
             seAudioAsset.play();
-
+            scene.asset.getAllTexts()
             // プレイヤーが発射する弾を生成します
             const shot = new g.Sprite({
                 scene: scene,
@@ -56,7 +58,18 @@ function main(param: g.GameMainParameterObject): void {
                 width: shotImageAsset.width,
                 height: shotImageAsset.height
             });
+// 上で生成した font.png と font_glyphs.json に対応するアセットを取得
+const fontAsset = g.game.scene().asset.getImageById("font");
+const fontGlyphAsset = g.game.scene().asset.getTextById("font_glyphs");
 
+// テキストアセット (JSON) の内容をオブジェクトに変換
+const glyphInfo = JSON.parse(fontGlyphAsset.data);
+
+// ビットマップフォントを生成
+const font = new g.BitmapFont({
+  src: fontAsset,
+  glyphInfo: glyphInfo
+});
 
             // 弾の初期座標を、プレイヤーの少し右に設定します
             shot.x = player.x + player.width;
