@@ -23,6 +23,9 @@ extern "C" {
 
     #[wasm_bindgen(js_namespace = g, method, js_name = getAudioById)]
     pub fn get_audio_by_id(this: &AssetAccessor, asset_id: String) -> AudioAsset;
+
+    #[wasm_bindgen(js_namespace = g, method, js_name = getTextById)]
+    pub fn get_text_by_id(this: &AssetAccessor, asset_id: String) -> TextAsset;
 }
 
 
@@ -83,4 +86,17 @@ extern "C" {
 
     #[wasm_bindgen(js_namespace = g, method, getter)]
     pub fn path(this: &AudioAsset) -> String;
+}
+
+
+#[wasm_bindgen]
+extern "C" {
+    #[derive(Clone, Debug)]
+    pub type TextAsset;
+
+    #[wasm_bindgen(js_namespace = g, method, getter)]
+    pub fn id(this: &TextAsset) -> String;
+
+    #[wasm_bindgen(js_namespace = g, method, getter)]
+    pub fn data(this: &TextAsset) -> String;
 }

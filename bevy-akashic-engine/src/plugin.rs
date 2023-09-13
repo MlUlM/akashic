@@ -1,6 +1,6 @@
 use std::sync::{Arc, RwLock};
 
-use bevy::app::{Plugin, PluginGroup, PluginGroupBuilder};
+use bevy::app::{PluginGroup, PluginGroupBuilder};
 
 use akashic_rs::prelude::SceneParameterObject;
 

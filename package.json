@@ -1,11 +1,10 @@
 {
   "name": "akashic-wasm",
   "version": "1.0.0",
-  "main": "convert.js",
-  "author": "elm_niconico <elmgameinfo@gmail.com>",
+  "author": "elm",
   "license": "MIT",
   "scripts": {
-    "build": "node index.js",
+    "start": "cargo run --target wasm32-unknown-unknown --release",
     "sandbox": "akashic-sandbox akashic",
     "serve": "akashic serve akashic --target-service nicolive"
   },

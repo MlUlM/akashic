@@ -1,9 +1,9 @@
 use std::panic;
 
-use bevy::app::{App, PluginGroup};
-use bevy::core::FrameCount;
+use bevy::app::{App, Update};
+use bevy::core::{FrameCount, FrameCountPlugin};
 use bevy::math::Vec2;
-use bevy::prelude::{Camera2dBundle, Color, Commands, Component, Event, EventReader, EventWriter, OnEnter, Query, Res, States, Transform, With};
+use bevy::prelude::{Camera2dBundle, Color, Commands, Component, Event, EventReader, EventWriter, in_state, IntoSystemConfigs, OnEnter, Query, Res, States, Transform, With};
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
 use bevy::sprite::SpriteBundle;
 use bevy::utils::default;
@@ -51,12 +51,13 @@ fn main() {
 
     App::new()
         .add_state::<SceneLoadState>()
-
+        .add_plugins(FrameCountPlugin)
         .add_plugins(AkashicMinimumPlugins)
         .add_plugins(AkashicSchedulerPlugin::new(SceneLoadState::Loading, SceneLoadState::Startup)
             .with_scene_param(scene_param)
         )
         .add_systems(OnEnter(SceneLoadState::Startup), setup)
+        .add_systems(Update, player_hovering_system.run_if(in_state(SceneLoadState::Startup)))
         .run();
 }
 
@@ -78,14 +79,17 @@ fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res
     console_log!("SETUP");
 
     let src = server.image_by_id("font");
-    let font_glyphs = server.text_by_id("font_glyphs");
+    let font_glyphs = GAME.scene().asset().get_text_by_id("font_glyphs".to_string());
 
     let label = Label::new(LabelParameterObjectBuilder::new(
-        "あだだだｄ",
+        "あかさたな",
         BitmapFont::new(BitmapFontParameterBuilder::new(src.into_src())
-            .glyph_info(&font_glyphs.data())
-            .build()),
+                .glyph_info(&font_glyphs.data())
+                .build()
+        ),
     )
+        .max_width(300.)
+        .font_size(80.)
         .build());
 
     commands.append(label);

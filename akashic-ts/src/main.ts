@@ -4,7 +4,7 @@ function main(param: g.GameMainParameterObject): void {
     const scene = new g.Scene({
         game: g.game,
         // このシーンで利用するアセットのIDを列挙し、シーンに通知します
-        assetIds: ["player", "shot", "se"]
+        assetIds: ["player", "shot", "se", "font", "font_glyphs"]
     });
     g.game.onJoin.add((player) => {
         console.log(player.player.id)
@@ -12,7 +12,26 @@ function main(param: g.GameMainParameterObject): void {
 
     scene.onLoad.add(() => {
         // ここからゲーム内容を記述します
+// 上で生成した font.png と font_glyphs.json に対応するアセットを取得
+const fontAsset = g.game.scene().asset.getImageById("font");
+const fontGlyphAsset = g.game.scene().asset.getTextById("font_glyphs");
 
+// テキストアセット (JSON) の内容をオブジェクトに変換
+const glyphInfo = JSON.parse(fontGlyphAsset.data);
+console.log(glyphInfo)
+// ビットマップフォントを生成
+const font = new g.BitmapFont({
+  src: fontAsset,
+  glyphInfo: glyphInfo,
+
+});
+
+const label = new g.Label({
+    font, scene: scene, text: "あかさたな",
+
+});
+
+scene.append(label)
         // 各アセットオブジェクトを取得します
         const playerImageAsset = scene.asset.getImageById("player");
         const shotImageAsset = scene.asset.getImageById("shot");
@@ -58,18 +77,6 @@ function main(param: g.GameMainParameterObject): void {
                 width: shotImageAsset.width,
                 height: shotImageAsset.height
             });
-// 上で生成した font.png と font_glyphs.json に対応するアセットを取得
-const fontAsset = g.game.scene().asset.getImageById("font");
-const fontGlyphAsset = g.game.scene().asset.getTextById("font_glyphs");
-
-// テキストアセット (JSON) の内容をオブジェクトに変換
-const glyphInfo = JSON.parse(fontGlyphAsset.data);
-
-// ビットマップフォントを生成
-const font = new g.BitmapFont({
-  src: fontAsset,
-  glyphInfo: glyphInfo
-});
 
             // 弾の初期座標を、プレイヤーの少し右に設定します
             shot.x = player.x + player.width;

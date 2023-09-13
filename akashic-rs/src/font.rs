@@ -4,6 +4,7 @@ pub mod dynamic;
 pub mod font_family;
 pub mod font_weight_string;
 pub mod surface_atlas_set;
+pub mod bitmap;
 
 
 #[wasm_bindgen]
