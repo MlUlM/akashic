@@ -3,7 +3,7 @@ use std::panic;
 use bevy::app::{App, Update};
 use bevy::core::{FrameCount, FrameCountPlugin};
 use bevy::math::Vec2;
-use bevy::prelude::{Camera2dBundle, Color, Commands, Component, Event, EventReader, EventWriter, in_state, IntoSystemConfigs, OnEnter, Query, Res, States, Transform, With};
+use bevy::prelude::{Camera2dBundle, Color, Commands, Component, Event, EventReader, EventWriter, in_state, IntoSystemConfigs, OnEnter, Query, Res, ResMut, States, Transform, With};
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
 use bevy::sprite::SpriteBundle;
 use bevy::utils::default;
@@ -20,6 +20,7 @@ use bevy_akashic_engine::prelude::point_down::ScenePointDown;
 use bevy_akashic_engine::prelude::SceneParameterObject;
 use bevy_akashic_engine::prelude::src::IntoSrc;
 use bevy_akashic_engine::resource::game::GameInfo;
+use bevy_akashic_engine::resource::game_state::AkashicGameState;
 use bevy_akashic_engine::resource::join::{JoinedAsListener, JoinedAsStreamer};
 use bevy_akashic_engine::resource::random::{AkashicLocalRandomGenerator, AkashicRandomGenerator};
 
@@ -60,6 +61,7 @@ fn main() {
         .add_systems(OnEnter(SceneLoadState::Startup), setup)
         .add_systems(Update, (
             player_hovering_system,
+            update
         ).run_if(in_state(SceneLoadState::Startup)))
         .run();
 }
@@ -79,10 +81,11 @@ fn set(
 }
 
 fn update(
-    random: Res<AkashicRandomGenerator>,
-    local_random: Res<AkashicLocalRandomGenerator>,
+   mut game_state: ResMut<AkashicGameState>
 ) {
-    console_log!("global: {} local: {}", random.generate(), local_random.generate());
+    game_state.increment_score();
+
+    console_log!("global: {} local: {}", game_state.score(), GAME.vars().game_state().score());
 }
 
 fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res<GameInfo>) {
