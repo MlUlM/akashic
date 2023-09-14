@@ -9,6 +9,7 @@ use crate::plugin::event::{PointDownPlugin, PointMovePlugin, PointUpPlugin};
 use crate::plugin::game_info::GameInfoPlugin;
 use crate::plugin::join::AkashicJoinEventPlugin;
 use crate::plugin::player_id::PlayerIdPlugin;
+use crate::plugin::random::AkashicRandomPlugin;
 use crate::plugin::render::AkashicRenderPlugin;
 use crate::plugin::transform::AkashicTransformPlugin;
 
@@ -20,6 +21,7 @@ pub mod join;
 pub mod player_id;
 pub mod game_info;
 pub mod asset;
+pub mod random;
 
 
 pub mod prelude {
@@ -49,6 +51,7 @@ impl PluginGroup for AkashicMinimumPlugins {
             .add(AkashicRenderPlugin)
             .add(AkashicTransformPlugin)
             .add(AkashicJoinEventPlugin)
+            .add(AkashicRandomPlugin)
     }
 }
 

@@ -7,6 +7,7 @@ use crate::prelude::{Scene, Trigger};
 use crate::trigger::join::JoinHandler;
 use crate::trigger::NativeTrigger;
 use wasm_bindgen::prelude::wasm_bindgen;
+use crate::random::RandomGenerator;
 
 pub mod prelude {
     pub use crate::game::{Game, GAME};
@@ -35,6 +36,12 @@ extern "C" {
 
     #[wasm_bindgen(getter, method)]
     pub fn height(this: &Game) -> f32;
+
+    #[wasm_bindgen(method, getter)]
+    pub fn random(this: &Game) -> RandomGenerator;
+
+    #[wasm_bindgen(method, getter, js_name = localRandom)]
+    pub fn local_random(this: &Game) -> RandomGenerator;
 
     #[wasm_bindgen(method, getter, js_name = selfId)]
     pub fn self_id(this: &Game) -> Option<String>;

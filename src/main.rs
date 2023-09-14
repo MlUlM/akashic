@@ -1,3 +1,4 @@
+use std::ops::Deref;
 use std::panic;
 
 use bevy::app::{App, Update};
@@ -21,6 +22,7 @@ use bevy_akashic_engine::prelude::SceneParameterObject;
 use bevy_akashic_engine::prelude::src::IntoSrc;
 use bevy_akashic_engine::resource::game::GameInfo;
 use bevy_akashic_engine::resource::join::{JoinedAsListener, JoinedAsStreamer};
+use bevy_akashic_engine::resource::random::{AkashicLocalRandomGenerator, AkashicRandomGenerator};
 
 #[derive(Component, Debug)]
 struct Player;
@@ -57,7 +59,10 @@ fn main() {
             .with_scene_param(scene_param)
         )
         .add_systems(OnEnter(SceneLoadState::Startup), setup)
-        .add_systems(Update, player_hovering_system.run_if(in_state(SceneLoadState::Startup)))
+        .add_systems(Update, (
+            player_hovering_system,
+            update
+        ).run_if(in_state(SceneLoadState::Startup)))
         .run();
 }
 
@@ -73,6 +78,13 @@ fn set(
         },
         ..default()
     });
+}
+
+fn update(
+    random: Res<AkashicRandomGenerator>,
+    local_random: Res<AkashicLocalRandomGenerator>
+){
+    console_log!("global: {} local: {}", random.generate(), local_random.generate());
 }
 
 fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res<GameInfo>) {
