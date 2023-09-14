@@ -1,4 +1,3 @@
-use std::ops::Deref;
 use std::panic;
 
 use bevy::app::{App, Update};
@@ -61,7 +60,6 @@ fn main() {
         .add_systems(OnEnter(SceneLoadState::Startup), setup)
         .add_systems(Update, (
             player_hovering_system,
-            update
         ).run_if(in_state(SceneLoadState::Startup)))
         .run();
 }
@@ -82,8 +80,8 @@ fn set(
 
 fn update(
     random: Res<AkashicRandomGenerator>,
-    local_random: Res<AkashicLocalRandomGenerator>
-){
+    local_random: Res<AkashicLocalRandomGenerator>,
+) {
     console_log!("global: {} local: {}", random.generate(), local_random.generate());
 }
 
@@ -96,8 +94,8 @@ fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res
     let label = Label::new(LabelParameterObjectBuilder::new(
         "あかさたな",
         BitmapFont::new(BitmapFontParameterBuilder::new(src.into_src())
-                .glyph_info(&font_glyphs.data())
-                .build()
+            .glyph_info(&font_glyphs.data())
+            .build()
         ),
     )
         .max_width(300.)
@@ -211,6 +209,7 @@ fn shot_move_system(
         shot.translation.x += 10.;
     }
 }
+
 
 fn point_up_event_system(mut er: EventReader<bevy_akashic_engine::event::point_up::PointUpEvent>) {
     for e in er.iter() {

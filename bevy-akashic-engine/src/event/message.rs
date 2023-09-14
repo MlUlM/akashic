@@ -4,7 +4,6 @@ use bevy::reflect::erased_serde::__private::serde;
 use bevy::reflect::erased_serde::__private::serde::de::DeserializeOwned;
 use bevy::reflect::erased_serde::__private::serde::Serialize;
 use std::sync::Arc;
-
 use akashic_rs::event::message::MessageEvent;
 
 use crate::event::AkashicEventQueue;
@@ -47,7 +46,6 @@ where
 
         scene.on_message().add(move |event| {
             let Some(data) = serde_wasm_bindgen::from_value::<E>(event.data()).ok() else { return; };
-
             queue.push(data);
         });
     })

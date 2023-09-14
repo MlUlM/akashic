@@ -1,4 +1,5 @@
 use std::fmt::Debug;
+
 use bevy::app::{App, Plugin, PreUpdate};
 use bevy::math::Vec2;
 use bevy::prelude::{Commands, Event, in_state, IntoSystemConfigs, NextState, Res, ResMut, Resource, States, World};
@@ -21,7 +22,7 @@ use crate::event::point_down::{PointDown, ScenePointDown};
 use crate::event::point_move::PointMoveEvent;
 use crate::event::point_up::ScenePointUpEvent;
 use crate::extensions::AsVec3;
-use crate::plugin::{SharedSceneParameter};
+use crate::plugin::SharedSceneParameter;
 use crate::plugin::asset::AkashicAssetServer;
 use crate::prelude::message::RegisterAkashicMessageFn;
 use crate::prelude::point_move::ScenePointMoveEvent;
@@ -31,22 +32,21 @@ use crate::SharedObject;
 struct LoadedStateResource<S: States + Copy>(S);
 
 
-
 pub struct AkashicSchedulerPlugin<S: States> {
     state_while_loading: S,
     state_loaded: S,
     scene_param: SharedSceneParameter,
-    message_event_registers: Vec<RegisterAkashicMessageFn>
+    message_event_registers: Vec<RegisterAkashicMessageFn>,
 }
 
 impl<S: States + Copy> AkashicSchedulerPlugin<S> {
     #[inline]
-    pub fn new(state_while_loading: S, state_loaded: S) -> AkashicSchedulerPlugin<S>{
-        Self{
+    pub fn new(state_while_loading: S, state_loaded: S) -> AkashicSchedulerPlugin<S> {
+        Self {
             state_while_loading,
             state_loaded,
             scene_param: SharedSceneParameter::default(),
-            message_event_registers: Vec::new()
+            message_event_registers: Vec::new(),
         }
     }
 
@@ -124,7 +124,7 @@ fn loading_scene_system<S: States + Copy>(
     mut commands: Commands,
     mut state: ResMut<NextState<S>>,
     scene_loaded_flag: Res<SceneLoadedFlag>,
-    next_state: Res<LoadedStateResource<S>>
+    next_state: Res<LoadedStateResource<S>>,
 ) {
     if scene_loaded_flag.loaded() {
         commands.insert_resource(AkashicAssetServer::default());

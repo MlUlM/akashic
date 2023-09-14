@@ -61,8 +61,11 @@
 		"sandbox-runtime": "3",
 		"nicolive": {
 			"supportedModes": [
-				"multi_admission"
-			]
+				"ranking"
+			],
+			"preferredSessionParameters": {
+				"totalTimeLimit": 20
+			}
 		}
 	}
 }
