@@ -19,22 +19,24 @@ pub mod prelude{
 }
 
 
-#[wasm_bindgen]
+#[wasm_bindgen(js_namespace = g)]
 extern "C" {
-    #[wasm_bindgen(js_namespace = g)]
     #[derive(Clone, Debug, AkashicScene)]
     pub type Scene;
 
-    #[wasm_bindgen(js_namespace = g, constructor)]
+    #[wasm_bindgen(constructor)]
     pub fn new(param: param::SceneParameterObject) -> Scene;
 
-    #[wasm_bindgen(js_namespace = g, method, getter)]
+    #[wasm_bindgen(method, getter)]
     pub fn local(this: &Scene) -> String;
 
-    #[wasm_bindgen(js_namespace = g, method, getter, js_name = _loaded)]
+    #[wasm_bindgen(method, getter)]
+    pub fn name(this: &Scene) -> Option<String>;
+
+    #[wasm_bindgen(method, getter, js_name = _loaded)]
     pub fn loaded(this: &Scene) -> bool;
     
-    #[wasm_bindgen(js_namespace = g, method, js_name = append)]
+    #[wasm_bindgen(method, js_name = append)]
     fn _append(this: &Scene, e: JsValue);
 }
 

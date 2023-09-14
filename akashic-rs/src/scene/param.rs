@@ -4,8 +4,10 @@ use wasm_bindgen::prelude::wasm_bindgen;
 
 use crate::game::Game;
 
+
 #[wasm_bindgen(getter_with_clone)]
 #[derive(Default, Clone)]
+#[non_exhaustive]
 pub struct SceneParameterObject {
     pub game: Game,
 
