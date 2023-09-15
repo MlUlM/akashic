@@ -49,12 +49,11 @@ fs.writeFileSync(mainJsPath, `
             entity.widthAutoAdjust = widthAutoAdjust
         }
         
-        g.updateEntityBase = (entity, x, y, angle, width, height) => {
-            entity.x = x;
-            entity.y = y;
+        g.feedEntityProperties = (entity, x, y, angle, width, height, scaleX, scaleY) => {
             entity.angle = angle;
-            entity.width = width;
-            entity.height = height;
+            entity.resizeTo(width, height)
+            entity.moveTo(x, y)
+            entity.scale(scaleX, scaleY)
         }
 
         if (typeof window == 'undefined') {

@@ -32,12 +32,11 @@
             entity.widthAutoAdjust = widthAutoAdjust
         }
         
-        g.updateEntityBase = (entity, x, y, angle, width, height) => {
-            entity.x = x;
-            entity.y = y;
+        g.feedEntityProperties = (entity, x, y, angle, width, height, scaleX, scaleY) => {
             entity.angle = angle;
-            entity.width = width;
-            entity.height = height;
+            entity.resizeTo(width, height)
+            entity.moveTo(x, y)
+            entity.scale(scaleX, scaleY)
         }
 
         if (typeof window == 'undefined') {
@@ -2415,8 +2414,8 @@ function __wbg_get_imports() {
             wasm.__wbindgen_free(deferred1_0, deferred1_1, 1);
         }
     };
-    imports.wbg.__wbg_updateEntityBase_56fd5bad93a1ce5e = function(arg0, arg1, arg2, arg3, arg4, arg5) {
-        g.updateEntityBase(takeObject(arg0), arg1, arg2, arg3, arg4, arg5);
+    imports.wbg.__wbg_feedEntityProperties_44c673bde2497ac9 = function(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7) {
+        g.feedEntityProperties(getObject(arg0), arg1, arg2, arg3, arg4, arg5, arg6, arg7);
     };
     imports.wbg.__wbindgen_is_undefined = function(arg0) {
         const ret = getObject(arg0) === undefined;
