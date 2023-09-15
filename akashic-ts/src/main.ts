@@ -1,6 +1,6 @@
 import {JoinEvent} from "@akashic/akashic-engine";
 
-function main(param: g.GameMainParameterObject): void {
+function main(param: any): void {
     const scene = new g.Scene({
         game: g.game,
         // このシーンで利用するアセットのIDを列挙し、シーンに通知します
@@ -9,7 +9,7 @@ function main(param: g.GameMainParameterObject): void {
     g.game.onJoin.add((player) => {
         console.log(player.player.id)
     })
-
+    console.log(param)
     scene.onLoad.add(() => {
         // ここからゲーム内容を記述します
 // 上で生成した font.png と font_glyphs.json に対応するアセットを取得

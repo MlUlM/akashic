@@ -1,9 +1,9 @@
 use derive_builder::Builder;
-use js_sys::Object;
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen::prelude::wasm_bindgen;
 
 use crate::asset::src::Src;
+use crate::console_log;
 use crate::font::bitmap::glyph_area::GlyphArea;
 use crate::font::bitmap::glyph_info::BitmapFontGlyphInfo;
 use crate::font::Font;
@@ -30,6 +30,7 @@ impl Into<Font> for BitmapFont {
 }
 
 
+#[non_exhaustive]
 #[wasm_bindgen(getter_with_clone)]
 #[derive(Builder, Debug)]
 #[builder(
@@ -50,11 +51,11 @@ pub struct BitmapFontParameter {
     pub default_glyph_width: Option<f32>,
 
     #[builder(setter(into, strip_option), default)]
-    pub map: Option<Object>,
+    pub map: JsValue,
 
     #[wasm_bindgen(js_name = glyphInfo)]
     #[builder(setter(custom, strip_option), default)]
-    pub glyph_info: Option<Object>,
+    pub glyph_info: JsValue,
 
     #[wasm_bindgen(js_name = missingGlyph)]
     #[builder(setter(into, strip_option), default)]
@@ -76,9 +77,11 @@ impl BitmapFontParameterBuilder {
 
     #[allow(deprecated)]
     pub fn glyph_info(&mut self, glyph_info: &str) -> &mut Self {
+             console_log!("{:?}", glyph_info);
         let glyph_info: BitmapFontGlyphInfo = serde_json::from_str(glyph_info).unwrap();
         let glyph_info = JsValue::from_serde(&glyph_info).unwrap();
-        self.glyph_info = Some(Some(Object::from(glyph_info)));
+        console_log!("{:?}", glyph_info);
+        self.glyph_info = Some(glyph_info);
 
         self
     }

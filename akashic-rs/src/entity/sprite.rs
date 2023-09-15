@@ -2,14 +2,14 @@ use derive_builder::Builder;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::{EParamSetters, object_e_parameter};
+use akashic_macro::{CacheableEntity, EParamSetters, object_e_parameter};
 
 use crate::asset::src::Src;
 
 #[wasm_bindgen]
 extern "C" {
     #[wasm_bindgen(js_namespace = g)]
-    #[derive(Clone, Debug, crate::entity::AkashicEntity)]
+    #[derive(Clone, Debug, crate::entity::AkashicEntity, CacheableEntity)]
     pub type Sprite;
 
     #[wasm_bindgen(js_namespace = g, constructor)]
@@ -20,6 +20,7 @@ extern "C" {
 }
 
 
+#[non_exhaustive]
 #[object_e_parameter]
 #[wasm_bindgen(getter_with_clone)]
 #[derive(Debug, Builder, EParamSetters)]

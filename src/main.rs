@@ -2,27 +2,17 @@ use std::panic;
 
 use bevy::app::{App, Update};
 use bevy::core::{FrameCount, FrameCountPlugin};
-use bevy::math::Vec2;
-use bevy::prelude::{Camera2dBundle, Color, Commands, Component, Event, EventReader, EventWriter, in_state, IntoSystemConfigs, OnEnter, Query, Res, ResMut, States, Transform, With};
+use bevy::prelude::{Commands, Component, Event, in_state, IntoSystemConfigs, OnEnter, Query, Res, States, Transform, With};
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
-use bevy::sprite::SpriteBundle;
-use bevy::utils::default;
 
 use bevy_akashic_engine::akashic::entity::label::{Label, LabelParameterObjectBuilder};
 use bevy_akashic_engine::akashic::font::bitmap::{BitmapFont, BitmapFontParameterBuilder};
-use bevy_akashic_engine::akashic::font::dynamic::{DynamicFont, DynamicFontParameterObjectBuilder};
-use bevy_akashic_engine::akashic::font::font_family::FontFamily;
-use bevy_akashic_engine::event::message::AkashicRaiseEvent;
 use bevy_akashic_engine::plugin::asset::AkashicAssetServer;
 use bevy_akashic_engine::prelude::*;
 use bevy_akashic_engine::prelude::entity_size::AkashicEntitySize;
-use bevy_akashic_engine::prelude::point_down::ScenePointDown;
 use bevy_akashic_engine::prelude::SceneParameterObject;
 use bevy_akashic_engine::prelude::src::IntoSrc;
 use bevy_akashic_engine::resource::game::GameInfo;
-use bevy_akashic_engine::resource::game_state::AkashicGameState;
-use bevy_akashic_engine::resource::join::{JoinedAsListener, JoinedAsStreamer};
-use bevy_akashic_engine::resource::random::{AkashicLocalRandomGenerator, AkashicRandomGenerator};
 
 #[derive(Component, Debug)]
 struct Player;
@@ -60,33 +50,11 @@ fn main() {
         )
         .add_systems(OnEnter(SceneLoadState::Startup), setup)
         .add_systems(Update, (
-            player_hovering_system,
-            update
+            player_hovering_system
         ).run_if(in_state(SceneLoadState::Startup)))
         .run();
 }
 
-fn set(
-    mut commands: Commands
-) {
-    commands.spawn(Camera2dBundle::default());
-    commands.spawn(SpriteBundle {
-        sprite: bevy::prelude::Sprite {
-            custom_size: Some(Vec2::new(30., 30.)),
-            color: Color::RED,
-            ..default()
-        },
-        ..default()
-    });
-}
-
-fn update(
-   mut game_state: ResMut<AkashicGameState>
-) {
-    game_state.increment_score();
-
-    console_log!("global: {} local: {}", game_state.score(), GAME.vars().game_state().score());
-}
 
 fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res<GameInfo>) {
     console_log!("SETUP");
@@ -101,8 +69,6 @@ fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res
             .build()
         ),
     )
-        .max_width(300.)
-        .font_size(80.)
         .build());
 
     commands.append(label);
@@ -124,34 +90,6 @@ fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res
         .insert(Player);
 }
 
-fn setup_streamer(mut commands: Commands, joined: Res<JoinedAsStreamer>) {
-    let font = DynamicFont::new(
-        DynamicFontParameterObjectBuilder::new(FontFamily::new("sans-serif"), 30.)
-            .font_color("blue")
-            .build(),
-    );
-
-    let text = format!("あなたは放送主です。 ID = {}", joined.player_id_as_str());
-    commands.append(Label::new(
-        LabelParameterObjectBuilder::new(text, font)
-            .local(true)
-            .build(),
-    ));
-}
-
-fn setup_listener(mut commands: Commands, joined: Res<JoinedAsListener>) {
-    let font = DynamicFont::new(
-        DynamicFontParameterObjectBuilder::new(FontFamily::new("sans-serif"), 30.)
-            .font_color("blue")
-            .build(),
-    );
-
-    let text = format!("あなたは参加者です。 ID = {}", joined.player_id_as_str());
-    commands.append(Label::new(LabelParameterObjectBuilder::new(text, font)
-        .local(true)
-        .build()
-    ));
-}
 
 fn player_hovering_system(
     mut player: Query<(&mut Transform, &AkashicEntitySize), With<Player>>,
@@ -162,66 +100,3 @@ fn player_hovering_system(
     transform.translation.y = (game_info.height() - size.height()) / 2. + ((frames.0 as f32) % (game_info.fps() * 10.) / 4.).sin() * 10.;
 }
 
-fn read_scene_point_down_event(
-    mut commands: Commands,
-    mut ew: EventWriter<AkashicRaiseEvent<TestMessageEvent>>,
-    mut er: EventReader<ScenePointDown>,
-    server: Res<AkashicAssetServer>,
-    player: Query<(&Transform, &AkashicEntitySize), With<Player>>,
-) {
-    for _ in er.iter() {
-        ew.send(AkashicRaiseEvent {
-            data: TestMessageEvent {
-                message: "TEST HELLO !!".to_string(),
-            },
-            ..default()
-        });
-
-        let (player_transform, player_size) = player.single();
-        let player_pos = player_transform.translation;
-        let shot_image_asset = server
-            .image_by_id("shot")
-            .into_src();
-        // 弾の初期座標を、プレイヤーの少し右に設定します
-        let shot = Sprite::new(
-            SpriteParameterObjectBuilder::new(shot_image_asset)
-                .x(player_pos.x + player_size.width())
-                .y(player_pos.y)
-                .build(),
-        );
-
-        commands
-            .append(shot)
-            .insert(Shot);
-        commands.play_audio(server.audio_by_id("se"));
-    }
-}
-
-fn shot_move_system(
-    mut commands: Commands,
-    mut shots: Query<(bevy::prelude::Entity, &mut Transform), With<Shot>>,
-    game_info: Res<GameInfo>,
-) {
-    for (entity, mut shot) in shots.iter_mut() {
-        if game_info.width() < shot.translation.x {
-            commands
-                .entity(entity)
-                .despawn();
-        }
-
-        shot.translation.x += 10.;
-    }
-}
-
-
-fn point_up_event_system(mut er: EventReader<bevy_akashic_engine::event::point_up::PointUpEvent>) {
-    for e in er.iter() {
-        console_log!("{e:?}");
-    }
-}
-
-fn read_raise_event_system(mut er: EventReader<TestMessageEvent>) {
-    for e in er.iter() {
-        console_log!("{e:?}");
-    }
-}

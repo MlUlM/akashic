@@ -1,12 +1,12 @@
 use derive_builder::Builder;
 use wasm_bindgen::prelude::wasm_bindgen;
-use akashic_macro::{EParamSetters, object_e_parameter};
+use akashic_macro::{CacheableEntity, EParamSetters, object_e_parameter};
 use crate::font::Font;
 
 
 #[wasm_bindgen]
 extern "C" {
-    #[derive(Clone, Debug, crate::entity::AkashicEntity)]
+    #[derive(Clone, Debug, crate::entity::AkashicEntity, CacheableEntity)]
     #[wasm_bindgen(js_namespace = g, js_name = Label)]
     pub type Label;
 
@@ -15,6 +15,7 @@ extern "C" {
 }
 
 
+#[non_exhaustive]
 #[object_e_parameter]
 #[wasm_bindgen(getter_with_clone)]
 #[derive(Debug, Builder, EParamSetters)]

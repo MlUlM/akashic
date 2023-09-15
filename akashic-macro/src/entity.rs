@@ -1,3 +1,5 @@
+pub mod cache;
+
 use proc_macro::TokenStream;
 
 use proc_macro2::Ident;

@@ -47,10 +47,13 @@
 	"moduleMainScripts": {},
 	"environment": {
 		"sandbox-runtime": "3",
-		"niconico": {
+		"nicolive": {
 			"supportedModes": [
 				"ranking"
-			]
+			],
+			"preferredSessionParameters": {
+				"totalTimeLimit": 20
+			}
 		}
 	},
 	"globalScripts": []

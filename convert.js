@@ -30,7 +30,7 @@ fs.writeFileSync(mainJsPath, `
     module.exports = () => {  
         const scene = new g.Scene({
           game: g.game
-        }) 
+        })
         g.game.pushScene(scene)
         
         g.Sprite.prototype.updateAll = function(x, y, angle, width, height){
@@ -47,6 +47,7 @@ fs.writeFileSync(mainJsPath, `
                 getRandomValues: (args) => new Uint8Array(args.map(_ => Math.floor(g.game.random.generate() * 255)))      
             }
         }else{
+            
             g.game.renderers[0].surface.canvas.id = "bevy"
         }
          

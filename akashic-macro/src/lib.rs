@@ -1,6 +1,7 @@
 use proc_macro::TokenStream;
 
 use proc_macro2::{Ident, Span};
+use crate::entity::cache::expand_cacheable;
 
 use crate::entity::expand_entity;
 use crate::event::expand_event_base;
@@ -20,6 +21,12 @@ mod event;
 #[proc_macro_derive(AkashicEntity)]
 pub fn akashic_entity(input: TokenStream) -> TokenStream {
     expand_entity(input)
+}
+
+
+#[proc_macro_derive(CacheableEntity)]
+pub fn chacheable_entity(input: TokenStream) -> TokenStream {
+    expand_cacheable(input)
 }
 
 
