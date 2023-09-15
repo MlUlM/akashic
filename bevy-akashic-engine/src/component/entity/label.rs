@@ -6,14 +6,12 @@ use akashic_rs::prelude::E;
 use crate::command::AsBundle;
 use crate::component::entity_size::AkashicEntitySize;
 use crate::prelude::AkashicEntityId;
-use crate::prelude::entity_size::PreviousAkashicEntitySize;
 
 #[derive(Debug, Bundle)]
 pub struct AkashicLabelBundle {
     id: AkashicEntityId,
     transform: Transform,
     size: AkashicEntitySize,
-    previous_size: PreviousAkashicEntitySize,
 }
 
 
@@ -26,7 +24,6 @@ impl AsBundle<AkashicLabelBundle> for Label {
             id: AkashicEntityId(self.id()),
             transform,
             size,
-            previous_size: PreviousAkashicEntitySize::from(size),
         }
     }
 } 

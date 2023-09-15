@@ -3,6 +3,7 @@ use std::sync::{Arc, RwLock};
 use bevy::app::{PluginGroup, PluginGroupBuilder};
 
 use akashic_rs::prelude::SceneParameterObject;
+use crate::plugin::akashic_entity_map::AkashicEntityMapPlugin;
 
 use crate::plugin::asset::AkashicAssetPlugin;
 use crate::plugin::event::{PointDownPlugin, PointMovePlugin, PointUpPlugin};
@@ -11,7 +12,8 @@ use crate::plugin::game_state::GameStatePlugin;
 use crate::plugin::join::AkashicJoinEventPlugin;
 use crate::plugin::player_id::PlayerIdPlugin;
 use crate::plugin::random::AkashicRandomPlugin;
-use crate::plugin::render::AkashicRenderPlugin;
+use crate::plugin::render::AkashicDespawnPlugin;
+use crate::plugin::system_set::AkashicSystemSetPlugin;
 use crate::plugin::transform::AkashicTransformPlugin;
 
 pub mod scheduler;
@@ -24,13 +26,15 @@ pub mod game_info;
 pub mod asset;
 pub mod random;
 pub mod game_state;
+pub mod akashic_entity_map;
+pub mod system_set;
 
 
 pub mod prelude {
     pub use crate::plugin::{
         AkashicMinimumPlugins,
         join::AkashicJoinEventPlugin,
-        render::AkashicRenderPlugin,
+        render::AkashicDespawnPlugin,
         scheduler::AkashicSchedulerPlugin,
         transform::AkashicTransformPlugin,
     };
@@ -44,13 +48,15 @@ pub struct AkashicMinimumPlugins;
 impl PluginGroup for AkashicMinimumPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
+            .add(AkashicSystemSetPlugin)
+            .add(AkashicEntityMapPlugin)
             .add(AkashicAssetPlugin)
             .add(GameInfoPlugin)
             .add(PlayerIdPlugin)
             .add(PointDownPlugin)
             .add(PointMovePlugin)
             .add(PointUpPlugin)
-            .add(AkashicRenderPlugin)
+            .add(AkashicDespawnPlugin)
             .add(AkashicTransformPlugin)
             .add(AkashicJoinEventPlugin)
             .add(AkashicRandomPlugin)

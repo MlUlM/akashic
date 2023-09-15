@@ -2,7 +2,7 @@ use std::fmt::Debug;
 
 use bevy::app::{App, Plugin, PreUpdate};
 use bevy::math::Vec2;
-use bevy::prelude::{Commands, Event, in_state, IntoSystemConfigs, NextState, Res, ResMut, Resource, States, World};
+use bevy::prelude::{Commands, Deref, Event, in_state, IntoSystemConfigs, NextState, Res, ResMut, Resource, States, World};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use wasm_bindgen::JsValue;
@@ -81,6 +81,7 @@ impl<S: States + Copy> Plugin for AkashicSchedulerPlugin<S> {
             )
             .set_runner(move |mut app| {
                 let scene = Scene::new(param.param());
+                app.insert_non_send_resource(GameScene(scene.clone()));
 
                 on_point_down_capture(&scene, &mut app.world);
                 on_point_up_capture(&scene, &mut app.world);
@@ -104,6 +105,9 @@ impl<S: States + Copy> Plugin for AkashicSchedulerPlugin<S> {
             });
     }
 }
+
+#[derive(Debug, Deref)]
+pub(crate) struct GameScene(pub(crate) Scene);
 
 #[derive(Resource, Debug, Default, Clone)]
 struct SceneLoadedFlag(SharedObject<bool>);

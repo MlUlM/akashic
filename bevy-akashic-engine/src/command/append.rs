@@ -1,13 +1,14 @@
 use bevy::ecs::system::{Command, EntityCommands};
 use bevy::hierarchy::{BuildChildren, ChildBuilder};
 use bevy::prelude::{Bundle, Commands, Entity, World};
-
 use akashic_rs::entity::AppendEntity;
+
 use akashic_rs::prelude::E;
 use akashic_rs::prelude::GAME;
 
 use crate::command::{AsBundle, BoxedAkashicEntity};
-use crate::plugin::render::AkashicEntityMap;
+use crate::plugin::akashic_entity_map::AkashicEntityMap;
+
 
 pub trait AkashicEntityAppend<'w, 's> {
     fn append<'a, B: Bundle>(&'a mut self, e: impl AsBundle<B> + E + 'static) -> EntityCommands<'w, 's, 'a>;

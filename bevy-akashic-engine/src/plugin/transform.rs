@@ -1,13 +1,12 @@
 use std::f32::consts::PI;
 
-use bevy::app::{App, Plugin, PreUpdate};
-use bevy::prelude::{Added, Commands, Entity, Query, Res, Transform};
+use bevy::app::{App, Last, Plugin, PreUpdate};
+use bevy::prelude::{Added, Commands, Component, Deref, Entity, IntoSystemConfigs, Query, Res, Transform};
 
-use crate::component::entity_size::{AkashicEntitySize, PreviousAkashicEntitySize};
-use crate::component::previous_transform::PreviousTransform;
+use crate::component::entity_size::AkashicEntitySize;
+use crate::plugin::akashic_entity_map::AkashicEntityMap;
+use crate::plugin::system_set::AkashicSystemSet;
 use crate::prelude::AkashicEntityId;
-
-use super::render::AkashicEntityMap;
 
 
 pub struct AkashicTransformPlugin;
@@ -15,7 +14,13 @@ pub struct AkashicTransformPlugin;
 impl Plugin for AkashicTransformPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(PreUpdate, insert_previous_transform_system);
+            .add_systems(PreUpdate, (
+                insert_previous_transform_system,
+                insert_previous_size_system
+            ))
+            .add_systems(Last, (
+                modify_transform_system
+            ).in_set(AkashicSystemSet::ModifyToNativeAkashicEntities));
     }
 }
 
@@ -30,7 +35,18 @@ fn insert_previous_transform_system(
 }
 
 
-pub(crate) fn transform_system(
+#[allow(clippy::type_complexity)]
+fn insert_previous_size_system(
+    mut commands: Commands,
+    akashic_entities: Query<(Entity, &AkashicEntitySize), (Added<AkashicEntitySize>, Added<AkashicEntityId>)>,
+) {
+    for (entity, size) in akashic_entities.iter() {
+        commands.entity(entity).insert(PreviousAkashicEntitySize::from(*size));
+    }
+}
+
+
+fn modify_transform_system(
     mut transforms: Query<(
         Entity,
         &Transform,
@@ -68,3 +84,38 @@ pub(crate) fn transform_system(
     }
 }
 
+#[derive(Copy, Clone, Debug, Default, PartialEq, Component)]
+struct PreviousTransform(pub(crate) Transform);
+
+impl PartialEq<Transform> for PreviousTransform {
+    #[inline(always)]
+    fn eq(&self, other: &Transform) -> bool {
+        &self.0 == other
+    }
+}
+
+
+impl From<Transform> for PreviousTransform {
+    fn from(value: Transform) -> Self {
+        Self(value)
+    }
+}
+
+
+#[derive(Component, Debug, Copy, Clone, PartialEq, Deref)]
+struct PreviousAkashicEntitySize(pub(crate) AkashicEntitySize);
+
+
+impl PartialEq<AkashicEntitySize> for PreviousAkashicEntitySize {
+    #[inline(always)]
+    fn eq(&self, other: &AkashicEntitySize) -> bool {
+        &self.0 == other
+    }
+}
+
+
+impl From<AkashicEntitySize> for PreviousAkashicEntitySize {
+    fn from(value: AkashicEntitySize) -> Self {
+        Self(value)
+    }
+}
