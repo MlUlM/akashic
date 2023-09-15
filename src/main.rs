@@ -2,15 +2,16 @@ use std::panic;
 
 use bevy::app::{App, Update};
 use bevy::core::{FrameCount, FrameCountPlugin};
-use bevy::prelude::{Commands, Component, Event, in_state, IntoSystemConfigs, OnEnter, Query, Res, States, Transform, With};
+use bevy::prelude::{Commands, Component, Event, in_state, IntoSystemConfigs, OnEnter, Query, Res, ResMut, Resource, States, Timer, Transform, With};
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
+use bevy::time::{Time, TimePlugin, TimerMode};
 
-use bevy_akashic_engine::akashic::object2d::entity::cacheable::label::{Label, LabelParameterObjectBuilder, TextColor};
 use bevy_akashic_engine::akashic::font::bitmap::{BitmapFont, BitmapFontParameterBuilder};
+use bevy_akashic_engine::akashic::object2d::entity::cacheable::label::{Label, LabelParameterObjectBuilder, TextColor};
 use bevy_akashic_engine::akashic::object2d::Object2D;
+use bevy_akashic_engine::component::object2d::entity_size::AkashicEntitySize;
 use bevy_akashic_engine::plugin::asset::AkashicAssetServer;
 use bevy_akashic_engine::prelude::*;
-use bevy_akashic_engine::component::object2d::entity_size::AkashicEntitySize;
 use bevy_akashic_engine::prelude::SceneParameterObject;
 use bevy_akashic_engine::prelude::text::AkashicText;
 use bevy_akashic_engine::resource::game::GameInfo;
@@ -43,8 +44,12 @@ fn main() {
         .build();
 
     App::new()
+        .insert_resource(MyTimer(Timer::from_seconds(0.3, TimerMode::Repeating)))
         .add_state::<SceneLoadState>()
-        .add_plugins(FrameCountPlugin)
+        .add_plugins((
+            FrameCountPlugin,
+            TimePlugin
+        ))
         .add_plugins(AkashicMinimumPlugins)
         .add_plugins(AkashicSchedulerPlugin::new(SceneLoadState::Loading, SceneLoadState::Startup)
             .with_scene_param(scene_param)
@@ -52,9 +57,37 @@ fn main() {
         .add_systems(OnEnter(SceneLoadState::Startup), setup)
         .add_systems(Update, (
             player_hovering_system,
+            spawn_player_system,
             update_label_system
         ).run_if(in_state(SceneLoadState::Startup)))
         .run();
+}
+
+#[derive(Resource)]
+struct MyTimer(Timer);
+
+
+fn spawn_player_system(
+    mut timer: ResMut<MyTimer>,
+    time: Res<Time>,
+    mut commands: Commands,
+    server: Res<AkashicAssetServer>,
+) {
+    if timer.0.tick(time.delta()).just_finished() {
+        let player_image_asset = server.image_by_id("player");
+        let param = SpriteParameterObjectBuilder::new(player_image_asset)
+            .local(true)
+            .angle(90.)
+            .x(100.)
+            .touchable(true)
+            .build();
+
+        let player = Sprite::new(param);
+
+        commands
+            .spawn(player.into_bundle())
+            .insert(Player);
+    }
 }
 
 
@@ -96,18 +129,19 @@ fn player_hovering_system(
     game_info: Res<GameInfo>,
     frames: Res<FrameCount>,
 ) {
-    let (mut transform, size) = player.single_mut();
-    transform.translation.y = (game_info.height() - size.height()) / 2. + ((frames.0 as f32) % (game_info.fps() * 10.) / 4.).sin() * 10.;
+    for (mut transform, size) in player.iter_mut(){
+        transform.translation.y = (game_info.height() - size.height()) / 2. + ((frames.0 as f32) % (game_info.fps() * 10.) / 4.).sin() * 10.;
+    }
 }
 
 fn update_label_system(
     mut player: Query<&mut AkashicText>,
     frames: Res<FrameCount>,
 ) {
-   for mut text in player.iter_mut(){
-       text.text = "テストアップデート".to_string();
-       text.style.font_size = 30;
-       let v = (frames.0 % 256) as u8;
-       text.style.text_color = Some(TextColor::from_rgba(v, v, v, 1.));
-   }
+    for mut text in player.iter_mut() {
+        text.text = "テストアップデート".to_string();
+        text.style.font_size = 30;
+        let v = (frames.0 % 256) as u8;
+        text.style.text_color = Some(TextColor::from_rgba(v, v, v, 1.));
+    }
 }
