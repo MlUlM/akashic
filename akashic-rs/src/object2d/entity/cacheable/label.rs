@@ -9,7 +9,7 @@ use crate::font::Font;
 
 #[wasm_bindgen(js_namespace = g)]
 extern "C" {
-    #[derive(Clone, Debug, crate::entity::AkashicEntity, CacheableEntity)]
+    #[derive(Clone, Debug, CacheableEntity)]
     #[wasm_bindgen(js_name = Label)]
     pub type Label;
 
@@ -76,7 +76,7 @@ pub struct LabelParameterObject {
 
     #[wasm_bindgen(js_name = fontSize)]
     #[builder(setter(into, strip_option), default)]
-    pub font_size: crate::param::OptionNumber,
+    pub font_size: crate::option_number::OptionNumber,
 
     #[wasm_bindgen(js_name = textAlign)]
     #[builder(setter(custom), default)]
@@ -84,7 +84,7 @@ pub struct LabelParameterObject {
 
     #[wasm_bindgen(js_name = maxWidth)]
     #[builder(setter(into, strip_option), default)]
-    pub max_width: crate::param::OptionNumber,
+    pub max_width: crate::option_number::OptionNumber,
 
     #[wasm_bindgen(js_name = widthAutoAdjust)]
     #[builder(setter(into, strip_option), default)]

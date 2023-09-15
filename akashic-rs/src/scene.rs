@@ -5,16 +5,16 @@ use wasm_bindgen::prelude::wasm_bindgen;
 
 use akashic_macro::AkashicScene;
 
-use crate::entity::{E, Entity};
 use crate::game::GAME;
+use crate::object2d::entity::{Entity, EntityObject2D};
 
 pub mod param;
 
 
-pub mod prelude{
+pub mod prelude {
     pub use crate::scene::{
         param::*,
-        Scene
+        Scene,
     };
 }
 
@@ -35,7 +35,7 @@ extern "C" {
 
     #[wasm_bindgen(method, getter, js_name = _loaded)]
     pub fn loaded(this: &Scene) -> bool;
-    
+
     #[wasm_bindgen(method, js_name = append)]
     fn _append(this: &Scene, e: JsValue);
 }
@@ -43,25 +43,25 @@ extern "C" {
 
 impl Scene {
     #[inline(always)]
-    pub fn append(&self, e: &impl E) {
+    pub fn append(&self, e: &impl EntityObject2D) {
         self._append(e.as_js_value())
     }
-    
-    
+
+
     #[inline(always)]
-    pub fn find_child(&self, id: usize) -> Option<Entity> {
+    pub fn find_child(&self, id: isize) -> Option<Entity> {
         self
             .children()
             .iter()
             .cloned()
-            .find(|child|{
-              child.id() == id  
+            .find(|child| {
+                child.id() == id
             })
     }
 
 
     #[inline(always)]
-    pub(crate) fn obj(&self) -> JsValue{
+    pub(crate) fn obj(&self) -> JsValue {
         self.obj.clone()
     }
 }

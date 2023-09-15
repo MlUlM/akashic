@@ -7,7 +7,7 @@ use serde::de::DeserializeOwned;
 use serde::Serialize;
 use wasm_bindgen::JsValue;
 
-use akashic_rs::entity::E;
+use akashic_rs::object2d::entity::EntityObject2D;
 use akashic_rs::prelude::{Scene, SceneParameterObject};
 use akashic_rs::prelude::{OnLoadHandler, PointDownCaptureHandler, UpdateHandler};
 use akashic_rs::prelude::GAME;
@@ -22,8 +22,8 @@ use crate::event::point_down::{PointDown, ScenePointDown};
 use crate::event::point_move::PointMoveEvent;
 use crate::event::point_up::ScenePointUpEvent;
 use crate::extensions::AsVec3;
-use crate::plugin::SharedSceneParameter;
 use crate::plugin::asset::AkashicAssetServer;
+use crate::plugin::SharedSceneParameter;
 use crate::prelude::message::RegisterAkashicMessageFn;
 use crate::prelude::point_move::ScenePointMoveEvent;
 use crate::SharedObject;

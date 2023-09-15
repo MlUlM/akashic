@@ -1,15 +1,16 @@
 use bevy::prelude::Component;
-use akashic_rs::entity::label::{TextColor, TextAlignment};
+
+use akashic_rs::object2d::entity::cacheable::label::{TextAlignment, TextColor};
 
 #[derive(Component, Debug, Eq, PartialEq)]
-pub struct AkashicText{
+pub struct AkashicText {
     pub text: String,
-    pub style: AkashicTextStyle
+    pub style: AkashicTextStyle,
 }
 
 
 #[derive(Component, Debug, Eq, PartialEq)]
-pub struct AkashicTextStyle{
+pub struct AkashicTextStyle {
     pub text_color: Option<TextColor>,
     pub font_size: isize,
     pub width_auto_adjust: bool,

@@ -1,9 +1,11 @@
 use bevy::app::{App, Last, Plugin};
 use bevy::prelude::{Commands, Component, Entity, IntoSystemConfigs, Query, With};
-use akashic_rs::entity::Cacheable;
+use akashic_rs::object2d::entity::cacheable::CacheableEntityObject2D;
+use akashic_rs::prelude::EntityObject2D;
+
 
 use crate::plugin::system_set::AkashicSystemSet;
-use crate::prelude::entity::label::NativeAkashicLabel;
+use crate::component::object2d::entity::label::NativeAkashicLabel;
 use crate::prelude::NativeAkashicEntity;
 
 #[derive(Component)]

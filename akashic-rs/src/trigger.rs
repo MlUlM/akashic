@@ -1,12 +1,12 @@
 use std::marker::PhantomData;
-use auto_delegate::delegate;
 
+use auto_delegate::delegate;
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::convert::FromWasmAbi;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use crate::entity::Entity;
+use crate::object2d::entity::Entity;
 
 pub mod on_point_down;
 pub mod on_load;

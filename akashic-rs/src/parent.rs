@@ -1,15 +1,15 @@
 use wasm_bindgen::JsValue;
 
-use crate::entity::E;
+use crate::object2d::entity::{Entity, EntityObject2D};
 use crate::scene::Scene;
 
 #[derive(Clone)]
-pub enum Parent<T: E> {
+pub enum Parent {
     Scene(Scene),
-    Entity(T),
+    Entity(Entity),
 }
 
-impl<T: E> Parent<T> {
+impl Parent {
     pub fn as_js_value(&self) -> JsValue {
         match self {
             Self::Scene(scene) => scene.obj(),
@@ -19,5 +19,5 @@ impl<T: E> Parent<T> {
 }
 
 
-pub type OptionNumber = Option<f32>;
+
 

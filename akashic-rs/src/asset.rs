@@ -2,7 +2,8 @@ use std::collections::HashMap;
 
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use crate::asset::src::{IntoSrc, Src};
+use crate::asset::src::Src;
+use crate::util::into_js_value::macros::into_js_value;
 
 pub mod surface;
 pub mod src;
@@ -61,10 +62,14 @@ extern "C" {
     pub fn path(this: &ImageAsset) -> String;
 }
 
+into_js_value!(ImageAsset);
 
-impl IntoSrc for ImageAsset {
+
+
+#[allow(clippy::from_over_into)]
+impl Into<Src> for ImageAsset {
     #[inline]
-    fn into_src(self) -> Src {
+    fn into(self) -> Src {
         Src::ImageAsset(self)
     }
 }

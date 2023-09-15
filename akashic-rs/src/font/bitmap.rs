@@ -63,9 +63,9 @@ pub struct BitmapFontParameter {
 
 
 impl BitmapFontParameterBuilder {
-    pub fn new(src: Src) -> Self {
+    pub fn new(src: impl Into<Src>) -> Self {
         Self {
-            src: Some(src.into()),
+            src: Some(src.into().into()),
             default_glyph_height: None,
             default_glyph_width: None,
             map: None,

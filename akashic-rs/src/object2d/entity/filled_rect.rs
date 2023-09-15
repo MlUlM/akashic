@@ -1,14 +1,16 @@
 use derive_builder::Builder;
+
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::{AkashicEntity, EParamSetters, object_e_parameter};
+use akashic_macro::{AkashicEntity, EParamSetters,  object_e_parameter};
 
-#[wasm_bindgen]
+
+#[wasm_bindgen(js_namespace = g)]
 extern "C" {
-    #[derive(Clone, AkashicEntity, Debug)]
+    #[derive(Clone, AkashicEntity)]
     pub type FilledRect;
 
-    #[wasm_bindgen(js_namespace = g, constructor)]
+    #[wasm_bindgen(constructor)]
     pub fn new(param: FilledRectParameter) -> FilledRect;
 }
 

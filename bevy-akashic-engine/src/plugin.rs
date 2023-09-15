@@ -10,17 +10,18 @@ use crate::plugin::event::{PointDownPlugin, PointMovePlugin, PointUpPlugin};
 use crate::plugin::game_info::GameInfoPlugin;
 use crate::plugin::game_state::AkashicGameScorePlugin;
 use crate::plugin::join::AkashicJoinEventPlugin;
-use crate::plugin::label::AkashicLabelPlugin;
+use feed::label::AkashicLabelPlugin;
 use crate::plugin::modify::AkashicModifyPlugin;
 use crate::plugin::player_id::PlayerIdPlugin;
 use crate::plugin::random::AkashicRandomPlugin;
 use crate::plugin::despawn::AkashicDespawnPlugin;
+use crate::plugin::feed::entity_object2d::AkashicEntityObject2DPlugin;
+
 use crate::plugin::system_set::AkashicSystemSetPlugin;
-use crate::plugin::transform::AkashicTransformPlugin;
+
 
 pub mod scheduler;
 pub mod despawn;
-pub mod transform;
 pub mod event;
 pub mod join;
 pub mod player_id;
@@ -30,17 +31,16 @@ pub mod random;
 pub mod game_state;
 pub mod system_set;
 pub mod modify;
-pub mod label;
 pub mod append;
+pub mod feed;
 
 
 pub mod prelude {
     pub use crate::plugin::{
         AkashicMinimumPlugins,
-        join::AkashicJoinEventPlugin,
         despawn::AkashicDespawnPlugin,
+        join::AkashicJoinEventPlugin,
         scheduler::AkashicSchedulerPlugin,
-        transform::AkashicTransformPlugin,
     };
 }
 
@@ -63,7 +63,7 @@ impl PluginGroup for AkashicMinimumPlugins {
             .add(PointUpPlugin)
             .add(AkashicJoinEventPlugin)
             .add(AkashicAppendEntityPlugin)
-            .add(AkashicTransformPlugin)
+            .add(AkashicEntityObject2DPlugin)
             .add(AkashicLabelPlugin)
             .add(AkashicDespawnPlugin)
             .add(AkashicModifyPlugin)
@@ -72,7 +72,7 @@ impl PluginGroup for AkashicMinimumPlugins {
 
 
 #[derive(Clone, Default)]
-pub struct SharedSceneParameter(Arc<RwLock<SceneParameterObject>>);
+pub(crate) struct SharedSceneParameter(Arc<RwLock<SceneParameterObject>>);
 
 
 impl SharedSceneParameter {

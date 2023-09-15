@@ -2,14 +2,15 @@ use derive_builder::Builder;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::{CacheableEntity, EParamSetters, object_e_parameter};
+use akashic_macro::{EParamSetters, object_e_parameter};
 
 use crate::asset::src::Src;
+use crate::util::into_js_value::IntoJsValue;
 
 #[wasm_bindgen]
 extern "C" {
     #[wasm_bindgen(js_namespace = g)]
-    #[derive(Clone, Debug, crate::entity::AkashicEntity, CacheableEntity)]
+    #[derive(Clone, Debug, crate::object2d::entity::AkashicEntity)]
     pub type Sprite;
 
     #[wasm_bindgen(js_namespace = g, constructor)]
@@ -35,29 +36,29 @@ pub struct SpriteParameterObject {
 
     #[wasm_bindgen(js_name = srcWidth)]
     #[builder(setter(into, strip_option), default)]
-    pub src_width: crate::param::OptionNumber,
+    pub src_width: crate::option_number::OptionNumber,
 
     #[wasm_bindgen(js_name = srcHeight)]
     #[builder(setter(into, strip_option), default)]
-    pub src_height: crate::param::OptionNumber,
+    pub src_height: crate::option_number::OptionNumber,
 
     #[wasm_bindgen(js_name = srcX)]
     #[builder(setter(into, strip_option), default)]
-    pub src_x: crate::param::OptionNumber,
+    pub src_x: crate::option_number::OptionNumber,
 
     #[wasm_bindgen(js_name = srcY)]
     #[builder(setter(into, strip_option), default)]
-    pub src_y: crate::param::OptionNumber,
+    pub src_y: crate::option_number::OptionNumber,
 }
 
 
 impl SpriteParameterObjectBuilder {
     #[inline]
     pub fn new(
-        src: Src
+        src: impl Into<Src>
     ) -> Self {
         Self {
-            src: Some(src.into()),
+            src: Some(src.into().into()),
             ..SpriteParameterObjectBuilder::empty()
         }
     }
@@ -84,8 +85,8 @@ impl SpriteParameterObjectBuilder {
 impl Into<JsValue> for Src {
     fn into(self) -> JsValue {
         match self {
-            Self::Surface(surface) => surface.into(),
-            Self::ImageAsset(image_asset) => image_asset.into(),
+            Self::Surface(surface) => surface.into_js_value(),
+            Self::ImageAsset(image_asset) => image_asset.into_js_value(),
         }
     }
 }

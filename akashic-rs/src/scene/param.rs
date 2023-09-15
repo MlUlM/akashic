@@ -1,5 +1,5 @@
 use js_sys::JsString;
-use wasm_bindgen::JsValue;
+use wasm_bindgen::{JsValue};
 use wasm_bindgen::prelude::wasm_bindgen;
 
 use crate::game::Game;
@@ -31,7 +31,6 @@ impl SceneParameterObject {
         SceneParameterObjectBuilder::new(game)
     }
 }
-
 
 
 // TODO: SCENEのパラメータを定義しなおす
