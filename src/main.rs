@@ -83,10 +83,7 @@ fn spawn_player_system(
             .build();
 
         let player = Sprite::new(param);
-
-        commands
-            .spawn(player.into_bundle())
-            .insert(Player);
+        commands.spawn(player.into_bundle()).insert(Player);
     }
 }
 
