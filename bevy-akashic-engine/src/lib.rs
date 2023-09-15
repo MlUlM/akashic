@@ -1,3 +1,5 @@
+#![allow(clippy::type_complexity)]
+
 use std::sync::{Arc, Mutex, MutexGuard};
 use bevy::prelude::Deref;
 use wasm_bindgen::JsValue;

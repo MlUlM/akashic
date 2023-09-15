@@ -5,14 +5,15 @@ use akashic_rs::prelude::E;
 
 use crate::command::AsBundle;
 use crate::component::entity_size::AkashicEntitySize;
-use crate::prelude::{AddAkashicEntity, AkashicEntityId};
+use crate::component::NativeAkashicEntity;
+use crate::prelude::AkashicEntityId;
 
 #[derive(Debug, Bundle)]
 pub struct AkashicSpriteBundle {
     id: AkashicEntityId,
     transform: Transform,
     size: AkashicEntitySize,
-    add: AddAkashicEntity,
+     native: NativeAkashicEntity
 }
 
 
@@ -26,7 +27,10 @@ impl AsBundle<AkashicSpriteBundle> for akashic_rs::prelude::Sprite {
             id: AkashicEntityId(self.id()),
             transform,
             size,
-            add: AddAkashicEntity(self.clone().into()),
+            native: NativeAkashicEntity::new(self)
         }
     }
 } 
+
+
+

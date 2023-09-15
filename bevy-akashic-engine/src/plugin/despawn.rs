@@ -1,9 +1,8 @@
 use bevy::app::{App, Last, Plugin};
-use bevy::prelude::{RemovedComponents, ResMut};
+use bevy::prelude::{NonSendMut, RemovedComponents};
+use akashic_rs::entity::EntityDestroy;
 
-use akashic_rs::prelude::EntityDestroy;
-
-use crate::plugin::akashic_entity_map::AkashicEntityMap;
+use crate::plugin::append::AkashicEntityMap;
 use crate::prelude::AkashicEntityId;
 
 pub struct AkashicDespawnPlugin;
@@ -19,13 +18,11 @@ impl Plugin for AkashicDespawnPlugin {
 
 
 fn akashic_entity_despawn_system(
+    mut akashic_entity_map: NonSendMut<AkashicEntityMap>,
     mut removed: RemovedComponents<AkashicEntityId>,
-    mut akashic_entity_map: ResMut<AkashicEntityMap>,
 ) {
     for entity in &mut removed {
-        let Some(akashic_entity) = akashic_entity_map.0.remove(&entity) else { continue; };
-
-        akashic_entity.destroy();
+        let Some(akashic_entity) = akashic_entity_map.remove(&entity) else { continue; };
         akashic_entity.destroy();
     }
 }

@@ -33,13 +33,28 @@ fs.writeFileSync(mainJsPath, `
         })
         g.game.pushScene(scene)
         
-        g.Sprite.prototype.updateAll = function(x, y, angle, width, height){
-            this.x = x;
-            this.y = y;
-            this.angle = angle;
-            this.width = width;
-            this.height = height;
-            this.modified();
+        // g.E.prototype.getProperties = function(){
+        //     id: this.id,
+        //     x: this.x,
+        //     y: this.y,
+        //     width: this.width,
+        //     height: this.height,
+        //     angle: this.angle
+        // }
+        
+        g.updateText = (entity, text, textAlign, textColor, widthAutoAdjust) => {
+            entity.text = text
+            entity.textAlign = textAlign
+            entity.textColor = textColor
+            entity.widthAutoAdjust = widthAutoAdjust
+        }
+        
+        g.updateEntityBase = (entity, x, y, angle, width, height) => {
+            entity.x = x;
+            entity.y = y;
+            entity.angle = angle;
+            entity.width = width;
+            entity.height = height;
         }
 
         if (typeof window == 'undefined') {

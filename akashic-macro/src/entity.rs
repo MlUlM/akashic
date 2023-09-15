@@ -46,14 +46,7 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
         #angle
         #append
         #impl_into_entity
-
-         #[wasm_bindgen]
-        extern "C"{
-            #[allow(clippy::type_complexity)]
-            #[wasm_bindgen(js_namespace = g, method, js_name=updateAll)]
-            pub fn update(this: &#entity_name, x: f32, y: f32, angle: f32, width: f32, height: f32);
-        }
-
+        
         #[wasm_bindgen]
         extern "C"{
             #[wasm_bindgen(js_namespace = g, method, getter, js_name=id)]

@@ -1,16 +1,14 @@
 use std::marker::PhantomData;
 
 use auto_delegate::Delegate;
-use akashic_rs::entity::Entity;
 
+use akashic_rs::entity::Entity;
 use akashic_rs::prelude::E;
 
-pub mod append;
 pub mod audio;
-pub mod destroy;
 
 pub mod prelude {
-    pub use crate::command::{append::*, AsBundle, audio::prelude::*, destroy::*};
+    pub use crate::command::{AsBundle, audio::prelude::*};
 }
 
 pub trait AsBundle<B> {

@@ -4,13 +4,13 @@ use akashic_rs::game::GAME;
 use akashic_rs::game::vars::game_state::GameState;
 
 #[derive(Debug, Resource)]
-pub struct AkashicGameState {
+pub struct GameScore {
     inner: GameState,
     cache: isize,
 }
 
 
-impl AkashicGameState {
+impl GameScore {
     #[inline(always)]
     pub fn score(&self) -> isize {
         self.cache
@@ -35,12 +35,12 @@ impl AkashicGameState {
 }
 
 
-unsafe impl Sync for AkashicGameState {}
+unsafe impl Sync for GameScore {}
 
-unsafe impl Send for AkashicGameState {}
+unsafe impl Send for GameScore {}
 
 
-impl Default for AkashicGameState {
+impl Default for GameScore {
     fn default() -> Self {
         Self {
             inner: GAME.vars().game_state(),

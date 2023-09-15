@@ -5,13 +5,14 @@ use bevy::core::{FrameCount, FrameCountPlugin};
 use bevy::prelude::{Commands, Component, Event, in_state, IntoSystemConfigs, OnEnter, Query, Res, States, Transform, With};
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
 
-use bevy_akashic_engine::akashic::entity::label::{Label, LabelParameterObjectBuilder};
+use bevy_akashic_engine::akashic::entity::label::{Label, LabelParameterObjectBuilder, TextColor};
 use bevy_akashic_engine::akashic::font::bitmap::{BitmapFont, BitmapFontParameterBuilder};
 use bevy_akashic_engine::plugin::asset::AkashicAssetServer;
 use bevy_akashic_engine::prelude::*;
 use bevy_akashic_engine::prelude::entity_size::AkashicEntitySize;
 use bevy_akashic_engine::prelude::SceneParameterObject;
 use bevy_akashic_engine::prelude::src::IntoSrc;
+use bevy_akashic_engine::prelude::text::AkashicText;
 use bevy_akashic_engine::resource::game::GameInfo;
 
 #[derive(Component, Debug)]
@@ -50,7 +51,8 @@ fn main() {
         )
         .add_systems(OnEnter(SceneLoadState::Startup), setup)
         .add_systems(Update, (
-            player_hovering_system
+            player_hovering_system,
+            update_label_system
         ).run_if(in_state(SceneLoadState::Startup)))
         .run();
 }
@@ -71,7 +73,7 @@ fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res
     )
         .build());
 
-    commands.append(label);
+    commands.spawn(label.as_bundle());
 
     let player_image_asset = server
         .image_by_id("player")
@@ -86,7 +88,7 @@ fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res
     player.set_y((game_size.height() - player.height()) / 2.);
     player.set_angle(45.);
     commands
-        .append(player)
+        .spawn(player.as_bundle())
         .insert(Player);
 }
 
@@ -100,3 +102,14 @@ fn player_hovering_system(
     transform.translation.y = (game_info.height() - size.height()) / 2. + ((frames.0 as f32) % (game_info.fps() * 10.) / 4.).sin() * 10.;
 }
 
+fn update_label_system(
+    mut player: Query<&mut AkashicText>,
+    frames: Res<FrameCount>,
+) {
+   for mut text in player.iter_mut(){
+       text.text = "テストアップデート".to_string();
+       text.style.font_size = 30;
+       let v = (frames.0 % 256) as u8;
+       text.style.text_color = Some(TextColor::from_rgba(v, v, v, 1.));
+   }
+}

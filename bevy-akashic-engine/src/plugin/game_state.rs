@@ -1,11 +1,11 @@
 use bevy::app::{App, Plugin};
-use crate::resource::game_state::AkashicGameState;
+use crate::resource::game_score::GameScore;
 
-pub struct GameStatePlugin;
+pub struct AkashicGameScorePlugin;
 
 
-impl Plugin for GameStatePlugin{
+impl Plugin for AkashicGameScorePlugin {
     fn build(&self, app: &mut App) {
-        app.init_resource::<AkashicGameState>();
+        app.init_resource::<GameScore>();
     }
 }

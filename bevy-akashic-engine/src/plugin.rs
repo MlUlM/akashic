@@ -3,21 +3,23 @@ use std::sync::{Arc, RwLock};
 use bevy::app::{PluginGroup, PluginGroupBuilder};
 
 use akashic_rs::prelude::SceneParameterObject;
-use crate::plugin::akashic_entity_map::AkashicEntityMapPlugin;
 
+use crate::plugin::append::AkashicAppendEntityPlugin;
 use crate::plugin::asset::AkashicAssetPlugin;
 use crate::plugin::event::{PointDownPlugin, PointMovePlugin, PointUpPlugin};
 use crate::plugin::game_info::GameInfoPlugin;
-use crate::plugin::game_state::GameStatePlugin;
+use crate::plugin::game_state::AkashicGameScorePlugin;
 use crate::plugin::join::AkashicJoinEventPlugin;
+use crate::plugin::label::AkashicLabelPlugin;
+use crate::plugin::modify::AkashicModifyPlugin;
 use crate::plugin::player_id::PlayerIdPlugin;
 use crate::plugin::random::AkashicRandomPlugin;
-use crate::plugin::render::AkashicDespawnPlugin;
+use crate::plugin::despawn::AkashicDespawnPlugin;
 use crate::plugin::system_set::AkashicSystemSetPlugin;
 use crate::plugin::transform::AkashicTransformPlugin;
 
 pub mod scheduler;
-pub mod render;
+pub mod despawn;
 pub mod transform;
 pub mod event;
 pub mod join;
@@ -26,15 +28,17 @@ pub mod game_info;
 pub mod asset;
 pub mod random;
 pub mod game_state;
-pub mod akashic_entity_map;
 pub mod system_set;
+pub mod modify;
+pub mod label;
+pub mod append;
 
 
 pub mod prelude {
     pub use crate::plugin::{
         AkashicMinimumPlugins,
         join::AkashicJoinEventPlugin,
-        render::AkashicDespawnPlugin,
+        despawn::AkashicDespawnPlugin,
         scheduler::AkashicSchedulerPlugin,
         transform::AkashicTransformPlugin,
     };
@@ -49,18 +53,20 @@ impl PluginGroup for AkashicMinimumPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
             .add(AkashicSystemSetPlugin)
-            .add(AkashicEntityMapPlugin)
             .add(AkashicAssetPlugin)
+            .add(AkashicGameScorePlugin)
+            .add(AkashicRandomPlugin)
             .add(GameInfoPlugin)
             .add(PlayerIdPlugin)
             .add(PointDownPlugin)
             .add(PointMovePlugin)
             .add(PointUpPlugin)
-            .add(AkashicDespawnPlugin)
-            .add(AkashicTransformPlugin)
             .add(AkashicJoinEventPlugin)
-            .add(AkashicRandomPlugin)
-            .add(GameStatePlugin)
+            .add(AkashicAppendEntityPlugin)
+            .add(AkashicTransformPlugin)
+            .add(AkashicLabelPlugin)
+            .add(AkashicDespawnPlugin)
+            .add(AkashicModifyPlugin)
     }
 }
 

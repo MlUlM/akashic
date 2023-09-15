@@ -1,12 +1,13 @@
 use std::f32::consts::PI;
 
-use bevy::app::{App, Last, Plugin, PreUpdate};
-use bevy::prelude::{Added, Commands, Component, Deref, Entity, IntoSystemConfigs, Query, Res, Transform};
+use bevy::app::{App, Last, Plugin};
+use bevy::prelude::{Changed, Commands, Entity, IntoSystemConfigs, Or, Query, Transform};
+use wasm_bindgen::prelude::wasm_bindgen;
 
 use crate::component::entity_size::AkashicEntitySize;
-use crate::plugin::akashic_entity_map::AkashicEntityMap;
+use crate::plugin::modify::RequestModifyTarget;
 use crate::plugin::system_set::AkashicSystemSet;
-use crate::prelude::AkashicEntityId;
+use crate::prelude::NativeAkashicEntity;
 
 
 pub struct AkashicTransformPlugin;
@@ -14,108 +15,45 @@ pub struct AkashicTransformPlugin;
 impl Plugin for AkashicTransformPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(PreUpdate, (
-                insert_previous_transform_system,
-                insert_previous_size_system
-            ))
             .add_systems(Last, (
-                modify_transform_system
-            ).in_set(AkashicSystemSet::ModifyToNativeAkashicEntities));
+                update_transform_system
+            ).in_set(AkashicSystemSet::UpdateAkashicEntities));
     }
 }
 
-#[allow(clippy::type_complexity)]
-fn insert_previous_transform_system(
+
+fn update_transform_system(
     mut commands: Commands,
-    akashic_entities: Query<(Entity, &Transform), (Added<Transform>, Added<AkashicEntityId>)>,
-) {
-    for (entity, transform) in akashic_entities.iter() {
-        commands.entity(entity).insert(PreviousTransform::from(*transform));
-    }
-}
-
-
-#[allow(clippy::type_complexity)]
-fn insert_previous_size_system(
-    mut commands: Commands,
-    akashic_entities: Query<(Entity, &AkashicEntitySize), (Added<AkashicEntitySize>, Added<AkashicEntityId>)>,
-) {
-    for (entity, size) in akashic_entities.iter() {
-        commands.entity(entity).insert(PreviousAkashicEntitySize::from(*size));
-    }
-}
-
-
-fn modify_transform_system(
     mut transforms: Query<(
         Entity,
+        &NativeAkashicEntity,
         &Transform,
         &AkashicEntitySize,
-        &mut PreviousTransform,
-        &mut PreviousAkashicEntitySize
-    )>,
-    entity_map: Res<AkashicEntityMap>,
+    ),
+        Or<(Changed<Transform>, Changed<AkashicEntitySize>)>
+    >
 ) {
-    for (
-        entity,
-        transform,
-        size,
-        mut prev_transform,
-        mut prev_size
-    ) in transforms.iter_mut() {
-        if prev_transform.eq(transform) && prev_size.eq(size) {
-            continue;
-        }
-
-        let Some(akashic_entity) = entity_map.0.get(&entity) else { continue; };
+    for (entity, native, transform, size) in transforms.iter_mut() {
+        let akashic_entity = native.0.clone();
         let (_, rad) = transform.rotation.to_axis_angle();
         let angle = rad * 180. / PI;
 
-        *prev_transform = PreviousTransform(*transform);
-        *prev_size = PreviousAkashicEntitySize(*size);
-
-        akashic_entity.update(
+        update_entity_base(
+            akashic_entity.clone(),
             transform.translation.x,
             transform.translation.y,
             angle,
             size.x,
             size.y,
         );
-    }
-}
-
-#[derive(Copy, Clone, Debug, Default, PartialEq, Component)]
-struct PreviousTransform(pub(crate) Transform);
-
-impl PartialEq<Transform> for PreviousTransform {
-    #[inline(always)]
-    fn eq(&self, other: &Transform) -> bool {
-        &self.0 == other
+        commands.entity(entity).insert(RequestModifyTarget);
     }
 }
 
 
-impl From<Transform> for PreviousTransform {
-    fn from(value: Transform) -> Self {
-        Self(value)
-    }
-}
+#[wasm_bindgen(js_namespace = g)]
+extern "C" {
 
-
-#[derive(Component, Debug, Copy, Clone, PartialEq, Deref)]
-struct PreviousAkashicEntitySize(pub(crate) AkashicEntitySize);
-
-
-impl PartialEq<AkashicEntitySize> for PreviousAkashicEntitySize {
-    #[inline(always)]
-    fn eq(&self, other: &AkashicEntitySize) -> bool {
-        &self.0 == other
-    }
-}
-
-
-impl From<AkashicEntitySize> for PreviousAkashicEntitySize {
-    fn from(value: AkashicEntitySize) -> Self {
-        Self(value)
-    }
+    #[wasm_bindgen(js_name = updateEntityBase)]
+    fn update_entity_base(entity: akashic_rs::entity::Entity, x: f32, y: f32, angle: f32, width: f32, height: f32);
 }

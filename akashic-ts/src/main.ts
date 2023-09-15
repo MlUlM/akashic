@@ -31,6 +31,7 @@ const label = new g.Label({
 
 });
 
+label.
 scene.append(label)
         // 各アセットオブジェクトを取得します
         const playerImageAsset = scene.asset.getImageById("player");
