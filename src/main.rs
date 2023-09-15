@@ -5,13 +5,13 @@ use bevy::core::{FrameCount, FrameCountPlugin};
 use bevy::prelude::{Commands, Component, Event, in_state, IntoSystemConfigs, OnEnter, Query, Res, States, Transform, With};
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
 
-use bevy_akashic_engine::akashic::entity::label::{Label, LabelParameterObjectBuilder, TextColor};
+use bevy_akashic_engine::akashic::object2d::entity::cacheable::label::{Label, LabelParameterObjectBuilder, TextColor};
 use bevy_akashic_engine::akashic::font::bitmap::{BitmapFont, BitmapFontParameterBuilder};
+use bevy_akashic_engine::akashic::object2d::Object2D;
 use bevy_akashic_engine::plugin::asset::AkashicAssetServer;
 use bevy_akashic_engine::prelude::*;
 use bevy_akashic_engine::prelude::entity_size::AkashicEntitySize;
 use bevy_akashic_engine::prelude::SceneParameterObject;
-use bevy_akashic_engine::prelude::src::IntoSrc;
 use bevy_akashic_engine::prelude::text::AkashicText;
 use bevy_akashic_engine::resource::game::GameInfo;
 
@@ -66,7 +66,7 @@ fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res
 
     let label = Label::new(LabelParameterObjectBuilder::new(
         "あかさたな",
-        BitmapFont::new(BitmapFontParameterBuilder::new(src.into_src())
+        BitmapFont::new(BitmapFontParameterBuilder::new(src)
             .glyph_info(&font_glyphs.data())
             .build()
         ),
@@ -75,9 +75,7 @@ fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res
 
     commands.spawn(label.as_bundle());
 
-    let player_image_asset = server
-        .image_by_id("player")
-        .into_src();
+    let player_image_asset = server.image_by_id("player");
     let param = SpriteParameterObjectBuilder::new(player_image_asset)
         .local(true)
         .touchable(true)

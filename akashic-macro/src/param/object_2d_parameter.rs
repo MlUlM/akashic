@@ -32,7 +32,7 @@ fn expand_fields(fields: &mut FieldsNamed) {
     push_if_need_option_number(fields, "opacity");
     push_if_need_option_number(fields, "scale_x");
     push_if_need_option_number(fields, "scale_y");
-    push_if_need(fields, "composite_operation", expand_custom_setter_field(expand_snake_case_field("compositeOperation", quote! {pub composite_operation: crate::param::OptionNumber})));
+    push_if_need(fields, "composite_operation", expand_custom_setter_field(expand_snake_case_field("compositeOperation", quote! {pub composite_operation: crate::option_number::OptionNumber})));
     push_if_need_option_number(fields, "anchor_x");
     push_if_need_option_number(fields, "anchor_y");
 }

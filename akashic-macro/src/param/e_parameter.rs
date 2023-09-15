@@ -38,14 +38,13 @@ fn expand_setters(
     quote! {
         paste::paste!{
             impl [<#ident Builder>]{
-                pub fn parent<T: crate::entity::E>(&mut self, parent: crate::param::Parent<T>) -> &mut Self{
+                pub fn parent(&mut self, parent: crate::parent::Parent) -> &mut Self{
                     let new = self;
                     new.parent = Some(parent.as_js_value());
                     new
                 }
             }
         }
-
     }
 }
 

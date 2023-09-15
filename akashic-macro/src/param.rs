@@ -1,7 +1,7 @@
 use proc_macro2::{Ident, Span};
 use quote::quote;
-use syn::FieldsNamed;
 use syn::__private::TokenStream2;
+use syn::FieldsNamed;
 use syn::parse::Parser;
 
 pub mod object_2d_parameter;
@@ -40,7 +40,7 @@ pub fn expand_option_number(field_name: &str) -> TokenStream2 {
     let field_name = Ident::new(field_name, Span::call_site());
     quote! {
         #[builder(setter(into, strip_option), default)]
-        pub #field_name: crate::param::OptionNumber
+        pub #field_name: crate::option_number::OptionNumber
     }
 }
 

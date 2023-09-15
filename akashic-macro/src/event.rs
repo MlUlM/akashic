@@ -28,7 +28,7 @@ pub fn expand_event_base(input: TokenStream) -> TokenStream {
               fn _pointer_id(this: &#name) -> f32;
 
               #[wasm_bindgen(method, getter, js_name = target)]
-              fn _target(this: &#name) -> Option<crate::entity::Entity>;
+              fn _target(this: &#name) -> Option<crate::object2d::entity::Entity>;
             }
 
             impl crate::trigger::PointEventBase for #name{
@@ -48,7 +48,7 @@ pub fn expand_event_base(input: TokenStream) -> TokenStream {
                 }
 
                 #[inline(always)]
-                fn target(&self) -> Option<crate::entity::Entity>{
+                fn target(&self) -> Option<crate::object2d::entity::Entity>{
                     self._target()
                 }
 

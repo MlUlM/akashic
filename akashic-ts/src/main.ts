@@ -1,42 +1,56 @@
 import {JoinEvent} from "@akashic/akashic-engine";
 
 function main(param: any): void {
+    console.log(g.game.selfId)
+
     const scene = new g.Scene({
         game: g.game,
         // このシーンで利用するアセットのIDを列挙し、シーンに通知します
         assetIds: ["player", "shot", "se", "font", "font_glyphs"]
     });
-    g.game.onJoin.add((player) => {
-        console.log(player.player.id)
+
+    let streamerId: undefined | string = undefined;
+    g.game.onJoin.add((joinEvent) => {
+        console.log(joinEvent.player.id)
+        streamerId = joinEvent.player.id
     })
+    console.log(g.game.selfId);
+
     console.log(param)
     scene.onLoad.add(() => {
         // ここからゲーム内容を記述します
 // 上で生成した font.png と font_glyphs.json に対応するアセットを取得
-const fontAsset = g.game.scene().asset.getImageById("font");
-const fontGlyphAsset = g.game.scene().asset.getTextById("font_glyphs");
+        const fontAsset = g.game.scene().asset.getImageById("font");
+        const fontGlyphAsset = g.game.scene().asset.getTextById("font_glyphs");
 
 // テキストアセット (JSON) の内容をオブジェクトに変換
-const glyphInfo = JSON.parse(fontGlyphAsset.data);
-console.log(glyphInfo)
+        const glyphInfo = JSON.parse(fontGlyphAsset.data);
+        console.log(glyphInfo)
 // ビットマップフォントを生成
-const font = new g.BitmapFont({
-  src: fontAsset,
-  glyphInfo: glyphInfo,
+        const font = new g.BitmapFont({
+            src: fontAsset,
+            glyphInfo: glyphInfo,
 
-});
+        });
 
-const label = new g.Label({
-    font, scene: scene, text: "あかさたな",
+        const label = new g.Label({
+            font, scene: scene, text: "あかさたな",
 
-});
+        });
 
-label.
-scene.append(label)
+        label.scene.append(label)
         // 各アセットオブジェクトを取得します
         const playerImageAsset = scene.asset.getImageById("player");
         const shotImageAsset = scene.asset.getImageById("shot");
         const seAudioAsset = scene.asset.getAudioById("se");
+
+        // 自分のID
+        console.log(g.game.selfId);
+
+
+        g.game.onJoin.add((event) => {
+        })
+
 
         seAudioAsset.play();
         g.game.onJoin.add((event: JoinEvent) => {
