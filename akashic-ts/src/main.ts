@@ -78,7 +78,7 @@ function main(param: any): void {
             // プレイヤーの座標に変更があった場合、 modified() を実行して変更をゲームに通知します
             player.modified();
         });
-
+  
         scene.asset.getAllTexts()
 
         // 画面をタッチしたとき、SEを鳴らします

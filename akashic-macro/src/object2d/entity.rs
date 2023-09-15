@@ -41,7 +41,7 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
         #[wasm_bindgen(js_namespace=g)]
         extern "C"{
             #[wasm_bindgen(method, getter, js_name=id)]
-            fn _id(this: &#entity_name) -> usize;
+            fn _id(this: &#entity_name) -> isize;
 
             #[wasm_bindgen(method, getter, js_name=scene)]
             fn _scene(this: &#entity_name) -> crate::scene::Scene;
@@ -82,7 +82,7 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
 
         impl crate::object2d::entity::EntityObject2D for #entity_name{
             #[inline(always)]
-            fn id(&self) -> usize{
+            fn id(&self) -> isize{
                 self._id()
             }
 
@@ -168,6 +168,12 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
             #[inline(always)]
             fn as_js_value(&self) -> wasm_bindgen::prelude::JsValue{
                 self.obj.clone()
+            }
+
+
+            #[inline(always)]
+            fn js_value_ref(&self) -> &wasm_bindgen::prelude::JsValue{
+                &self.obj
             }
         }
     }

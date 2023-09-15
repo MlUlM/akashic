@@ -33,27 +33,32 @@ fs.writeFileSync(mainJsPath, `
         })
         g.game.pushScene(scene)
         
-        // g.E.prototype.getProperties = function(){
-        //     id: this.id,
-        //     x: this.x,
-        //     y: this.y,
-        //     width: this.width,
-        //     height: this.height,
-        //     angle: this.angle
-        // }
+        g.getEntityProperties = (entity) => ({
+            id: entity.id,
+            x: entity.x,
+            y: entity.y,
+            width: entity.width,
+            height: entity.height,
+            angle: entity.angle,
+            scaleX: entity.scaleX,
+            scaleY: entity.scaleY,
+            anchorX: entity.anchorX,
+            anchorY: entity.anchorY
+        })
         
-        g.updateText = (entity, text, textAlign, textColor, widthAutoAdjust) => {
+        g.feedLabelProperties = (entity, text, textAlign, textColor, widthAutoAdjust) => {
             entity.text = text
             entity.textAlign = textAlign
             entity.textColor = textColor
             entity.widthAutoAdjust = widthAutoAdjust
         }
         
-        g.feedEntityProperties = (entity, x, y, angle, width, height, scaleX, scaleY) => {
+        g.feedEntityProperties = (entity, x, y, angle, width, height, scaleX, scaleY, anchorX, anchorY) => {
             entity.angle = angle;
             entity.resizeTo(width, height)
             entity.moveTo(x, y)
             entity.scale(scaleX, scaleY)
+            entity.anchor(anchorX, anchorY)
         }
 
         if (typeof window == 'undefined') {

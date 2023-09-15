@@ -10,7 +10,7 @@ use bevy_akashic_engine::akashic::font::bitmap::{BitmapFont, BitmapFontParameter
 use bevy_akashic_engine::akashic::object2d::Object2D;
 use bevy_akashic_engine::plugin::asset::AkashicAssetServer;
 use bevy_akashic_engine::prelude::*;
-use bevy_akashic_engine::prelude::entity_size::AkashicEntitySize;
+use bevy_akashic_engine::component::object2d::entity_size::AkashicEntitySize;
 use bevy_akashic_engine::prelude::SceneParameterObject;
 use bevy_akashic_engine::prelude::text::AkashicText;
 use bevy_akashic_engine::resource::game::GameInfo;
@@ -73,7 +73,7 @@ fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res
     )
         .build());
 
-    commands.spawn(label.as_bundle());
+    commands.spawn(label.into_bundle());
 
     let player_image_asset = server.image_by_id("player");
     let param = SpriteParameterObjectBuilder::new(player_image_asset)
@@ -86,7 +86,7 @@ fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res
     player.set_y((game_size.height() - player.height()) / 2.);
     player.set_angle(45.);
     commands
-        .spawn(player.as_bundle())
+        .spawn(player.into_bundle())
         .insert(Player);
 }
 
