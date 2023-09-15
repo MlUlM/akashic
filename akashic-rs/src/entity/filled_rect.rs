@@ -13,6 +13,7 @@ extern "C" {
 }
 
 
+#[non_exhaustive]
 #[object_e_parameter]
 #[allow(unused_variables)]
 #[wasm_bindgen(getter_with_clone)]

@@ -1,10 +1,11 @@
 use std::collections::HashMap;
 
 use bevy::app::{App, Last, Plugin};
-use bevy::prelude::{Added, Deref, DerefMut, Entity, IntoSystemConfigs, NonSend, NonSendMut, Parent, Query};
+use bevy::prelude::{Added, Children, Deref, DerefMut, Entity, IntoSystemConfigs, NonSend, NonSendMut, Parent, Query};
+
+use akashic_rs::entity::AppendEntity;
 
 use crate::plugin::scheduler::GameScene;
-
 use crate::plugin::system_set::AkashicSystemSet;
 use crate::prelude::NativeAkashicEntity;
 
@@ -24,13 +25,18 @@ impl Plugin for AkashicAppendEntityPlugin {
 
 fn append_akashic_entities_system(
     mut entity_map: NonSendMut<AkashicEntityMap>,
+    parents: Query<&NativeAkashicEntity, &Children>,
     akashic_entities: Query<(Entity, &NativeAkashicEntity, Option<&Parent>), Added<NativeAkashicEntity>>,
     scene: NonSend<GameScene>,
 ) {
     for (entity, native, parent) in akashic_entities.iter() {
         entity_map.insert(entity, native.0.clone());
 
-        if let Some(parent) = parent {} else {
+        if let Some(parent_entity) = parent {
+            // Errorの場合既に親が削除されてしまっていると考えてスキップ
+            let Ok(parent) = parents.get(parent_entity.get()) else { continue; };
+            parent.append(native.0.clone());
+        } else {
             scene.append(&native.0);
         }
     }
