@@ -4,3 +4,4 @@
 /.idea/
 **/node_modules/
 **/*.wasm
+akashic/script/bevy-akashic.wasm
