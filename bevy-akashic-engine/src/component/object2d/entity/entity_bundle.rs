@@ -1,12 +1,14 @@
-use bevy::math::{Quat, Vec3};
+use bevy::math::{Quat, Vec2, Vec3};
 use bevy::prelude::{Bundle, Transform};
+use serde::{Deserialize, Serialize};
+use wasm_bindgen::JsValue;
+use wasm_bindgen::prelude::wasm_bindgen;
 
 use akashic_rs::prelude::EntityObject2D;
 
 use crate::component::{AkashicEntityId, NativeAkashicEntity};
 use crate::component::object2d::entity_size::AkashicEntitySize;
 use crate::prelude::object2d::anchor::Anchor;
-use crate::prelude::object2d::entity::entity_properties;
 
 #[derive(Bundle, Debug)]
 pub struct AkashicEntityBundle {
@@ -22,11 +24,11 @@ impl AkashicEntityBundle {
     pub fn new(entity: impl EntityObject2D) -> Self {
         let properties = entity_properties(&entity);
         let id = AkashicEntityId(properties.id);
-        let size = AkashicEntitySize::new(&properties);
+        let size = AkashicEntitySize::new(Vec2::new(properties.width, properties.height));
         let transform = Transform::from_xyz(properties.x, properties.y, 0.)
             .with_rotation(Quat::from_rotation_z(properties.angle))
             .with_scale(Vec3::new(properties.scale_x, properties.scale_y, 0.));
-        let anchor = Anchor::new(&properties);
+        let anchor = Anchor::new(properties.anchor_x, properties.anchor_y);
         let native: akashic_rs::object2d::entity::Entity = entity.into();
 
         Self {
@@ -37,4 +39,44 @@ impl AkashicEntityBundle {
             native: NativeAkashicEntity(native),
         }
     }
+}
+#[wasm_bindgen(js_namespace=g)]
+extern {
+    #[wasm_bindgen(js_name=getEntityProperties)]
+    fn _entity_properties(entity: &JsValue) -> JsValue;
+}
+
+#[inline]
+fn entity_properties(entity: &impl EntityObject2D) -> EntityProperties {
+    let raw = _entity_properties(entity.js_value_ref());
+    serde_wasm_bindgen::from_value(raw).unwrap()
+}
+
+
+#[wasm_bindgen]
+#[derive(Serialize, Deserialize, Debug, Copy, Clone)]
+struct EntityProperties {
+    pub id: isize,
+
+    pub x: f32,
+
+    pub y: f32,
+
+    pub width: f32,
+
+    pub height: f32,
+
+    pub angle: f32,
+
+    #[serde(rename = "scaleX")]
+    pub scale_x: f32,
+
+    #[serde(rename = "scaleY")]
+    pub scale_y: f32,
+
+    #[serde(rename = "anchorX")]
+    pub anchor_x: Option<f32>,
+
+    #[serde(rename = "anchorY")]
+    pub anchor_y: Option<f32>,
 }

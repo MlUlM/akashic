@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use bevy::app::App;
 
 use bevy::prelude::{Plugin, Resource};
+use akashic_rs::console_log;
 
 use akashic_rs::prelude::{AudioAsset, GAME};
 use akashic_rs::prelude::ImageAsset;
@@ -12,7 +13,7 @@ use crate::SharedObject;
 pub struct AkashicAssetPlugin;
 
 
-impl Plugin for AkashicAssetPlugin{
+impl Plugin for AkashicAssetPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<AkashicAssetServer>();
     }
@@ -71,7 +72,7 @@ impl AkashicAssetServer {
 impl Default for AkashicAssetServer {
     fn default() -> Self {
         let assets = GAME.scene().asset();
-
+        console_log!("{:?}", assets.get_all_images_map("/image/*.png"));
         AkashicAssetServer {
             images: asset_map(assets.get_all_images_map("/image/*.png")),
             audios: asset_map(assets.get_all_audios_map("/audio/*")),
@@ -84,6 +85,9 @@ impl Default for AkashicAssetServer {
 fn asset_map<T>(map: HashMap<String, T>) -> HashMap<String, SharedObject<T>> {
     map
         .into_iter()
-        .map(|(path, asset)| (path, SharedObject::new(asset)))
-        .collect()
+        .map(|(path, asset)| {
+            console_log!("path = {path}");
+            (path, SharedObject::new(asset))
+        })
+    .collect()
 }

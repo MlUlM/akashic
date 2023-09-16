@@ -44,11 +44,6 @@
 			"width": 512,
 			"height": 220
 		},
-		"crypto": {
-			"type": "script",
-			"path": "script/crypto.js",
-			"global": true
-		},
 		"font_glyphs": {
 			"type": "text",
 			"path": "text/font_glyphs.json"
@@ -61,7 +56,7 @@
 		"sandbox-runtime": "3",
 		"nicolive": {
 			"supportedModes": [
-				"ranking"
+				"multi_admission"
 			],
 			"preferredSessionParameters": {
 				"totalTimeLimit": 20

@@ -1,15 +1,12 @@
 use std::fmt::Debug;
 
-use bevy::app::{App, Plugin, PreUpdate};
+use bevy::app::{App, Plugin};
 use bevy::math::Vec2;
-use bevy::prelude::{Commands, Deref, Event, in_state, IntoSystemConfigs, NextState, Res, ResMut, Resource, States, World};
-use serde::de::DeserializeOwned;
-use serde::Serialize;
-use wasm_bindgen::JsValue;
+use bevy::prelude::{Deref, Resource, States, World};
 
 use akashic_rs::object2d::entity::EntityObject2D;
-use akashic_rs::prelude::{Scene, SceneParameterObject};
-use akashic_rs::prelude::{OnLoadHandler, PointDownCaptureHandler, UpdateHandler};
+use akashic_rs::prelude::Scene;
+use akashic_rs::prelude::{PointDownCaptureHandler, UpdateHandler};
 use akashic_rs::prelude::GAME;
 use akashic_rs::trigger::point_move::PointMoveCaptureHandler;
 use akashic_rs::trigger::point_up::PointUpCaptureHandler;
@@ -17,91 +14,35 @@ use akashic_rs::trigger::PointEventBase;
 
 use crate::component::AkashicEntityId;
 use crate::event::AkashicEventQueue;
-use crate::event::message::add_akashic_message_event;
 use crate::event::point_down::{PointDown, ScenePointDown};
 use crate::event::point_move::PointMoveEvent;
 use crate::event::point_up::ScenePointUpEvent;
 use crate::extensions::AsVec3;
-use crate::plugin::asset::AkashicAssetServer;
-use crate::plugin::SharedSceneParameter;
-use crate::prelude::message::RegisterAkashicMessageFn;
 use crate::prelude::point_move::ScenePointMoveEvent;
-use crate::SharedObject;
-
-#[derive(Resource)]
-struct LoadedStateResource<S: States + Copy>(S);
 
 
-pub struct AkashicSchedulerPlugin<S: States> {
-    state_while_loading: S,
-    state_loaded: S,
-    scene_param: SharedSceneParameter,
-    message_event_registers: Vec<RegisterAkashicMessageFn>,
-}
 
-impl<S: States + Copy> AkashicSchedulerPlugin<S> {
-    #[inline]
-    pub fn new(state_while_loading: S, state_loaded: S) -> AkashicSchedulerPlugin<S> {
-        Self {
-            state_while_loading,
-            state_loaded,
-            scene_param: SharedSceneParameter::default(),
-            message_event_registers: Vec::new(),
-        }
-    }
-
-    #[inline]
-    pub fn with_scene_param(mut self, scene_param: SceneParameterObject) -> Self {
-        self.scene_param = SharedSceneParameter::new(scene_param);
-        self
-    }
+pub struct AkashicScheduleRunnerPlugin;
 
 
-    #[inline]
-    pub fn with_message_event<E>(mut self) -> Self
-        where E: Event + Serialize + DeserializeOwned
-    {
-        self.message_event_registers.push(add_akashic_message_event::<E>());
-        self
-    }
-}
-
-impl<S: States + Copy> Plugin for AkashicSchedulerPlugin<S> {
+impl Plugin for AkashicScheduleRunnerPlugin {
     fn build(&self, app: &mut App) {
-        let param = self.scene_param.clone();
-        let message_event_registers = self.message_event_registers.clone();
-        let scene_loaded_flag = SceneLoadedFlag::default();
-
         app
-            .insert_resource(scene_loaded_flag.clone())
-            .insert_resource(LoadedStateResource(self.state_loaded))
-            .add_systems(
-                PreUpdate,
-                (loading_scene_system::<S>).run_if(in_state(self.state_while_loading)),
-            )
+            .insert_non_send_resource(GameScene(GAME.scene()))
             .set_runner(move |mut app| {
-                let scene = Scene::new(param.param());
-                app.insert_non_send_resource(GameScene(scene.clone()));
+                let scene = app
+                    .world
+                    .non_send_resource::<GameScene>();
 
-                on_point_down_capture(&scene, &mut app.world);
-                on_point_up_capture(&scene, &mut app.world);
-                on_point_move_capture(&scene, &mut app.world);
-
-                for f in message_event_registers.iter() {
-                    f(&mut app, &scene);
-                }
-
-                scene.on_load().add(move |_| {
-                    scene_loaded_flag.set_loaded();
-                });
+                // on_point_down_capture(&scene, &mut app.world);
+                // on_point_up_capture(&scene, &mut app.world);
+                // on_point_move_capture(&scene, &mut app.world);
 
                 scene
                     .on_update()
                     .add(move || {
                         app.update();
                     });
-
-                GAME.push_scene(scene.clone(), JsValue::UNDEFINED);
             });
     }
 }
@@ -109,32 +50,6 @@ impl<S: States + Copy> Plugin for AkashicSchedulerPlugin<S> {
 #[derive(Debug, Deref)]
 pub(crate) struct GameScene(pub(crate) Scene);
 
-#[derive(Resource, Debug, Default, Clone)]
-struct SceneLoadedFlag(SharedObject<bool>);
-
-impl SceneLoadedFlag {
-    #[inline]
-    pub fn set_loaded(&self) {
-        *self.0.lock() = true;
-    }
-
-    #[inline]
-    pub fn loaded(&self) -> bool {
-        *self.0.lock()
-    }
-}
-
-fn loading_scene_system<S: States + Copy>(
-    mut commands: Commands,
-    mut state: ResMut<NextState<S>>,
-    scene_loaded_flag: Res<SceneLoadedFlag>,
-    next_state: Res<LoadedStateResource<S>>,
-) {
-    if scene_loaded_flag.loaded() {
-        commands.insert_resource(AkashicAssetServer::default());
-        state.set(next_state.0);
-    }
-}
 
 fn on_point_down_capture(scene: &impl PointDownCaptureHandler, world: &mut World) {
     let point_down_queue = world

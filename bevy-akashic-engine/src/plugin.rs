@@ -18,6 +18,7 @@ use crate::plugin::despawn::AkashicDespawnPlugin;
 use crate::plugin::feed::entity_object2d::AkashicEntityObject2DPlugin;
 
 use crate::plugin::system_set::AkashicSystemSetPlugin;
+use crate::prelude::AkashicScheduleRunnerPlugin;
 
 
 pub mod scheduler;
@@ -40,7 +41,7 @@ pub mod prelude {
         AkashicMinimumPlugins,
         despawn::AkashicDespawnPlugin,
         join::AkashicJoinEventPlugin,
-        scheduler::AkashicSchedulerPlugin,
+        scheduler::AkashicScheduleRunnerPlugin,
     };
 }
 
@@ -67,6 +68,7 @@ impl PluginGroup for AkashicMinimumPlugins {
             .add(AkashicLabelPlugin)
             .add(AkashicDespawnPlugin)
             .add(AkashicModifyPlugin)
+            .add(AkashicScheduleRunnerPlugin)
     }
 }
 

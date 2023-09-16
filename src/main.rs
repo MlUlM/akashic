@@ -1,8 +1,8 @@
 use std::panic;
 
-use bevy::app::{App, Update};
+use bevy::app::{App, Startup, Update};
 use bevy::core::{FrameCount, FrameCountPlugin};
-use bevy::prelude::{Commands, Component, Event, in_state, IntoSystemConfigs, OnEnter, Query, Res, ResMut, Resource, States, Timer, Transform, With};
+use bevy::prelude::{Commands, Component, Event, Query, Res, ResMut, Resource, States, Timer, Transform, With};
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
 use bevy::time::{Time, TimePlugin, TimerMode};
 
@@ -12,7 +12,6 @@ use bevy_akashic_engine::akashic::object2d::Object2D;
 use bevy_akashic_engine::component::object2d::entity_size::AkashicEntitySize;
 use bevy_akashic_engine::plugin::asset::AkashicAssetServer;
 use bevy_akashic_engine::prelude::*;
-use bevy_akashic_engine::prelude::SceneParameterObject;
 use bevy_akashic_engine::prelude::text::AkashicText;
 use bevy_akashic_engine::resource::game::GameInfo;
 
@@ -39,10 +38,6 @@ enum SceneLoadState {
 fn main() {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
 
-    let scene_param = SceneParameterObject::builder(GAME.clone())
-        .asset_ids(vec!["player", "shot", "se", "font", "font_glyphs"])
-        .build();
-
     App::new()
         .insert_resource(MyTimer(Timer::from_seconds(0.3, TimerMode::Repeating)))
         .add_state::<SceneLoadState>()
@@ -51,15 +46,12 @@ fn main() {
             TimePlugin
         ))
         .add_plugins(AkashicMinimumPlugins)
-        .add_plugins(AkashicSchedulerPlugin::new(SceneLoadState::Loading, SceneLoadState::Startup)
-            .with_scene_param(scene_param)
-        )
-        .add_systems(OnEnter(SceneLoadState::Startup), setup)
+        .add_systems(Startup, setup)
         .add_systems(Update, (
             player_hovering_system,
             spawn_player_system,
             update_label_system
-        ).run_if(in_state(SceneLoadState::Startup)))
+        ))
         .run();
 }
 
@@ -126,7 +118,7 @@ fn player_hovering_system(
     game_info: Res<GameInfo>,
     frames: Res<FrameCount>,
 ) {
-    for (mut transform, size) in player.iter_mut(){
+    for (mut transform, size) in player.iter_mut() {
         transform.translation.y = (game_info.height() - size.height()) / 2. + ((frames.0 as f32) % (game_info.fps() * 10.) / 4.).sin() * 10.;
     }
 }

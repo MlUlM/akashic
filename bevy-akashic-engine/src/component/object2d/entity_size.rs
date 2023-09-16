@@ -1,6 +1,5 @@
 use bevy::math::Vec2;
 use bevy::prelude::{Component, Deref, DerefMut};
-use crate::prelude::object2d::entity::EntityProperties;
 
 #[derive(Component, Debug, Copy, Clone, PartialEq, Deref, DerefMut)]
 pub struct AkashicEntitySize(Vec2);
@@ -8,8 +7,8 @@ pub struct AkashicEntitySize(Vec2);
 
 impl AkashicEntitySize {
     #[inline(always)]
-    pub(crate) fn new(size: &EntityProperties) -> Self {
-        Self(Vec2::new(size.width, size.height))
+    pub(crate) fn new(size: Vec2) -> Self {
+        Self(size)
     }
 
 
