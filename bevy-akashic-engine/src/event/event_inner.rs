@@ -31,44 +31,51 @@ impl<E: PointEventBase> PointEventInner<E> {
 }
 
 
+macro_rules! event_base_methods {
+    () => {
+        #[inline(always)]
+        pub fn button(&self) -> u8 {
+            *self.button.get_or_init(|| self.native_event.button())
+        }
+
+
+        #[inline(always)]
+        pub fn event_flags(&self) -> u8 {
+            *self.event_flags.get_or_init(|| self.native_event.event_flags())
+        }
+
+
+        #[inline(always)]
+        pub fn local(&self) -> bool {
+            *self.local.get_or_init(|| self.native_event.local())
+        }
+
+
+        #[inline(always)]
+        pub fn player(&self) -> &Option<Player> {
+            self.player.get_or_init(|| self.native_event.player())
+        }
+
+
+        #[inline(always)]
+        pub fn point(&self) -> Vec3 {
+            *self.point.get_or_init(|| {
+                let point = self.native_event.point();
+                Vec3::new(point.x(), point.y(), 0.)
+            })
+        }
+
+
+        #[inline(always)]
+        pub fn pointer_id(&self) -> f32 {
+            *self.pointer_id.get_or_init(|| self.native_event.pointer_id())
+        }
+    };
+}
+
+
 impl<B: PointEventBase> PointEventInner<B> {
-    #[inline(always)]
-    pub fn button(&self) -> u8 {
-        *self.button.get_or_init(|| self.native_event.button())
-    }
-
-
-    #[inline(always)]
-    pub fn event_flags(&self) -> u8 {
-        *self.event_flags.get_or_init(|| self.native_event.event_flags())
-    }
-
-
-    #[inline(always)]
-    pub fn local(&self) -> bool {
-        *self.local.get_or_init(|| self.native_event.local())
-    }
-
-
-    #[inline(always)]
-    pub fn player(&self) -> Option<Player> {
-        self.player.get_or_init(|| self.native_event.player()).clone()
-    }
-
-
-    #[inline(always)]
-    pub fn point(&self) -> Vec3 {
-        *self.point.get_or_init(|| {
-            let point = self.native_event.point();
-            Vec3::new(point.x(), point.y(), 0.)
-        })
-    }
-
-
-    #[inline(always)]
-    pub fn pointer_id(&self) -> f32 {
-        *self.pointer_id.get_or_init(|| self.native_event.pointer_id())
-    }
+    event_base_methods!();
 }
 
 
@@ -110,44 +117,7 @@ impl<E: PointDeltaEventBase> PointDeltaEventInner<E> {
 
 
 impl<B: PointDeltaEventBase> PointDeltaEventInner<B> {
-    #[inline(always)]
-    pub fn button(&self) -> u8 {
-        *self.button.get_or_init(|| self.native_event.button())
-    }
-
-
-    #[inline(always)]
-    pub fn event_flags(&self) -> u8 {
-        *self.event_flags.get_or_init(|| self.native_event.event_flags())
-    }
-
-
-    #[inline(always)]
-    pub fn local(&self) -> bool {
-        *self.local.get_or_init(|| self.native_event.local())
-    }
-
-
-    #[inline(always)]
-    pub fn player(&self) -> Option<Player> {
-        self.player.get_or_init(|| self.native_event.player()).clone()
-    }
-
-
-    #[inline(always)]
-    pub fn point(&self) -> Vec3 {
-        *self.point.get_or_init(|| {
-            let point = self.native_event.point();
-            Vec3::new(point.x(), point.y(), 0.)
-        })
-    }
-
-
-    #[inline(always)]
-    pub fn pointer_id(&self) -> f32 {
-        *self.pointer_id.get_or_init(|| self.native_event.pointer_id())
-    }
-
+    event_base_methods!();
 
     #[inline(always)]
     pub fn start_delta(&self) -> Vec3 {

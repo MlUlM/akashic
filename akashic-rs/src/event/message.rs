@@ -14,6 +14,15 @@ extern "C" {
     #[wasm_bindgen(method, getter)]
     pub fn data(this: &MessageEvent) -> JsValue;
 
+    #[wasm_bindgen(method, getter)]
+    pub fn local(this: &MessageEvent) -> bool;
+
+    #[wasm_bindgen(method, getter)]
+    pub fn player(this: &MessageEvent) -> Option<Player>;
+    
+    #[wasm_bindgen(method, getter, js_name=eventFlags)]
+    pub fn event_flags(this: &MessageEvent) -> u8;
+
     #[wasm_bindgen(method, getter, js_name = "type")]
     pub fn event_type(this: &MessageEvent) -> String;
 }

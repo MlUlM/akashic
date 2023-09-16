@@ -2,7 +2,7 @@ use std::panic;
 
 use bevy::app::{App, Startup, Update};
 use bevy::core::{FrameCount, FrameCountPlugin};
-use bevy::prelude::{Commands, Component, Event, Query, Res, ResMut, Resource, Timer, Transform, With};
+use bevy::prelude::{Commands, Component, Event, EventReader, Query, Res, ResMut, Resource, Timer, Transform, With};
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
 use bevy::time::{Time, TimePlugin, TimerMode};
 
@@ -10,6 +10,9 @@ use bevy_akashic_engine::akashic::font::bitmap::{BitmapFont, BitmapFontParameter
 use bevy_akashic_engine::akashic::object2d::entity::cacheable::label::{Label, LabelParameterObjectBuilder, TextColor};
 use bevy_akashic_engine::akashic::object2d::Object2D;
 use bevy_akashic_engine::component::object2d::entity_size::AkashicEntitySize;
+use bevy_akashic_engine::event::message::AddMessageEvent;
+use bevy_akashic_engine::event::message::raise_event::RaiseEvent;
+use bevy_akashic_engine::event::message::request_raise_event::RaiseEventRequester;
 use bevy_akashic_engine::event::point_down::OnPointDown;
 use bevy_akashic_engine::event::point_move::OnPointMove;
 use bevy_akashic_engine::event::point_up::OnPointUp;
@@ -20,7 +23,7 @@ use bevy_akashic_engine::prelude::text::AkashicText;
 use bevy_akashic_engine::resource::game::GameInfo;
 
 #[derive(Component, Debug)]
-struct Player;
+struct Angel;
 
 #[derive(Component, Debug)]
 struct Shot;
@@ -35,6 +38,7 @@ fn main() {
 
     App::new()
         .insert_resource(MyTimer(Timer::from_seconds(0.3, TimerMode::Repeating)))
+        .add_message_event::<TestMessageEvent>()
         .add_plugins((
             FrameCountPlugin,
             TimePlugin
@@ -47,7 +51,8 @@ fn main() {
             update_label_system,
             point_down,
             point_move,
-            point_up
+            point_up,
+            read_raise_events
         ))
         .run();
 }
@@ -72,7 +77,7 @@ fn spawn_player_system(
             .build();
 
         let player = Sprite::new(param);
-        commands.spawn(player.into_bundle()).insert(Player);
+        commands.spawn(player.into_bundle()).insert(Angel);
     }
 }
 
@@ -106,12 +111,12 @@ fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res
     player.set_angle(45.);
     commands
         .spawn(player.into_bundle())
-        .insert(Player);
+        .insert(Angel);
 }
 
 
 fn player_hovering_system(
-    mut player: Query<(&mut Transform, &AkashicEntitySize), With<Player>>,
+    mut player: Query<(&mut Transform, &AkashicEntitySize), With<Angel>>,
     game_info: Res<GameInfo>,
     frames: Res<FrameCount>,
 ) {
@@ -134,9 +139,11 @@ fn update_label_system(
 
 
 fn point_down(
-    player: Query<&OnPointDown, With<GameScene>>
+    raise_event_requester: RaiseEventRequester,
+    player: Query<&OnPointDown, With<Angel>>,
 ) {
     for p in player.iter() {
+        raise_event_requester.raise_only_data(TestMessageEvent("HELLO".to_string()));
         console_log!("down = {:?}", p.point());
     }
 }
@@ -156,5 +163,14 @@ fn point_up(
 ) {
     for p in tests.iter() {
         console_log!("up = {:?}", p.start_delta());
+    }
+}
+
+
+fn read_raise_events(
+    mut er: EventReader<RaiseEvent<TestMessageEvent>>
+) {
+    for event in er.iter() {
+        console_log!("{:?}", event);
     }
 }
