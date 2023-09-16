@@ -4,5 +4,6 @@
 
 pub mod entity_object2d;
 pub mod label;
+pub mod filled_rect;
 
 

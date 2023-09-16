@@ -10,7 +10,7 @@ use bevy_akashic_engine::akashic::console_log;
 use bevy_akashic_engine::akashic::font::bitmap::{BitmapFont, BitmapFontParameterBuilder};
 use bevy_akashic_engine::akashic::object2d::entity::cacheable::label::{Label, LabelParameterObjectBuilder};
 use bevy_akashic_engine::akashic::object2d::Object2D;
-use bevy_akashic_engine::akashic::prelude::{Sprite, SpriteParameterObjectBuilder};
+use bevy_akashic_engine::akashic::prelude::{FilledRect, FilledRectParameterBuilder, Sprite, SpriteParameterObjectBuilder};
 use bevy_akashic_engine::component::object2d::entity_size::AkashicEntitySize;
 use bevy_akashic_engine::event::message::AddMessageEvent;
 use bevy_akashic_engine::event::message::raise_event::RaiseEvent;
@@ -20,6 +20,7 @@ use bevy_akashic_engine::event::point_move::OnPointMove;
 use bevy_akashic_engine::event::point_up::OnPointUp;
 use bevy_akashic_engine::plugin::asset::AkashicAssetServer;
 use bevy_akashic_engine::prelude::*;
+use bevy_akashic_engine::prelude::object2d::entity::filled_rect::CssColor;
 use bevy_akashic_engine::prelude::object2d::touchable::Touchable;
 use bevy_akashic_engine::prelude::scene::GameScene;
 use bevy_akashic_engine::prelude::text::AkashicText;
@@ -67,9 +68,13 @@ struct MyTimer(Timer);
 fn spawn_player_system(
     mut timer: ResMut<MyTimer>,
     mut touches: Query<&mut Touchable, With<Angel>>,
+    mut colors: Query<&mut CssColor>,
     time: Res<Time>,
 ) {
     if timer.0.tick(time.delta()).just_finished() {
+        for mut c in colors.iter_mut(){
+            c.set_rgba(1., 0., 0., 1.);
+        }
         for mut t in touches.iter_mut() {
             t.toggle();
         }
@@ -95,6 +100,8 @@ fn label_sytem(
 
 fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res<GameInfo>) {
     console_log!("SETUP");
+
+    commands.spawn(FilledRect::new(FilledRectParameterBuilder::new("blue", 32., 32.).build()).into_bundle());
 
     let src = server.image_by_id("font");
     let font_glyphs = server.text_by_id("font_glyphs");

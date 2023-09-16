@@ -31,6 +31,10 @@ fs.writeFileSync(mainJsPath, `
             touchable: entity.touchable
         })
         
+        g.feedFilledRectProperties = (entity, cssColor) => {
+            entity.cssColor = cssColor
+        }
+        
         g.feedLabelProperties = (entity, text, textAlign, textColor, widthAutoAdjust) => {
             entity.text = text
             console.log(entity.text)

@@ -7,6 +7,7 @@ use crate::plugin::asset::AkashicAssetPlugin;
 use crate::plugin::despawn::AkashicDespawnPlugin;
 use crate::plugin::event::{PointDownPlugin, PointMovePlugin, PointUpPlugin};
 use crate::plugin::feed::entity_object2d::AkashicEntityObject2DPlugin;
+use crate::plugin::feed::filled_rect::FilledRectPlugin;
 use crate::plugin::game_info::GameInfoPlugin;
 use crate::plugin::game_state::AkashicGameScorePlugin;
 use crate::plugin::join::AkashicJoinEventPlugin;
@@ -64,6 +65,7 @@ impl PluginGroup for AkashicMinimumPlugins {
             .add(AkashicAppendEntityPlugin)
             .add(AkashicEntityObject2DPlugin)
             .add(AkashicLabelPlugin)
+            .add(FilledRectPlugin)
             .add(AkashicDespawnPlugin)
             .add(AkashicModifyPlugin)
             .add(AkashicScheduleRunnerPlugin)

@@ -14,6 +14,10 @@
             touchable: entity.touchable
         })
         
+        g.feedFilledRectProperties = (entity, cssColor) => {
+            entity.cssColor = cssColor
+        }
+        
         g.feedLabelProperties = (entity, text, textAlign, textColor, widthAutoAdjust) => {
             entity.text = text
             console.log(entity.text)
@@ -958,6 +962,14 @@ __exports.EntityProperties = EntityProperties;
 /**
 */
 class FilledRectParameter {
+
+    static __wrap(ptr) {
+        ptr = ptr >>> 0;
+        const obj = Object.create(FilledRectParameter.prototype);
+        obj.__wbg_ptr = ptr;
+
+        return obj;
+    }
 
     __destroy_into_raw() {
         const ptr = this.__wbg_ptr;
@@ -2643,16 +2655,16 @@ function __wbg_get_imports() {
         const ret = g.getEntityProperties(getObject(arg0));
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_boolean_get = function(arg0) {
-        const v = getObject(arg0);
-        const ret = typeof(v) === 'boolean' ? (v ? 1 : 0) : 2;
-        return ret;
-    };
-    imports.wbg.__wbindgen_number_get = function(arg0, arg1) {
-        const obj = getObject(arg1);
-        const ret = typeof(obj) === 'number' ? obj : undefined;
-        getFloat64Memory0()[arg0 / 8 + 1] = isLikeNone(ret) ? 0 : ret;
-        getInt32Memory0()[arg0 / 4 + 0] = !isLikeNone(ret);
+    imports.wbg.__wbg_feedFilledRectProperties_a48109919dbc67a4 = function(arg0, arg1, arg2) {
+        let deferred0_0;
+        let deferred0_1;
+        try {
+            deferred0_0 = arg1;
+            deferred0_1 = arg2;
+            g.feedFilledRectProperties(getObject(arg0), getStringFromWasm0(arg1, arg2));
+        } finally {
+            wasm.__wbindgen_free(deferred0_0, deferred0_1, 1);
+        }
     };
     imports.wbg.__wbindgen_is_object = function(arg0) {
         const val = getObject(arg0);
@@ -2667,6 +2679,12 @@ function __wbg_get_imports() {
         const ret = getObject(arg0) in getObject(arg1);
         return ret;
     };
+    imports.wbg.__wbindgen_number_get = function(arg0, arg1) {
+        const obj = getObject(arg1);
+        const ret = typeof(obj) === 'number' ? obj : undefined;
+        getFloat64Memory0()[arg0 / 8 + 1] = isLikeNone(ret) ? 0 : ret;
+        getInt32Memory0()[arg0 / 4 + 0] = !isLikeNone(ret);
+    };
     imports.wbg.__wbindgen_is_bigint = function(arg0) {
         const ret = typeof(getObject(arg0)) === 'bigint';
         return ret;
@@ -2677,6 +2695,11 @@ function __wbg_get_imports() {
     };
     imports.wbg.__wbindgen_jsval_eq = function(arg0, arg1) {
         const ret = getObject(arg0) === getObject(arg1);
+        return ret;
+    };
+    imports.wbg.__wbindgen_boolean_get = function(arg0) {
+        const v = getObject(arg0);
+        const ret = typeof(v) === 'boolean' ? (v ? 1 : 0) : 2;
         return ret;
     };
     imports.wbg.__wbg_feedLabelProperties_526d7a665d59f24c = function(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7) {
@@ -2886,6 +2909,17 @@ function __wbg_get_imports() {
     imports.wbg.__wbg_y_398e9cccf1c984a4 = function(arg0) {
         const ret = getObject(arg0).y;
         return ret;
+    };
+    imports.wbg.__wbg_new_922693aeee367f21 = function(arg0) {
+        const ret = new g.FilledRect(FilledRectParameter.__wrap(arg0));
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_cssColor_6af5b452497db75b = function(arg0, arg1) {
+        const ret = getObject(arg1).cssColor;
+        const ptr1 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len1 = WASM_VECTOR_LEN;
+        getInt32Memory0()[arg0 / 4 + 1] = len1;
+        getInt32Memory0()[arg0 / 4 + 0] = ptr1;
     };
     imports.wbg.__wbg_static_accessor_GAME_7c453f8c156b042d = function() {
         const ret = g.game;
@@ -3191,28 +3225,28 @@ function __wbg_get_imports() {
         const ret = wasm.memory;
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper307 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 143, __wbg_adapter_46);
+    imports.wbg.__wbindgen_closure_wrapper379 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 266, __wbg_adapter_46);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper1069 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 782, __wbg_adapter_49);
+    imports.wbg.__wbindgen_closure_wrapper1134 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 829, __wbg_adapter_49);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper1071 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 782, __wbg_adapter_52);
+    imports.wbg.__wbindgen_closure_wrapper1136 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 829, __wbg_adapter_52);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper1073 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 782, __wbg_adapter_52);
+    imports.wbg.__wbindgen_closure_wrapper1138 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 829, __wbg_adapter_52);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper1075 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 782, __wbg_adapter_52);
+    imports.wbg.__wbindgen_closure_wrapper1140 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 829, __wbg_adapter_52);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper1077 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 782, __wbg_adapter_52);
+    imports.wbg.__wbindgen_closure_wrapper1142 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 829, __wbg_adapter_52);
         return addHeapObject(ret);
     };
 
