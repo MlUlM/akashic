@@ -71,7 +71,7 @@ impl AkashicAssetServer {
 
     #[inline]
     pub fn text_by_id(&self, asset_id: &str) -> TextAsset{
-        self.get_text_by_id(asset_id).expect(&format!("Not found text asset; id={asset_id}"))
+        self.get_text_by_id(asset_id).unwrap_or_else(|| panic!("Not found text asset; id={asset_id}"))
     }
 
 
@@ -96,7 +96,7 @@ impl Default for AkashicAssetServer {
     }
 }
 
-
+#[allow(clippy::boxed_local)]
 fn convert_to_hash_map<A: akashic_rs::asset::Asset + Clone>(assets: Box<[A]>) -> HashMap<String, SharedObject<A>> {
     assets
         .iter()

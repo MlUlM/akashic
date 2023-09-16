@@ -16,17 +16,6 @@ const wasmCode = js
     .replace("Object.assign(__wbg_init, { initSync }, __exports);", "Object.assign(__wbg_init, { initSync }, __exports)();")
 
 fs.writeFileSync(mainJsPath, `
-   
-    function base64ToArrayBuffer(base64) {
-        var binaryString = atob(base64);
-        var bytes = new Uint8Array(binaryString.length);
-        for (var i = 0; i < binaryString.length; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-        }
-        return bytes.buffer;
-    }
-    
-    // main function
     module.exports = () => {          
         g.getEntityProperties = (entity) => ({
             id: entity.id,
@@ -38,22 +27,25 @@ fs.writeFileSync(mainJsPath, `
             scaleX: entity.scaleX,
             scaleY: entity.scaleY,
             anchorX: entity.anchorX,
-            anchorY: entity.anchorY
+            anchorY: entity.anchorY,
+            touchable: entity.touchable
         })
         
         g.feedLabelProperties = (entity, text, textAlign, textColor, widthAutoAdjust) => {
             entity.text = text
+            console.log(entity.text)
             entity.textAlign = textAlign
             entity.textColor = textColor
             entity.widthAutoAdjust = widthAutoAdjust
         }
         
-        g.feedEntityProperties = (entity, x, y, angle, width, height, scaleX, scaleY, anchorX, anchorY) => {
+        g.feedEntityProperties = (entity, x, y, angle, width, height, scaleX, scaleY, anchorX, anchorY, touchable) => {
             entity.angle = angle;
             entity.resizeTo(width, height)
             entity.moveTo(x, y)
             entity.scale(scaleX, scaleY)
             entity.anchor(anchorX, anchorY)
+            entity.touchable = touchable
         }
 
         if (typeof window == 'undefined') {

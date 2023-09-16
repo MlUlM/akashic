@@ -9,6 +9,7 @@ use crate::component::object2d::entity_size::AkashicEntitySize;
 use crate::plugin::modify::RequestModifyTarget;
 use crate::plugin::system_set::AkashicSystemSet;
 use crate::prelude::NativeAkashicEntity;
+use crate::prelude::object2d::touchable::Touchable;
 
 pub struct AkashicEntityObject2DPlugin;
 
@@ -29,12 +30,13 @@ fn feed_entity_objects(
         &NativeAkashicEntity,
         &Transform,
         &AkashicEntitySize,
-        &Anchor
+        &Anchor,
+        &Touchable
     ),
-        Or<(Changed<Transform>, Changed<AkashicEntitySize>, Changed<Anchor>)>
+        Or<(Changed<Transform>, Changed<AkashicEntitySize>, Changed<Anchor>, Changed<Touchable>)>
     >,
 ) {
-    for (entity, native, transform, size, anchor) in transforms.iter_mut() {
+    for (entity, native, transform, size, anchor, touchable) in transforms.iter_mut() {
         let akashic_entity = native.0.clone();
         let (_, rad) = transform.rotation.to_axis_angle();
         let angle = rad * 180. / PI;
@@ -49,7 +51,8 @@ fn feed_entity_objects(
             transform.scale.x,
             transform.scale.y,
             anchor.x,
-            anchor.y
+            anchor.y,
+            touchable.0
         );
 
         commands.entity(entity).insert(RequestModifyTarget);
@@ -73,5 +76,6 @@ extern "C" {
         scale_y: f32,
         anchor_x: Option<f32>,
         anchor_y: Option<f32>,
+        touchable: bool
     );
 }

@@ -9,7 +9,7 @@ pub struct AkashicText {
 }
 
 
-#[derive(Component, Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq)]
 pub struct AkashicTextStyle {
     pub text_color: Option<TextColor>,
     pub font_size: isize,

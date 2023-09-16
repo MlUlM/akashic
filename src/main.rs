@@ -2,16 +2,15 @@ use std::panic;
 
 use bevy::app::{App, Startup, Update};
 use bevy::core::{FrameCount, FrameCountPlugin};
-use bevy::prelude::{Commands, Component, Event, EventReader, Query, Res, ResMut, Resource, Timer, Transform, With};
+use bevy::prelude::{Changed, Commands, Component, Event, EventReader, Query, Res, ResMut, Resource, Timer, Transform, With};
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
 use bevy::time::{Time, TimePlugin, TimerMode};
-use bevy_akashic_engine::akashic::console_log;
 
+use bevy_akashic_engine::akashic::console_log;
 use bevy_akashic_engine::akashic::font::bitmap::{BitmapFont, BitmapFontParameterBuilder};
-use bevy_akashic_engine::akashic::object2d::entity::cacheable::label::{Label, LabelParameterObjectBuilder, TextColor};
+use bevy_akashic_engine::akashic::object2d::entity::cacheable::label::{Label, LabelParameterObjectBuilder};
 use bevy_akashic_engine::akashic::object2d::Object2D;
 use bevy_akashic_engine::akashic::prelude::{Sprite, SpriteParameterObjectBuilder};
-
 use bevy_akashic_engine::component::object2d::entity_size::AkashicEntitySize;
 use bevy_akashic_engine::event::message::AddMessageEvent;
 use bevy_akashic_engine::event::message::raise_event::RaiseEvent;
@@ -21,6 +20,7 @@ use bevy_akashic_engine::event::point_move::OnPointMove;
 use bevy_akashic_engine::event::point_up::OnPointUp;
 use bevy_akashic_engine::plugin::asset::AkashicAssetServer;
 use bevy_akashic_engine::prelude::*;
+use bevy_akashic_engine::prelude::object2d::touchable::Touchable;
 use bevy_akashic_engine::prelude::scene::GameScene;
 use bevy_akashic_engine::prelude::text::AkashicText;
 use bevy_akashic_engine::resource::game::GameInfo;
@@ -40,7 +40,7 @@ fn main() {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
 
     App::new()
-        .insert_resource(MyTimer(Timer::from_seconds(0.3, TimerMode::Repeating)))
+        .insert_resource(MyTimer(Timer::from_seconds(3., TimerMode::Repeating)))
         .add_message_event::<TestMessageEvent>()
         .add_plugins((
             FrameCountPlugin,
@@ -50,8 +50,8 @@ fn main() {
         .add_systems(Startup, setup)
         .add_systems(Update, (
             player_hovering_system,
+            label_sytem,
             spawn_player_system,
-            update_label_system,
             point_down,
             point_move,
             point_up,
@@ -66,21 +66,29 @@ struct MyTimer(Timer);
 
 fn spawn_player_system(
     mut timer: ResMut<MyTimer>,
+    mut touches: Query<&mut Touchable, With<Angel>>,
     time: Res<Time>,
-    mut commands: Commands,
-    server: Res<AkashicAssetServer>,
 ) {
     if timer.0.tick(time.delta()).just_finished() {
-        let player_image_asset = server.image_by_id("player");
-        let param = SpriteParameterObjectBuilder::new(player_image_asset)
-            .local(true)
-            .angle(90.)
-            .x(100.)
-            .touchable(true)
-            .build();
+        for mut t in touches.iter_mut() {
+            t.toggle();
+        }
+    }
+}
 
-        let player = Sprite::new(param);
-        commands.spawn(player.into_bundle()).insert(Angel);
+
+fn label_sytem(
+    mut labels: Query<&mut AkashicText>,
+    touch: Query<&Touchable, (With<Angel>, Changed<Touchable>)>,
+) {
+    for t in touch.iter() {
+        for mut l in labels.iter_mut() {
+            l.text = if t.get() {
+                "おん".to_string()
+            } else {
+                "おふ".to_string()
+            };
+        }
     }
 }
 
@@ -125,18 +133,6 @@ fn player_hovering_system(
 ) {
     for (mut transform, size) in player.iter_mut() {
         transform.translation.y = (game_info.height() - size.height()) / 2. + ((frames.0 as f32) % (game_info.fps() * 10.) / 4.).sin() * 10.;
-    }
-}
-
-fn update_label_system(
-    mut player: Query<&mut AkashicText>,
-    frames: Res<FrameCount>,
-) {
-    for mut text in player.iter_mut() {
-        text.text = "テストアップデート".to_string();
-        text.style.font_size = 30;
-        let v = (frames.0 % 256) as u8;
-        text.style.text_color = Some(TextColor::from_rgba(v, v, v, 1.));
     }
 }
 

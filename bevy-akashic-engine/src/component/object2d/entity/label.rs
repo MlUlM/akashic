@@ -10,6 +10,7 @@ use crate::prelude::object2d::entity::entity_bundle::AkashicEntityBundle;
 pub struct AkashicLabelBundle {
     basic: AkashicEntityBundle,
     text: AkashicText,
+    native_label: NativeAkashicLabel
 }
 
 
@@ -25,7 +26,8 @@ impl IntoBundle<AkashicLabelBundle> for Label {
                     text_align: self.text_align(),
                 },
             },
-            basic: AkashicEntityBundle::new(self),
+            basic: AkashicEntityBundle::new(self.clone()),
+            native_label: NativeAkashicLabel(self)
         }
     }
 }

@@ -8,6 +8,7 @@ use akashic_rs::prelude::EntityObject2D;
 
 use crate::component::{AkashicEntityId, NativeAkashicEntity};
 use crate::component::object2d::entity_size::AkashicEntitySize;
+use crate::component::object2d::touchable::Touchable;
 use crate::prelude::object2d::anchor::Anchor;
 
 #[derive(Bundle, Debug)]
@@ -16,6 +17,7 @@ pub struct AkashicEntityBundle {
     size: AkashicEntitySize,
     transform: Transform,
     anchor: Anchor,
+    touchable: Touchable,
     native: NativeAkashicEntity,
 }
 
@@ -29,6 +31,7 @@ impl AkashicEntityBundle {
             .with_rotation(Quat::from_rotation_z(properties.angle))
             .with_scale(Vec3::new(properties.scale_x, properties.scale_y, 0.));
         let anchor = Anchor::new(properties.anchor_x, properties.anchor_y);
+        let touchable = Touchable(properties.touchable);
         let native: akashic_rs::object2d::entity::Entity = entity.into();
 
         Self {
@@ -36,6 +39,7 @@ impl AkashicEntityBundle {
             size,
             transform,
             anchor,
+            touchable,
             native: NativeAkashicEntity(native),
         }
     }
@@ -79,4 +83,6 @@ struct EntityProperties {
 
     #[serde(rename = "anchorY")]
     pub anchor_y: Option<f32>,
+    
+    pub touchable: bool
 }

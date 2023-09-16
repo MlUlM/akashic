@@ -1,5 +1,4 @@
-import {EventIndex, JoinEvent, PointDownEvent, PointMoveEvent, PointUpEvent} from "@akashic/akashic-engine";
-import PointMove = EventIndex.PointMove;
+import {EventIndex, JoinEvent} from "@akashic/akashic-engine";
 
 function main(param: any): void {
     console.log(g.game.selfId)
@@ -38,21 +37,21 @@ function main(param: any): void {
             font, scene: scene, text: "あかさたな",
 
         });
-        
+
         label.scene.append(label)
         // 各アセットオブジェクトを取得します
         const playerImageAsset = scene.asset.getImageById("player");
         const shotImageAsset = scene.asset.getImageById("shot");
         const seAudioAsset = scene.asset.getAudioById("se");
-
+        new g.FilledRect({});
         // 自分のID
         console.log(g.game.selfId);
 
 
         g.game.onJoin.add((event) => {
         })
-    
-      
+
+
         seAudioAsset.play();
         g.game.onJoin.add((event: JoinEvent) => {
             event.player.id
@@ -79,7 +78,7 @@ function main(param: any): void {
             // プレイヤーの座標に変更があった場合、 modified() を実行して変更をゲームに通知します
             player.modified();
         });
-  
+
         scene.asset.getAllTexts()
 
         // 画面をタッチしたとき、SEを鳴らします

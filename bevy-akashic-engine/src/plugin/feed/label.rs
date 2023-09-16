@@ -1,7 +1,6 @@
 use bevy::app::{App, Last};
 use bevy::prelude::{Changed, Commands, Entity, IntoSystemConfigs, Plugin, Query};
 use wasm_bindgen::prelude::wasm_bindgen;
-
 use crate::plugin::modify::RequestInvalidateTarget;
 use crate::plugin::system_set::AkashicSystemSet;
 use crate::component::object2d::entity::label::NativeAkashicLabel;
