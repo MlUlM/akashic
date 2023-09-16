@@ -1,0 +1,8 @@
+{
+    "cSpell.words": [
+        "bindgen"
+    ],
+    "rust-analyzer.linkedProjects": [
+        ".\\akashic-rs\\Cargo.toml"
+    ]
+}

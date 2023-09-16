@@ -14,6 +14,7 @@ pub mod error;
 pub mod object2d;
 pub mod option_number;
 pub mod util;
+pub mod common_offset;
 
 pub mod prelude {
     pub use crate::asset::*;
@@ -24,4 +25,7 @@ pub mod prelude {
     pub use crate::player::*;
     pub use crate::scene::prelude::*;
     pub use crate::trigger::prelude::*;
+    pub use crate::{
+        common_offset::CommonOffset,
+    };
 }

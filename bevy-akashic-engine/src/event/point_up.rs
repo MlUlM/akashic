@@ -1,20 +1,16 @@
-use bevy::math::Vec2;
-use bevy::prelude::Event;
+use bevy::prelude::{Component, Deref};
+use akashic_rs::event::point::point_up::PointUpEvent;
 
-use crate::component::AkashicEntityId;
+use crate::event::event_inner::PointDeltaEventInner;
 
-#[derive(Clone, Debug, Event)]
-pub struct PointUpEvent {
-    pub entity_id: Option<AkashicEntityId>,
-    pub point: Vec2,
+#[derive(Debug, Component, Deref)]
+pub struct OnPointUp(PointDeltaEventInner<PointUpEvent>);
+
+
+impl OnPointUp {
+    #[inline(always)]
+    pub(crate) fn new(native_event: PointUpEvent) -> Self{
+        Self(PointDeltaEventInner::new(native_event))
+    }
 }
-
-
-#[derive(Clone, Debug, Event)]
-pub struct ScenePointUpEvent {
-    pub point: Vec2,
-}
-
-
-
 

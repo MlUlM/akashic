@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 use std::sync::{Arc, Mutex};
-use bevy::prelude::{Event, Resource};
+use bevy::prelude::{Resource};
 
 pub mod point_down;
 pub mod point_up;
@@ -21,7 +21,7 @@ impl<T> Clone for AkashicEventQueue<T> {
 }
 
 
-impl<T: Event> AkashicEventQueue<T> {
+impl<T> AkashicEventQueue<T> {
     #[inline(always)]
     pub fn push(&self, event: T) {
         self.0.lock().unwrap().push_back(event);

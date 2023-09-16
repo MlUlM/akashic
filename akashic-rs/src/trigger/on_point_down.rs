@@ -21,15 +21,3 @@ extern "C" {
     pub type PointDownEvent;
 }
 
-
-#[wasm_bindgen]
-extern "C" {
-    #[derive(Clone, Debug)]
-    pub type CommonOffset;
-
-    #[wasm_bindgen(js_namespace = g, getter, method)]
-    pub fn x(this: &CommonOffset) -> f32;
-
-    #[wasm_bindgen(js_namespace = g, getter, method)]
-    pub fn y(this: &CommonOffset) -> f32;
-}

@@ -4,7 +4,7 @@ use bevy::app::{App, Last, Plugin};
 use bevy::prelude::{Added, Children, Deref, DerefMut, Entity, IntoSystemConfigs, NonSend, NonSendMut, Parent, Query};
 use akashic_rs::prelude::EntityObject2D;
 
-use crate::plugin::scheduler::GameScene;
+use crate::plugin::scene::NativeScene;
 use crate::plugin::system_set::AkashicSystemSet;
 use crate::prelude::NativeAkashicEntity;
 
@@ -26,7 +26,7 @@ fn append_akashic_entities_system(
     mut entity_map: NonSendMut<AkashicEntityMap>,
     parents: Query<&NativeAkashicEntity, &Children>,
     akashic_entities: Query<(Entity, &NativeAkashicEntity, Option<&Parent>), Added<NativeAkashicEntity>>,
-    scene: NonSend<GameScene>,
+    scene: NonSend<NativeScene>,
 ) {
     for (entity, native, parent) in akashic_entities.iter() {
         entity_map.insert(entity, native.0.clone());

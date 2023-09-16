@@ -1,7 +1,7 @@
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::AkashicEntity;
+use akashic_macro::EntityObject2D;
 
 use crate::game::Game;
 use crate::object2d::Object2D;
@@ -27,7 +27,7 @@ pub mod prelude {
 
 #[wasm_bindgen]
 extern "C" {
-    #[derive(Clone, AkashicEntity, Debug)]
+    #[derive(Clone, EntityObject2D, Debug)]
     pub type Entity;
 }
 

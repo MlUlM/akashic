@@ -6,6 +6,8 @@ pub enum AkashicSystemSet {
     /// Added new component with [`crate::component::AkashicEntityId`]
     Added,
 
+    PointEvents,
+
     Feed,
 
     Despawn,
@@ -24,6 +26,7 @@ impl Plugin for AkashicSystemSetPlugin {
                 Last,
                 (
                     AkashicSystemSet::Added,
+                    AkashicSystemSet::PointEvents,
                     AkashicSystemSet::Feed,
                     AkashicSystemSet::Despawn,
                     AkashicSystemSet::Modify

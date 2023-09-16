@@ -2,7 +2,7 @@ use proc_macro::TokenStream;
 
 use proc_macro2::{Ident, Span};
 
-use crate::event::expand_event_base;
+use crate::event::{expand_point_delta_event_base, expand_point_event_base};
 use crate::object2d::entity::cacheable::expand_cacheable;
 use crate::object2d::entity::expand_entity;
 use crate::object2d::expand_object_2d;
@@ -26,7 +26,7 @@ pub fn object_2d(input: TokenStream) -> TokenStream {
 }
 
 
-#[proc_macro_derive(AkashicEntity)]
+#[proc_macro_derive(EntityObject2D)]
 pub fn akashic_entity(input: TokenStream) -> TokenStream {
     expand_entity(input)
 }
@@ -46,7 +46,13 @@ pub fn akashic_scene(input: TokenStream) -> TokenStream {
 
 #[proc_macro_derive(PointEventBase)]
 pub fn akashic_event_base(input: TokenStream) -> TokenStream {
-    expand_event_base(input)
+    expand_point_event_base(input)
+}
+
+
+#[proc_macro_derive(PointDeltaEventBase)]
+pub fn akashic_delta_event_base(input: TokenStream) -> TokenStream {
+    expand_point_delta_event_base(input)
 }
 
 

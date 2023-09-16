@@ -7,6 +7,7 @@ use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
 use crate::object2d::entity::Entity;
+use crate::prelude::CommonOffset;
 
 pub mod on_point_down;
 pub mod on_load;
@@ -44,6 +45,18 @@ pub trait PointEventBase {
 
     fn pointer_id(&self) -> f32;
 }
+
+
+
+
+#[delegate]
+pub trait PointDeltaEventBase: PointEventBase {
+    fn start_delta(&self) -> CommonOffset;
+
+
+    fn prev_delta(&self) -> CommonOffset;
+}
+
 
 
 pub struct Void;

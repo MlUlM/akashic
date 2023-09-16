@@ -1,22 +1,18 @@
-use bevy::math::Vec3;
-use bevy::prelude::Event;
+use bevy::prelude::{Component, Deref};
 
-use crate::component::AkashicEntityId;
+use akashic_rs::event::point::point_move::PointMoveEvent;
 
-#[derive(Clone, Debug, Event)]
-pub struct PointMoveEvent {
-    pub entity_id: AkashicEntityId,
-    pub point: Vec3,
-    pub start_delta: Vec3,
-    pub prev_delta: Vec3,
-}
+use crate::event::event_inner::PointDeltaEventInner;
+
+#[derive(Debug, Component, Deref)]
+pub struct OnPointMove(PointDeltaEventInner<PointMoveEvent>);
 
 
-#[derive(Clone, Debug, Event)]
-pub struct ScenePointMoveEvent {
-    pub point: Vec3,
-    pub start_delta: Vec3,
-    pub prev_delta: Vec3,
+impl OnPointMove {
+    #[inline(always)]
+    pub(crate) fn new(native_event: PointMoveEvent) -> Self {
+        Self(PointDeltaEventInner::new(native_event))
+    }
 }
 
 

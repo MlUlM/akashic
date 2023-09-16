@@ -3,6 +3,7 @@ use bevy::prelude::{Component, Deref};
 pub mod player_id;
 pub mod text;
 pub mod object2d;
+pub mod scene;
 
 pub mod prelude {
     pub use crate::component::AkashicEntityId;

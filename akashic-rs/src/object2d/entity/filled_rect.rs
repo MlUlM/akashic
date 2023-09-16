@@ -2,12 +2,12 @@ use derive_builder::Builder;
 
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::{AkashicEntity, EParamSetters,  object_e_parameter};
+use akashic_macro::{EntityObject2D, EParamSetters, object_e_parameter};
 
 
 #[wasm_bindgen(js_namespace = g)]
 extern "C" {
-    #[derive(Clone, AkashicEntity)]
+    #[derive(Clone, EntityObject2D)]
     pub type FilledRect;
 
     #[wasm_bindgen(constructor)]

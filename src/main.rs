@@ -10,8 +10,12 @@ use bevy_akashic_engine::akashic::font::bitmap::{BitmapFont, BitmapFontParameter
 use bevy_akashic_engine::akashic::object2d::entity::cacheable::label::{Label, LabelParameterObjectBuilder, TextColor};
 use bevy_akashic_engine::akashic::object2d::Object2D;
 use bevy_akashic_engine::component::object2d::entity_size::AkashicEntitySize;
+use bevy_akashic_engine::event::point_down::OnPointDown;
+use bevy_akashic_engine::event::point_move::OnPointMove;
+use bevy_akashic_engine::event::point_up::OnPointUp;
 use bevy_akashic_engine::plugin::asset::AkashicAssetServer;
 use bevy_akashic_engine::prelude::*;
+use bevy_akashic_engine::prelude::scene::GameScene;
 use bevy_akashic_engine::prelude::text::AkashicText;
 use bevy_akashic_engine::resource::game::GameInfo;
 
@@ -23,16 +27,7 @@ struct Shot;
 
 
 #[derive(Serialize, Deserialize, Event, Default, Debug)]
-pub struct TestMessageEvent {
-    message: String,
-}
-
-#[derive(States, Copy, Clone, Default, Debug, Hash, Eq, PartialEq)]
-enum SceneLoadState {
-    #[default]
-    Loading,
-    Startup,
-}
+pub struct TestMessageEvent(String);
 
 
 fn main() {
@@ -40,7 +35,6 @@ fn main() {
 
     App::new()
         .insert_resource(MyTimer(Timer::from_seconds(0.3, TimerMode::Repeating)))
-        .add_state::<SceneLoadState>()
         .add_plugins((
             FrameCountPlugin,
             TimePlugin
@@ -50,7 +44,10 @@ fn main() {
         .add_systems(Update, (
             player_hovering_system,
             spawn_player_system,
-            update_label_system
+            update_label_system,
+            point_down,
+            point_move,
+            point_up
         ))
         .run();
 }
@@ -132,5 +129,32 @@ fn update_label_system(
         text.style.font_size = 30;
         let v = (frames.0 % 256) as u8;
         text.style.text_color = Some(TextColor::from_rgba(v, v, v, 1.));
+    }
+}
+
+
+fn point_down(
+    player: Query<&OnPointDown, With<GameScene>>
+){
+    for p in player.iter(){
+        console_log!("down = {:?}", p.point());
+    }
+}
+
+
+fn point_move(
+    tests: Query<&OnPointMove, With<GameScene>>
+){
+    for p in tests.iter(){
+        console_log!("move = {:?}", p.prev_delta());
+    }
+}
+
+
+fn point_up(
+    tests: Query<&OnPointUp, With<GameScene>>
+){
+    for p in tests.iter(){
+        console_log!("up = {:?}", p.start_delta());
     }
 }

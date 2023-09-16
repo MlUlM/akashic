@@ -1,4 +1,5 @@
-import {JoinEvent} from "@akashic/akashic-engine";
+import {EventIndex, JoinEvent, PointDownEvent, PointMoveEvent, PointUpEvent} from "@akashic/akashic-engine";
+import PointMove = EventIndex.PointMove;
 
 function main(param: any): void {
     console.log(g.game.selfId)
@@ -37,7 +38,7 @@ function main(param: any): void {
             font, scene: scene, text: "あかさたな",
 
         });
-
+        
         label.scene.append(label)
         // 各アセットオブジェクトを取得します
         const playerImageAsset = scene.asset.getImageById("player");
@@ -50,8 +51,8 @@ function main(param: any): void {
 
         g.game.onJoin.add((event) => {
         })
-
-
+    
+      
         seAudioAsset.play();
         g.game.onJoin.add((event: JoinEvent) => {
             event.player.id

@@ -1,41 +1,95 @@
-use bevy::prelude::{App, Event, EventWriter, Res};
+use bevy::prelude::{App, Commands, Component, Entity, NonSend, Query, With, IntoSystemConfigs};
+use akashic_rs::event::point::point_move::PointMoveEvent;
+use akashic_rs::event::point::point_up::PointUpEvent;
 
+use akashic_rs::prelude::{EntityObject2D, PointDownCaptureHandler, PointDownEvent};
+use akashic_rs::trigger::point_move::PointMoveCaptureHandler;
+use akashic_rs::trigger::point_up::PointUpCaptureHandler;
+use akashic_rs::trigger::PointEventBase;
+
+use crate::component::AkashicEntityId;
 use crate::event::AkashicEventQueue;
-use crate::event::point_down::PointDown;
-use crate::event::point_move::{PointMoveEvent, ScenePointMoveEvent};
-use crate::event::point_up::{PointUpEvent, ScenePointUpEvent};
-use crate::prelude::point_down::ScenePointDown;
+use crate::event::point_down::OnPointDown;
+use crate::event::point_move::OnPointMove;
+use crate::prelude::point_up::OnPointUp;
+use crate::prelude::scene::GameScene;
+use crate::plugin::scene::NativeScene;
 
 macro_rules! trigger_plugin {
-    ($name: ident, $event: ident $(, $scene_event: ident)?) => {
-        pub struct $name;
+    ($plugin_name: ident, $native_event: ident, $component: ident, $scene_trigger_name: ident) => {
+        pub struct $plugin_name;
 
-        impl bevy::prelude::Plugin for $name {
+        impl bevy::prelude::Plugin for $plugin_name {
             fn build(&self, app: &mut App) {
                 app
-                    .init_resource::<AkashicEventQueue<$event>>()
-                    $(.init_resource::<AkashicEventQueue<$scene_event>>())?
-                    .add_event::<$event>()
-                    $(.add_event::<$scene_event>())?
-                    .add_systems(bevy::prelude::PreUpdate, (
-                        read_akashic_event_queue_system::<$event>,
-                        $(read_akashic_event_queue_system::<$scene_event>)?
-                    ));
+                    .init_non_send_resource::<AkashicEventQueue<$native_event>>()
+                    .add_systems(bevy::prelude::Startup, |
+                        queue: NonSend<AkashicEventQueue<$native_event>>,
+                        scene: NonSend<NativeScene>,
+                    |{
+                        let queue = queue.clone();
+                        scene
+                            .$scene_trigger_name()
+                            .add(move |event| {
+                                queue.push(event);
+                            });
+                    })
+                    .add_systems(bevy::prelude::PreUpdate, |
+                        mut commands: Commands,
+                        queue: NonSend<AkashicEventQueue<$native_event>>,
+                        akashic_entities: Query<(Entity, &AkashicEntityId)>,
+                        scene: Query<Entity, With<GameScene>>,
+                    |{
+                        while let Some(event) = queue.pop_front() {
+                            let target_id = event.target().map(|akashic_entity| akashic_entity.id());
+                            if let Some(target_entity) = find_point_event_target(&akashic_entities, target_id) {
+                                commands
+                                    .entity(target_entity)
+                                    .insert($component::new(event));
+                            } else {
+                                commands
+                                    .entity(scene.single())
+                                    .insert($component::new(event));
+                            }
+                        }
+                    })
+                    .add_systems(bevy::prelude::Last, (
+                        remove_point_component_system::<$component>
+                    ).in_set(crate::plugin::system_set::AkashicSystemSet::PointEvents));
             }
         }
     };
 }
 
 
-trigger_plugin!(PointDownPlugin, PointDown, ScenePointDown);
-trigger_plugin!(PointUpPlugin, PointUpEvent, ScenePointUpEvent);
-trigger_plugin!(PointMovePlugin, PointMoveEvent, ScenePointMoveEvent);
+trigger_plugin!(PointDownPlugin, PointDownEvent, OnPointDown, on_point_down_capture);
+trigger_plugin!(PointUpPlugin, PointUpEvent, OnPointUp, on_point_up_capture);
+trigger_plugin!(PointMovePlugin, PointMoveEvent, OnPointMove, on_point_move_capture);
 
-pub(crate) fn read_akashic_event_queue_system<T: Event>(
-    mut ew: EventWriter<T>,
-    queue: Res<AkashicEventQueue<T>>,
-) {
-    while let Some(event) = queue.pop_front() {
-        ew.send(event);
+
+fn remove_point_component_system<P: Component>(
+    mut commands: Commands,
+    point_event_targets: Query<Entity, With<P>>
+){
+    for entity in point_event_targets.iter(){
+        commands.entity(entity).remove::<P>();
     }
 }
+
+
+fn find_point_event_target(
+    akashic_entities: &Query<(Entity, &AkashicEntityId)>,
+    target_id: Option<isize>,
+) -> Option<Entity> {
+    let target_id = target_id?;
+    akashic_entities
+        .iter()
+        .find_map(|(entity, id)| {
+            if id.0 == target_id {
+                Some(entity)
+            } else {
+                None
+            }
+        })
+}
+
