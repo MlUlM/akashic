@@ -22,14 +22,13 @@ pub mod akashic {
 pub mod prelude {
     pub use crate::command::prelude::*;
     pub use crate::plugin::prelude::*;
-    pub use akashic_rs::prelude::*;
     pub use crate::event::*;
     pub use crate::component::*;
 }
 
 
 #[derive(Debug, Default, Deref)]
-pub(crate) struct SharedObject<T>(Arc<Mutex<T>>);
+pub(crate) struct SharedObject<T: 'static>(Arc<Mutex<T>>);
 
 
 impl<T> SharedObject<T> {

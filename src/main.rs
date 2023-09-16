@@ -5,10 +5,13 @@ use bevy::core::{FrameCount, FrameCountPlugin};
 use bevy::prelude::{Commands, Component, Event, EventReader, Query, Res, ResMut, Resource, Timer, Transform, With};
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
 use bevy::time::{Time, TimePlugin, TimerMode};
+use bevy_akashic_engine::akashic::console_log;
 
 use bevy_akashic_engine::akashic::font::bitmap::{BitmapFont, BitmapFontParameterBuilder};
 use bevy_akashic_engine::akashic::object2d::entity::cacheable::label::{Label, LabelParameterObjectBuilder, TextColor};
 use bevy_akashic_engine::akashic::object2d::Object2D;
+use bevy_akashic_engine::akashic::prelude::{Sprite, SpriteParameterObjectBuilder};
+
 use bevy_akashic_engine::component::object2d::entity_size::AkashicEntitySize;
 use bevy_akashic_engine::event::message::AddMessageEvent;
 use bevy_akashic_engine::event::message::raise_event::RaiseEvent;
@@ -86,7 +89,7 @@ fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res
     console_log!("SETUP");
 
     let src = server.image_by_id("font");
-    let font_glyphs = GAME.scene().asset().get_text_by_id("font_glyphs".to_string());
+    let font_glyphs = server.text_by_id("font_glyphs");
 
     let label = Label::new(LabelParameterObjectBuilder::new(
         "あかさたな",

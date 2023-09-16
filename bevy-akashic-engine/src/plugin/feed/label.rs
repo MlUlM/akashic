@@ -5,7 +5,7 @@ use wasm_bindgen::prelude::wasm_bindgen;
 use crate::plugin::modify::RequestInvalidateTarget;
 use crate::plugin::system_set::AkashicSystemSet;
 use crate::component::object2d::entity::label::NativeAkashicLabel;
-use crate::prelude::text::AkashicText;
+use crate::component::text::AkashicText;
 
 pub struct AkashicLabelPlugin;
 

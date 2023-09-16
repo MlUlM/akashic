@@ -1,6 +1,7 @@
 use proc_macro::TokenStream;
 
 use proc_macro2::{Ident, Span};
+use crate::asset::expand_impl_asset;
 
 use crate::event::{expand_point_delta_event_base, expand_point_event_base};
 use crate::object2d::entity::cacheable::expand_cacheable;
@@ -18,6 +19,13 @@ mod asset;
 mod param;
 mod event;
 mod object2d;
+
+
+
+#[proc_macro_derive(Asset)]
+pub fn asset(input: TokenStream) -> TokenStream {
+    expand_impl_asset(input)
+}
 
 
 #[proc_macro_derive(Object2D)]

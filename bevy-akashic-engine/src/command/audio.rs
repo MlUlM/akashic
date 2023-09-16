@@ -1,9 +1,9 @@
-use akashic_rs::prelude::AudioAsset;
+use akashic_rs::asset::audio::AudioAsset;
 use crate::SharedObject;
 
 mod play;
 
-pub mod prelude{
+pub mod prelude {
     pub use crate::command::audio::play::*;
 }
 

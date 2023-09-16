@@ -1,10 +1,12 @@
 use std::collections::HashMap;
 
-use bevy::app::App;
-use bevy::prelude::{Plugin, Resource};
+use bevy::app::{App, Plugin};
+use bevy::prelude::Resource;
 
-use akashic_rs::prelude::{AudioAsset, GAME};
-use akashic_rs::prelude::ImageAsset;
+use akashic_rs::asset::audio::AudioAsset;
+use akashic_rs::asset::image::ImageAsset;
+use akashic_rs::asset::text::TextAsset;
+use akashic_rs::prelude::GAME;
 
 use crate::SharedObject;
 
@@ -22,6 +24,7 @@ impl Plugin for AkashicAssetPlugin {
 pub struct AkashicAssetServer {
     images: HashMap<String, SharedObject<ImageAsset>>,
     audios: HashMap<String, SharedObject<AudioAsset>>,
+    texts: HashMap<String, SharedObject<TextAsset>>,
 }
 
 
@@ -64,6 +67,20 @@ impl AkashicAssetServer {
             .get(asset_id)
             .map(|o| o.lock().clone())
     }
+
+
+    #[inline]
+    pub fn text_by_id(&self, asset_id: &str) -> TextAsset{
+        self.get_text_by_id(asset_id).expect(&format!("Not found text asset; id={asset_id}"))
+    }
+
+
+    pub fn get_text_by_id(&self, asset_id: &str) -> Option<TextAsset>{
+        self
+            .texts
+            .get(asset_id)
+            .map(|o|o.lock().clone())
+    }
 }
 
 
@@ -72,17 +89,21 @@ impl Default for AkashicAssetServer {
         let assets = GAME.scene().asset();
 
         AkashicAssetServer {
-            images: asset_map(assets.get_all_images_map("/image/*.png")),
-            audios: asset_map(assets.get_all_audios_map("/audio/*")),
+            images: convert_to_hash_map(assets.get_all_images_with_path_pattern("/image/*".to_string())),
+            audios: convert_to_hash_map(assets.get_all_audios_with_path_pattern("/audio/*".to_string())),
+            texts: convert_to_hash_map(assets.get_all_texts_with_path_pattern("/text/*".to_string())),
         }
     }
 }
 
 
-#[inline]
-fn asset_map<T>(map: HashMap<String, T>) -> HashMap<String, SharedObject<T>> {
-    map
-        .into_iter()
-        .map(|(path, asset)| (path, SharedObject::new(asset)))
+fn convert_to_hash_map<A: akashic_rs::asset::Asset + Clone>(assets: Box<[A]>) -> HashMap<String, SharedObject<A>> {
+    assets
+        .iter()
+        .map(|asset| (asset.id(), asset.clone()))
+        .map(|(path, asset)| (path, SharedObject::new(asset.clone())))
         .collect()
 }
+
+
+
