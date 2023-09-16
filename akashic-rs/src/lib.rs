@@ -17,6 +17,15 @@ pub mod util;
 pub mod common_offset;
 
 pub mod prelude {
+    pub use crate::{
+        event::{
+            point::{
+                point_move::*,
+                point_down::*,
+                point_up::*
+            }
+        }
+    };
     pub use crate::asset::*;
     pub use crate::console_log;
     pub use crate::game::prelude::*;

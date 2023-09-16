@@ -2,7 +2,7 @@ use std::panic;
 
 use bevy::app::{App, Startup, Update};
 use bevy::core::{FrameCount, FrameCountPlugin};
-use bevy::prelude::{Commands, Component, Event, Query, Res, ResMut, Resource, States, Timer, Transform, With};
+use bevy::prelude::{Commands, Component, Event, Query, Res, ResMut, Resource, Timer, Transform, With};
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
 use bevy::time::{Time, TimePlugin, TimerMode};
 
@@ -135,8 +135,8 @@ fn update_label_system(
 
 fn point_down(
     player: Query<&OnPointDown, With<GameScene>>
-){
-    for p in player.iter(){
+) {
+    for p in player.iter() {
         console_log!("down = {:?}", p.point());
     }
 }
@@ -144,8 +144,8 @@ fn point_down(
 
 fn point_move(
     tests: Query<&OnPointMove, With<GameScene>>
-){
-    for p in tests.iter(){
+) {
+    for p in tests.iter() {
         console_log!("move = {:?}", p.prev_delta());
     }
 }
@@ -153,8 +153,8 @@ fn point_move(
 
 fn point_up(
     tests: Query<&OnPointUp, With<GameScene>>
-){
-    for p in tests.iter(){
+) {
+    for p in tests.iter() {
         console_log!("up = {:?}", p.start_delta());
     }
 }

@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use bevy::app::{App, Update};
 use bevy::prelude::{Event, EventReader, EventWriter, Res};
 use bevy::reflect::erased_serde::__private::serde;
@@ -53,7 +51,7 @@ impl AddMessageEvent for App {
                 let Some(data) = serde_wasm_bindgen::from_value::<E>(event.data()).ok() else { return; };
                 queue.push(data);
             });
-        
+
         self
     }
 }

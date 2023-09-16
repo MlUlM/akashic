@@ -3,8 +3,8 @@ use akashic_rs::event::point::point_move::PointMoveEvent;
 use akashic_rs::event::point::point_up::PointUpEvent;
 
 use akashic_rs::prelude::{EntityObject2D, PointDownCaptureHandler, PointDownEvent};
-use akashic_rs::trigger::point_move::PointMoveCaptureHandler;
-use akashic_rs::trigger::point_up::PointUpCaptureHandler;
+use akashic_rs::trigger::point::point_move::PointMoveCaptureHandler;
+use akashic_rs::trigger::point::point_up::PointUpCaptureHandler;
 use akashic_rs::trigger::PointEventBase;
 
 use crate::component::AkashicEntityId;

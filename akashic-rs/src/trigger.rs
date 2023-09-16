@@ -9,23 +9,25 @@ use wasm_bindgen::prelude::wasm_bindgen;
 use crate::object2d::entity::Entity;
 use crate::prelude::CommonOffset;
 
-pub mod on_point_down;
 pub mod on_load;
 pub mod on_update;
-pub mod point_up;
-pub mod point_move;
 pub mod message;
 pub mod join;
+pub mod point;
 
 
 pub mod prelude {
     pub use crate::trigger::{
         message::MessageHandler,
         on_load::*,
-        on_point_down::*,
         on_update::*,
         Trigger,
         Void,
+        point::{
+            point_down::*,
+            point_up::*,
+            point_move::*
+        }
     };
 }
 

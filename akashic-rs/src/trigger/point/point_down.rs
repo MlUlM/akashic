@@ -1,7 +1,6 @@
 use auto_delegate::delegate;
-use wasm_bindgen::prelude::wasm_bindgen;
-use akashic_macro::PointEventBase;
 
+use crate::event::point::point_down::PointDownEvent;
 use crate::trigger::Trigger;
 
 #[delegate]
@@ -15,9 +14,4 @@ pub trait PointDownCaptureHandler {
 }
 
 
-#[wasm_bindgen]
-extern "C" {
-    #[derive(Clone, Debug, PointEventBase)]
-    pub type PointDownEvent;
-}
 

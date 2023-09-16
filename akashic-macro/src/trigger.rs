@@ -59,7 +59,7 @@ pub fn expand_point_up_capture(entity_name: &Ident) -> syn::Result<TokenStream2>
     expand_trigger(
         entity_name,
         ident("onPointUpCapture"),
-        quote!(crate::trigger::point_up::PointUpCaptureHandler),
+        quote!(crate::trigger::point::point_up::PointUpCaptureHandler),
         quote!(crate::event::point::point_up::PointUpEvent),
     )
 }
@@ -68,7 +68,7 @@ pub fn expand_point_up(entity_name: &Ident) -> syn::Result<TokenStream2> {
     expand_trigger(
         entity_name,
         ident("onPointUp"),
-        quote!(crate::trigger::point_up::PointUpHandler),
+        quote!(crate::trigger::point::point_up::PointUpHandler),
         quote!(crate::event::point::point_up::PointUpEvent),
     )
 }
@@ -77,7 +77,7 @@ pub fn expand_point_move_capture(entity_name: &Ident) -> syn::Result<TokenStream
     expand_trigger(
         entity_name,
         ident("onPointMoveCapture"),
-        quote!(crate::trigger::point_move::PointMoveCaptureHandler),
+        quote!(crate::trigger::point::point_move::PointMoveCaptureHandler),
         quote!(crate::event::point::point_move::PointMoveEvent),
     )
 }
@@ -86,7 +86,7 @@ pub fn expand_point_move(entity_name: &Ident) -> syn::Result<TokenStream2> {
     expand_trigger(
         entity_name,
         ident("onPointMove"),
-        quote!(crate::trigger::point_move::PointMoveHandler),
+        quote!(crate::trigger::point::point_move::PointMoveHandler),
         quote!(crate::event::point::point_move::PointMoveEvent),
     )
 }
