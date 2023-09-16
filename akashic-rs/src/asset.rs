@@ -5,6 +5,7 @@ use wasm_bindgen::prelude::wasm_bindgen;
 use crate::asset::audio::AudioAsset;
 use crate::asset::image::ImageAsset;
 use crate::asset::text::TextAsset;
+use crate::util::FunctionIntoJsValue;
 
 pub mod surface;
 pub mod src;
@@ -99,20 +100,20 @@ extern {
 
 impl AssetAccessor {
     #[inline]
-    pub fn get_all_images_with_filter(&self, filter: impl FnMut(String) -> bool + 'static) -> Box<[ImageAsset]> {
-        self._get_all_images_with_filter(Box::new(filter).into_js_function())
+    pub fn get_all_images_with_filter(&self, filter: impl 'static + FnMut(String) -> bool) -> Box<[ImageAsset]> {
+        self._get_all_images_with_filter((Box::new(filter) as Box<dyn FnMut(String) -> bool>).into_js_value())
     }
 
 
     #[inline]
     pub fn get_all_audios_with_filter(&self, filter: impl FnMut(String) -> bool + 'static) -> Box<[AudioAsset]> {
-        self._get_all_audios_with_filter(Box::new(filter).into_js_function())
+        self._get_all_audios_with_filter((Box::new(filter) as Box<dyn FnMut(String) -> bool>).into_js_function())
     }
 
 
     #[inline]
     pub fn get_all_texts_with_filter(&self, filter: impl FnMut(String) -> bool + 'static) -> Box<[TextAsset]> {
-        self._get_all_texts_with_filter(Box::new(filter).into_js_function())
+        self._get_all_texts_with_filter((Box::new(filter) as Box<dyn FnMut(String) -> bool>).into_js_function())
     }
 }
 
