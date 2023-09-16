@@ -1,7 +1,8 @@
+use derive_builder::Builder;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::EntityObject2D;
+use akashic_macro::{EntityObject2D, EParamSetters, object_e_parameter};
 
 use crate::game::Game;
 use crate::object2d::Object2D;
@@ -18,21 +19,15 @@ pub mod cacheable;
 
 pub mod prelude {
     pub use crate::object2d::entity::{
-        Entity,
+        AkashicEntity,
         EntityObject2D,
         filled_rect::*,
         sprite::*,
     };
 }
 
-#[wasm_bindgen]
-extern "C" {
-    #[derive(Clone, EntityObject2D, Debug)]
-    pub type Entity;
-}
 
-
-pub trait EntityObject2D: Object2D + PointDownHandler + PointMoveHandler + PointMoveHandler + UpdateHandler + Into<Entity> {
+pub trait EntityObject2D: Object2D + PointDownHandler + PointMoveHandler + PointMoveHandler + UpdateHandler + Into<AkashicEntity> {
     /// このエンティティに割り振られる Game 単位で一意のID。(ただし local が真である場合を除く)
     fn id(&self) -> isize;
 
@@ -46,7 +41,7 @@ pub trait EntityObject2D: Object2D + PointDownHandler + PointMoveHandler + Point
 
 
     /// 自身の子となるエンティティをすべて取得する。
-    fn children(&self) -> Box<[Entity]>;
+    fn children(&self) -> Box<[AkashicEntity]>;
 
 
     fn parent(&self) -> Option<Parent>;
@@ -57,7 +52,7 @@ pub trait EntityObject2D: Object2D + PointDownHandler + PointMoveHandler + Point
     /// ## Panics
     ///
     /// 指定されたエンティティが自身の子ではない場合
-    fn remove_child(&self, child_entity: impl Into<Entity>);
+    fn remove_child(&self, child_entity: impl Into<AkashicEntity>);
 
 
     /// 自身を親から削除する。
@@ -80,13 +75,13 @@ pub trait EntityObject2D: Object2D + PointDownHandler + PointMoveHandler + Point
 
 
     /// 子を追加する。
-    fn append(&self, child: impl Into<Entity>);
+    fn append(&self, child: impl Into<AkashicEntity>);
 
 
     /// 子を挿入する。
     ///
     /// target がthis の子でない場合、append(e) と同じ動作となる。
-    fn insert_before(&self, child: impl Into<Entity>, target: Option<Entity>);
+    fn insert_before(&self, child: impl Into<AkashicEntity>, target: Option<AkashicEntity>);
 
 
     /// このエンティティを破棄する。
@@ -115,5 +110,38 @@ pub trait EntityObject2D: Object2D + PointDownHandler + PointMoveHandler + Point
 }
 
 
+#[wasm_bindgen(js_namespace = g)]
+extern {
+    #[derive(Clone, EntityObject2D, Debug)]
+    #[wasm_bindgen(js_name = "E")]
+    pub type AkashicEntity;
+
+    #[wasm_bindgen(constructor, js_class = "E")]
+    pub fn new(param: AkashicEntityParam) -> AkashicEntity;
+}
 
 
+impl Default for AkashicEntity {
+    #[inline(always)]
+    fn default() -> Self {
+        AkashicEntityBuilder::default().build()
+    }
+}
+
+
+#[object_e_parameter]
+#[wasm_bindgen(getter_with_clone)]
+#[derive(Default, Debug, Builder, EParamSetters)]
+#[builder(
+name = "AkashicEntityBuilder",
+build_fn(private, name = "fallible_build")
+)]
+pub struct AkashicEntityParam {}
+
+
+impl AkashicEntityBuilder {
+    #[inline]
+    pub fn build(&self) -> AkashicEntity {
+        AkashicEntity::new(self.fallible_build().unwrap())
+    }
+}

@@ -38,5 +38,5 @@ fn feed_filled_rects_system(
 #[wasm_bindgen(js_namespace = g)]
 extern {
     #[wasm_bindgen(js_name = feedFilledRectProperties)]
-    fn feed_filled_rect_properties(entity: &akashic_rs::object2d::entity::Entity, css_color: String);
+    fn feed_filled_rect_properties(entity: &akashic_rs::object2d::entity::AkashicEntity, css_color: String);
 }

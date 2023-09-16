@@ -14,7 +14,7 @@ extern "C" {
     pub type Sprite;
 
     #[wasm_bindgen(js_namespace = g, constructor)]
-    pub fn new(param: SpriteParameterObject) -> Sprite;
+    pub fn new(param: SpriteParam) -> Sprite;
 
     #[wasm_bindgen(js_namespace = g, method, getter)]
     pub fn local(this: &Sprite) -> String;
@@ -26,11 +26,12 @@ extern "C" {
 #[wasm_bindgen(getter_with_clone)]
 #[derive(Debug, Builder, EParamSetters)]
 #[builder(
+name="SpriteBuilder",
 custom_constructor,
 create_empty = "empty",
 build_fn(private, name = "fallible_build")
 )]
-pub struct SpriteParameterObject {
+pub struct SpriteParam {
     #[builder(setter(custom))]
     pub src: JsValue,
 
@@ -52,14 +53,14 @@ pub struct SpriteParameterObject {
 }
 
 
-impl SpriteParameterObjectBuilder {
+impl SpriteBuilder {
     #[inline]
     pub fn new(
         src: impl Into<Src>
     ) -> Self {
         Self {
             src: Some(src.into().into()),
-            ..SpriteParameterObjectBuilder::empty()
+            ..SpriteBuilder::empty()
         }
     }
 
@@ -73,10 +74,8 @@ impl SpriteParameterObjectBuilder {
 
 
     #[inline]
-    pub fn build(&self) -> SpriteParameterObject {
-        self
-            .fallible_build()
-            .expect("All required fields were initialized")
+    pub fn build(&self) -> Sprite {
+        Sprite::new(self.fallible_build().unwrap())
     }
 }
 

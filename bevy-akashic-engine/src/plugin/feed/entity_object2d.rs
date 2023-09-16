@@ -66,7 +66,7 @@ fn feed_entity_objects(
 extern "C" {
     #[wasm_bindgen(js_name = feedEntityProperties)]
     fn feed_entity_properties(
-        entity: &akashic_rs::object2d::entity::Entity,
+        entity: &akashic_rs::object2d::entity::AkashicEntity,
         x: f32,
         y: f32,
         angle: f32,

@@ -45,7 +45,7 @@ fn try_expand_point_event_base(input: TokenStream) -> syn::Result<TokenStream2> 
               fn _pointer_id(this: &#name) -> f32;
 
               #[wasm_bindgen::prelude::wasm_bindgen(method, getter, js_name = target)]
-              fn _target(this: &#name) -> Option<crate::object2d::entity::Entity>;
+              fn _target(this: &#name) -> Option<crate::object2d::entity::AkashicEntity>;
             }
 
             impl crate::trigger::PointEventBase for #name{
@@ -65,7 +65,7 @@ fn try_expand_point_event_base(input: TokenStream) -> syn::Result<TokenStream2> 
                 }
 
                 #[inline(always)]
-                fn target(&self) -> Option<crate::object2d::entity::Entity>{
+                fn target(&self) -> Option<crate::object2d::entity::AkashicEntity>{
                     self._target()
                 }
 
@@ -94,7 +94,7 @@ fn try_expand_point_delta_event_base(input: TokenStream) -> syn::Result<TokenStr
 
     Ok(quote! {
         #base
-        
+
         #[wasm_bindgen::prelude::wasm_bindgen(js_namespace = g)]
         extern {
             #[wasm_bindgen::prelude::wasm_bindgen(method, getter, js_name = startDelta)]

@@ -42,5 +42,5 @@ extern {
     ///
     /// この関数はアカシックエンジンに組み込まれているものではなく、ビルドの際に自動で追加されるものです。
     #[wasm_bindgen(js_name = feedLabelProperties)]
-    fn feed_label_properties(entity: &akashic_rs::object2d::entity::Entity, text: String, text_align: String, text_color: Option<String>, width_auto_adjust: bool);
+    fn feed_label_properties(entity: &akashic_rs::object2d::entity::AkashicEntity, text: String, text_align: String, text_color: Option<String>, width_auto_adjust: bool);
 }

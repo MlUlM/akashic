@@ -1,12 +1,12 @@
 use wasm_bindgen::JsValue;
 
-use crate::object2d::entity::{Entity, EntityObject2D};
+use crate::object2d::entity::{AkashicEntity, EntityObject2D};
 use crate::scene::Scene;
 
 #[derive(Clone)]
 pub enum Parent {
     Scene(Scene),
-    Entity(Entity),
+    Entity(AkashicEntity),
 }
 
 impl Parent {

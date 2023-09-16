@@ -6,7 +6,7 @@ use wasm_bindgen::prelude::wasm_bindgen;
 use akashic_macro::AkashicScene;
 
 use crate::game::GAME;
-use crate::object2d::entity::{Entity, EntityObject2D};
+use crate::object2d::entity::{AkashicEntity, EntityObject2D};
 
 pub mod param;
 
@@ -49,7 +49,7 @@ impl Scene {
 
 
     #[inline(always)]
-    pub fn find_child(&self, id: isize) -> Option<Entity> {
+    pub fn find_child(&self, id: isize) -> Option<AkashicEntity> {
         self
             .children()
             .iter()

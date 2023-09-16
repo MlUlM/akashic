@@ -50,7 +50,7 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
             fn _game(this: &#entity_name) -> crate::game::Game;
 
             #[wasm_bindgen(method, getter, js_name=children)]
-            fn _children(this: &#entity_name) -> Box<[crate::object2d::entity::Entity]>;
+            fn _children(this: &#entity_name) -> Box<[crate::object2d::entity::AkashicEntity]>;
 
             #[wasm_bindgen(method, getter, js_name=parent)]
             fn _parent(this: &#entity_name) -> wasm_bindgen::JsValue;
@@ -59,13 +59,13 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
             fn _touchable(this: &#entity_name) -> bool;
 
             #[wasm_bindgen(method, js_name=remove)]
-            fn _remove(this: &#entity_name, child_entity: Option<crate::object2d::entity::Entity>);
+            fn _remove(this: &#entity_name, child_entity: Option<crate::object2d::entity::AkashicEntity>);
 
             #[wasm_bindgen(method, js_name=append)]
-            fn _append(this: &#entity_name, entity: crate::object2d::entity::Entity);
+            fn _append(this: &#entity_name, entity: crate::object2d::entity::AkashicEntity);
 
             #[wasm_bindgen(method, js_name=insertBefore)]
-            fn _insert_before(this: &#entity_name, entity: crate::object2d::entity::Entity, target: Option<crate::object2d::entity::Entity>);
+            fn _insert_before(this: &#entity_name, entity: crate::object2d::entity::AkashicEntity, target: Option<crate::object2d::entity::AkashicEntity>);
 
             #[wasm_bindgen(method, js_name=destroy)]
             fn _destory(this: &#entity_name);
@@ -97,7 +97,7 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
             }
 
             #[inline(always)]
-            fn children(&self) -> Box<[crate::object2d::entity::Entity]>{
+            fn children(&self) -> Box<[crate::object2d::entity::AkashicEntity]>{
                 self._children()
             }
 
@@ -109,7 +109,7 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
                 }
 
                 use wasm_bindgen::prelude::{JsCast, JsValue};
-                if let Ok(parent) = parent.clone().dyn_into::<crate::object2d::entity::Entity>(){
+                if let Ok(parent) = parent.clone().dyn_into::<crate::object2d::entity::AkashicEntity>(){
                     return Some(crate::parent::Parent::Entity(parent));
                 }
 
@@ -121,7 +121,7 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
             }
 
             #[inline(always)]
-            fn remove_child(&self, target: impl Into<crate::object2d::entity::Entity>){
+            fn remove_child(&self, target: impl Into<crate::object2d::entity::AkashicEntity>){
                 self._remove(Some(target.into()))
             }
 
@@ -136,12 +136,12 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
             }
 
             #[inline(always)]
-            fn append(&self, child: impl Into<crate::object2d::entity::Entity>){
+            fn append(&self, child: impl Into<crate::object2d::entity::AkashicEntity>){
                 self._append(child.into())
             }
 
             #[inline(always)]
-            fn insert_before(&self, child: impl Into<crate::object2d::entity::Entity>, target: Option<crate::object2d::entity::Entity>){
+            fn insert_before(&self, child: impl Into<crate::object2d::entity::AkashicEntity>, target: Option<crate::object2d::entity::AkashicEntity>){
                 self._insert_before(child.into(), target)
             }
 
@@ -181,13 +181,13 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
 
 
 fn expand_impl_into_entity(entity_name: &Ident) -> Option<proc_macro2::TokenStream> {
-    if *entity_name == "Entity" {
+    if *entity_name == "AkashicEntity" {
         None
     } else {
         Some(quote! {
-            impl Into<crate::object2d::entity::Entity> for #entity_name{
+            impl Into<crate::object2d::entity::AkashicEntity> for #entity_name{
                 #[inline(always)]
-                fn into(self) -> crate::object2d::entity::Entity{
+                fn into(self) -> crate::object2d::entity::AkashicEntity{
                     use wasm_bindgen::JsCast;
                     self.unchecked_into()
                 }

@@ -34,7 +34,7 @@ pub(crate) fn expand_param_setters(
 fn expand_setters(
     item: &ItemStruct
 ) -> TokenStream2 {
-    let ident = &item.ident;
+    let ident = &item.ident.to_string().replace("Param", "");
     quote! {
         paste::paste!{
             impl [<#ident Builder>]{

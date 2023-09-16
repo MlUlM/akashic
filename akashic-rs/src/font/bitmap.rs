@@ -16,7 +16,7 @@ extern "C" {
     pub type BitmapFont;
 
     #[wasm_bindgen(constructor)]
-    pub fn new(param: BitmapFontParameter) -> BitmapFont;
+    pub fn new(param: BitmapFontParam) -> BitmapFont;
 }
 
 
@@ -33,11 +33,12 @@ impl Into<Font> for BitmapFont {
 #[wasm_bindgen(getter_with_clone)]
 #[derive(Builder, Debug)]
 #[builder(
+name="BitmapFontBuilder",
 custom_constructor,
 create_empty = "empty",
 build_fn(private, name = "fallible_build")
 )]
-pub struct BitmapFontParameter {
+pub struct BitmapFontParam {
     #[builder(setter(custom))]
     pub src: JsValue,
 
@@ -62,7 +63,7 @@ pub struct BitmapFontParameter {
 }
 
 
-impl BitmapFontParameterBuilder {
+impl BitmapFontBuilder {
     pub fn new(src: impl Into<Src>) -> Self {
         Self {
             src: Some(src.into().into()),
@@ -84,10 +85,8 @@ impl BitmapFontParameterBuilder {
     }
 
     #[inline]
-    pub fn build(&self) -> BitmapFontParameter {
-        self
-            .fallible_build()
-            .unwrap()
+    pub fn build(&self) -> BitmapFont {
+        BitmapFont::new(self.fallible_build().unwrap())
     }
 }
 

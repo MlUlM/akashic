@@ -6,7 +6,7 @@ use wasm_bindgen::convert::FromWasmAbi;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use crate::object2d::entity::Entity;
+use crate::object2d::entity::AkashicEntity;
 use crate::prelude::CommonOffset;
 
 pub mod on_load;
@@ -39,7 +39,7 @@ pub trait PointEventBase {
 
     fn local(&self) -> bool;
 
-    fn target(&self) -> Option<Entity>;
+    fn target(&self) -> Option<AkashicEntity>;
 
     fn player(&self) -> Option<crate::player::Player>;
 

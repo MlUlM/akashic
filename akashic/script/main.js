@@ -353,11 +353,11 @@ function handleError(f, args) {
 }
 /**
 */
-class BitmapFontParameter {
+class AkashicEntityParam {
 
     static __wrap(ptr) {
         ptr = ptr >>> 0;
-        const obj = Object.create(BitmapFontParameter.prototype);
+        const obj = Object.create(AkashicEntityParam.prototype);
         obj.__wbg_ptr = ptr;
 
         return obj;
@@ -372,20 +372,387 @@ class BitmapFontParameter {
 
     free() {
         const ptr = this.__destroy_into_raw();
-        wasm.__wbg_bitmapfontparameter_free(ptr);
+        wasm.__wbg_akashicentityparam_free(ptr);
+    }
+    /**
+    * @returns {number | undefined}
+    */
+    get x() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.__wbg_get_akashicentityparam_x(retptr, this.__wbg_ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getFloat32Memory0()[retptr / 4 + 1];
+            return r0 === 0 ? undefined : r1;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {number | undefined} arg0
+    */
+    set x(arg0) {
+        wasm.__wbg_set_akashicentityparam_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+    }
+    /**
+    * @returns {number | undefined}
+    */
+    get y() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.__wbg_get_akashicentityparam_y(retptr, this.__wbg_ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getFloat32Memory0()[retptr / 4 + 1];
+            return r0 === 0 ? undefined : r1;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {number | undefined} arg0
+    */
+    set y(arg0) {
+        wasm.__wbg_set_akashicentityparam_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+    }
+    /**
+    * @returns {number | undefined}
+    */
+    get width() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.__wbg_get_akashicentityparam_width(retptr, this.__wbg_ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getFloat32Memory0()[retptr / 4 + 1];
+            return r0 === 0 ? undefined : r1;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {number | undefined} arg0
+    */
+    set width(arg0) {
+        wasm.__wbg_set_akashicentityparam_width(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+    }
+    /**
+    * @returns {number | undefined}
+    */
+    get height() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.__wbg_get_akashicentityparam_height(retptr, this.__wbg_ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getFloat32Memory0()[retptr / 4 + 1];
+            return r0 === 0 ? undefined : r1;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {number | undefined} arg0
+    */
+    set height(arg0) {
+        wasm.__wbg_set_akashicentityparam_height(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+    }
+    /**
+    * @returns {number | undefined}
+    */
+    get opacity() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.__wbg_get_akashicentityparam_opacity(retptr, this.__wbg_ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getFloat32Memory0()[retptr / 4 + 1];
+            return r0 === 0 ? undefined : r1;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {number | undefined} arg0
+    */
+    set opacity(arg0) {
+        wasm.__wbg_set_akashicentityparam_opacity(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+    }
+    /**
+    * @returns {number | undefined}
+    */
+    get scale_x() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.__wbg_get_akashicentityparam_scale_x(retptr, this.__wbg_ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getFloat32Memory0()[retptr / 4 + 1];
+            return r0 === 0 ? undefined : r1;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {number | undefined} arg0
+    */
+    set scale_x(arg0) {
+        wasm.__wbg_set_akashicentityparam_scale_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+    }
+    /**
+    * @returns {number | undefined}
+    */
+    get scale_y() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.__wbg_get_akashicentityparam_scale_y(retptr, this.__wbg_ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getFloat32Memory0()[retptr / 4 + 1];
+            return r0 === 0 ? undefined : r1;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {number | undefined} arg0
+    */
+    set scale_y(arg0) {
+        wasm.__wbg_set_akashicentityparam_scale_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+    }
+    /**
+    * @returns {number | undefined}
+    */
+    get angle() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.__wbg_get_akashicentityparam_angle(retptr, this.__wbg_ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getFloat32Memory0()[retptr / 4 + 1];
+            return r0 === 0 ? undefined : r1;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {number | undefined} arg0
+    */
+    set angle(arg0) {
+        wasm.__wbg_set_akashicentityparam_angle(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+    }
+    /**
+    * @returns {number | undefined}
+    */
+    get compositeOperation() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.__wbg_get_akashicentityparam_compositeOperation(retptr, this.__wbg_ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getFloat32Memory0()[retptr / 4 + 1];
+            return r0 === 0 ? undefined : r1;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {number | undefined} arg0
+    */
+    set compositeOperation(arg0) {
+        wasm.__wbg_set_akashicentityparam_compositeOperation(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+    }
+    /**
+    * @returns {number | undefined}
+    */
+    get anchor_x() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.__wbg_get_akashicentityparam_anchor_x(retptr, this.__wbg_ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getFloat32Memory0()[retptr / 4 + 1];
+            return r0 === 0 ? undefined : r1;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {number | undefined} arg0
+    */
+    set anchor_x(arg0) {
+        wasm.__wbg_set_akashicentityparam_anchor_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+    }
+    /**
+    * @returns {number | undefined}
+    */
+    get anchor_y() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.__wbg_get_akashicentityparam_anchor_y(retptr, this.__wbg_ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getFloat32Memory0()[retptr / 4 + 1];
+            return r0 === 0 ? undefined : r1;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {number | undefined} arg0
+    */
+    set anchor_y(arg0) {
+        wasm.__wbg_set_akashicentityparam_anchor_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+    }
+    /**
+    * @returns {any}
+    */
+    get scene() {
+        const ret = wasm.__wbg_get_akashicentityparam_scene(this.__wbg_ptr);
+        return takeObject(ret);
+    }
+    /**
+    * @param {any} arg0
+    */
+    set scene(arg0) {
+        wasm.__wbg_set_akashicentityparam_scene(this.__wbg_ptr, addHeapObject(arg0));
+    }
+    /**
+    * @returns {boolean}
+    */
+    get local() {
+        const ret = wasm.__wbg_get_akashicentityparam_local(this.__wbg_ptr);
+        return ret !== 0;
+    }
+    /**
+    * @param {boolean} arg0
+    */
+    set local(arg0) {
+        wasm.__wbg_set_akashicentityparam_local(this.__wbg_ptr, arg0);
+    }
+    /**
+    * @returns {any}
+    */
+    get parent() {
+        const ret = wasm.__wbg_get_akashicentityparam_parent(this.__wbg_ptr);
+        return takeObject(ret);
+    }
+    /**
+    * @param {any} arg0
+    */
+    set parent(arg0) {
+        wasm.__wbg_set_akashicentityparam_parent(this.__wbg_ptr, addHeapObject(arg0));
+    }
+    /**
+    * @returns {any[]}
+    */
+    get children() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.__wbg_get_akashicentityparam_children(retptr, this.__wbg_ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            var v1 = getArrayJsValueFromWasm0(r0, r1).slice();
+            wasm.__wbindgen_free(r0, r1 * 4);
+            return v1;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {any[]} arg0
+    */
+    set children(arg0) {
+        const ptr0 = passArrayJsValueToWasm0(arg0, wasm.__wbindgen_malloc);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.__wbg_set_akashicentityparam_children(this.__wbg_ptr, ptr0, len0);
+    }
+    /**
+    * @returns {boolean}
+    */
+    get touchable() {
+        const ret = wasm.__wbg_get_akashicentityparam_touchable(this.__wbg_ptr);
+        return ret !== 0;
+    }
+    /**
+    * @param {boolean} arg0
+    */
+    set touchable(arg0) {
+        wasm.__wbg_set_akashicentityparam_touchable(this.__wbg_ptr, arg0);
+    }
+    /**
+    * @returns {number | undefined}
+    */
+    get id() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.__wbg_get_akashicentityparam_id(retptr, this.__wbg_ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getFloat32Memory0()[retptr / 4 + 1];
+            return r0 === 0 ? undefined : r1;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {number | undefined} arg0
+    */
+    set id(arg0) {
+        wasm.__wbg_set_akashicentityparam_id(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+    }
+    /**
+    * @returns {any}
+    */
+    get tag() {
+        const ret = wasm.__wbg_get_akashicentityparam_tag(this.__wbg_ptr);
+        return takeObject(ret);
+    }
+    /**
+    * @param {any} arg0
+    */
+    set tag(arg0) {
+        wasm.__wbg_set_akashicentityparam_tag(this.__wbg_ptr, addHeapObject(arg0));
+    }
+    /**
+    * @returns {any | undefined}
+    */
+    get shaderProgram() {
+        const ret = wasm.__wbg_get_akashicentityparam_shaderProgram(this.__wbg_ptr);
+        return takeObject(ret);
+    }
+    /**
+    * @param {any | undefined} arg0
+    */
+    set shaderProgram(arg0) {
+        wasm.__wbg_set_akashicentityparam_shaderProgram(this.__wbg_ptr, isLikeNone(arg0) ? 0 : addHeapObject(arg0));
+    }
+}
+__exports.AkashicEntityParam = AkashicEntityParam;
+/**
+*/
+class BitmapFontParam {
+
+    static __wrap(ptr) {
+        ptr = ptr >>> 0;
+        const obj = Object.create(BitmapFontParam.prototype);
+        obj.__wbg_ptr = ptr;
+
+        return obj;
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.__wbg_ptr;
+        this.__wbg_ptr = 0;
+
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_bitmapfontparam_free(ptr);
     }
     /**
     * @returns {any}
     */
     get src() {
-        const ret = wasm.__wbg_get_bitmapfontparameter_src(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_bitmapfontparam_src(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any} arg0
     */
     set src(arg0) {
-        wasm.__wbg_set_bitmapfontparameter_src(this.__wbg_ptr, addHeapObject(arg0));
+        wasm.__wbg_set_bitmapfontparam_src(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
     * @returns {number | undefined}
@@ -393,7 +760,7 @@ class BitmapFontParameter {
     get defaultGlyphHeight() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_bitmapfontparameter_defaultGlyphHeight(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_bitmapfontparam_defaultGlyphHeight(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -405,7 +772,7 @@ class BitmapFontParameter {
     * @param {number | undefined} arg0
     */
     set defaultGlyphHeight(arg0) {
-        wasm.__wbg_set_bitmapfontparameter_defaultGlyphHeight(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_bitmapfontparam_defaultGlyphHeight(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -413,7 +780,7 @@ class BitmapFontParameter {
     get defaultGlyphWidth() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_bitmapfontparameter_defaultGlyphWidth(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_bitmapfontparam_defaultGlyphWidth(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -425,39 +792,39 @@ class BitmapFontParameter {
     * @param {number | undefined} arg0
     */
     set defaultGlyphWidth(arg0) {
-        wasm.__wbg_set_bitmapfontparameter_defaultGlyphWidth(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_bitmapfontparam_defaultGlyphWidth(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {any}
     */
     get map() {
-        const ret = wasm.__wbg_get_bitmapfontparameter_map(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_bitmapfontparam_map(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any} arg0
     */
     set map(arg0) {
-        wasm.__wbg_set_bitmapfontparameter_map(this.__wbg_ptr, addHeapObject(arg0));
+        wasm.__wbg_set_bitmapfontparam_map(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
     * @returns {any}
     */
     get glyphInfo() {
-        const ret = wasm.__wbg_get_bitmapfontparameter_glyphInfo(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_bitmapfontparam_glyphInfo(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any} arg0
     */
     set glyphInfo(arg0) {
-        wasm.__wbg_set_bitmapfontparameter_glyphInfo(this.__wbg_ptr, addHeapObject(arg0));
+        wasm.__wbg_set_bitmapfontparam_glyphInfo(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
     * @returns {GlyphArea | undefined}
     */
     get missingGlyph() {
-        const ret = wasm.__wbg_get_bitmapfontparameter_missingGlyph(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_bitmapfontparam_missingGlyph(this.__wbg_ptr);
         return ret === 0 ? undefined : GlyphArea.__wrap(ret);
     }
     /**
@@ -469,10 +836,10 @@ class BitmapFontParameter {
             _assertClass(arg0, GlyphArea);
             ptr0 = arg0.__destroy_into_raw();
         }
-        wasm.__wbg_set_bitmapfontparameter_missingGlyph(this.__wbg_ptr, ptr0);
+        wasm.__wbg_set_bitmapfontparam_missingGlyph(this.__wbg_ptr, ptr0);
     }
 }
-__exports.BitmapFontParameter = BitmapFontParameter;
+__exports.BitmapFontParam = BitmapFontParam;
 /**
 */
 class DynamicFontHint {
@@ -600,7 +967,7 @@ class DynamicFontHint {
 __exports.DynamicFontHint = DynamicFontHint;
 /**
 */
-class DynamicFontParameterObject {
+class DynamicFontParam {
 
     __destroy_into_raw() {
         const ptr = this.__wbg_ptr;
@@ -611,52 +978,52 @@ class DynamicFontParameterObject {
 
     free() {
         const ptr = this.__destroy_into_raw();
-        wasm.__wbg_dynamicfontparameterobject_free(ptr);
+        wasm.__wbg_dynamicfontparam_free(ptr);
     }
     /**
     * @returns {any}
     */
     get game() {
-        const ret = wasm.__wbg_get_dynamicfontparameterobject_game(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_dynamicfontparam_game(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any} arg0
     */
     set game(arg0) {
-        wasm.__wbg_set_dynamicfontparameterobject_game(this.__wbg_ptr, addHeapObject(arg0));
+        wasm.__wbg_set_dynamicfontparam_game(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
     * @returns {string | string[]}
     */
     get fontFamily() {
-        const ret = wasm.__wbg_get_dynamicfontparameterobject_fontFamily(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_dynamicfontparam_fontFamily(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {string | string[]} arg0
     */
     set fontFamily(arg0) {
-        wasm.__wbg_set_dynamicfontparameterobject_fontFamily(this.__wbg_ptr, addHeapObject(arg0));
+        wasm.__wbg_set_dynamicfontparam_fontFamily(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
     * @returns {number}
     */
     get size() {
-        const ret = wasm.__wbg_get_dynamicfontparameterobject_size(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_dynamicfontparam_size(this.__wbg_ptr);
         return ret;
     }
     /**
     * @param {number} arg0
     */
     set size(arg0) {
-        wasm.__wbg_set_dynamicfontparameterobject_size(this.__wbg_ptr, arg0);
+        wasm.__wbg_set_dynamicfontparam_size(this.__wbg_ptr, arg0);
     }
     /**
     * @returns {DynamicFontHint | undefined}
     */
     get hint() {
-        const ret = wasm.__wbg_get_dynamicfontparameterobject_hint(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_dynamicfontparam_hint(this.__wbg_ptr);
         return ret === 0 ? undefined : DynamicFontHint.__wrap(ret);
     }
     /**
@@ -668,7 +1035,7 @@ class DynamicFontParameterObject {
             _assertClass(arg0, DynamicFontHint);
             ptr0 = arg0.__destroy_into_raw();
         }
-        wasm.__wbg_set_dynamicfontparameterobject_hint(this.__wbg_ptr, ptr0);
+        wasm.__wbg_set_dynamicfontparam_hint(this.__wbg_ptr, ptr0);
     }
     /**
     * @returns {string | undefined}
@@ -676,7 +1043,7 @@ class DynamicFontParameterObject {
     get fontColor() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_dynamicfontparameterobject_fontColor(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_dynamicfontparam_fontColor(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             let v1;
@@ -695,20 +1062,20 @@ class DynamicFontParameterObject {
     set fontColor(arg0) {
         var ptr0 = isLikeNone(arg0) ? 0 : passStringToWasm0(arg0, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         var len0 = WASM_VECTOR_LEN;
-        wasm.__wbg_set_dynamicfontparameterobject_fontColor(this.__wbg_ptr, ptr0, len0);
+        wasm.__wbg_set_dynamicfontparam_fontColor(this.__wbg_ptr, ptr0, len0);
     }
     /**
     * @returns {'normal' | 'bold' | undefined}
     */
     get fontWeight() {
-        const ret = wasm.__wbg_get_dynamicfontparameterobject_fontWeight(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_dynamicfontparam_fontWeight(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {'normal' | 'bold' | undefined} arg0
     */
     set fontWeight(arg0) {
-        wasm.__wbg_set_dynamicfontparameterobject_fontWeight(this.__wbg_ptr, isLikeNone(arg0) ? 0 : addHeapObject(arg0));
+        wasm.__wbg_set_dynamicfontparam_fontWeight(this.__wbg_ptr, isLikeNone(arg0) ? 0 : addHeapObject(arg0));
     }
     /**
     * @returns {number | undefined}
@@ -736,7 +1103,7 @@ class DynamicFontParameterObject {
     get strokeColor() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_dynamicfontparameterobject_strokeColor(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_dynamicfontparam_strokeColor(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             let v1;
@@ -755,36 +1122,36 @@ class DynamicFontParameterObject {
     set strokeColor(arg0) {
         var ptr0 = isLikeNone(arg0) ? 0 : passStringToWasm0(arg0, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         var len0 = WASM_VECTOR_LEN;
-        wasm.__wbg_set_dynamicfontparameterobject_strokeColor(this.__wbg_ptr, ptr0, len0);
+        wasm.__wbg_set_dynamicfontparam_strokeColor(this.__wbg_ptr, ptr0, len0);
     }
     /**
     * @returns {boolean | undefined}
     */
     get strokeOnly() {
-        const ret = wasm.__wbg_get_dynamicfontparameterobject_strokeOnly(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_dynamicfontparam_strokeOnly(this.__wbg_ptr);
         return ret === 0xFFFFFF ? undefined : ret !== 0;
     }
     /**
     * @param {boolean | undefined} arg0
     */
     set strokeOnly(arg0) {
-        wasm.__wbg_set_dynamicfontparameterobject_strokeOnly(this.__wbg_ptr, isLikeNone(arg0) ? 0xFFFFFF : arg0 ? 1 : 0);
+        wasm.__wbg_set_dynamicfontparam_strokeOnly(this.__wbg_ptr, isLikeNone(arg0) ? 0xFFFFFF : arg0 ? 1 : 0);
     }
     /**
     * @returns {any | undefined}
     */
     get surfaceAtlasSet() {
-        const ret = wasm.__wbg_get_dynamicfontparameterobject_surfaceAtlasSet(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_dynamicfontparam_surfaceAtlasSet(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any | undefined} arg0
     */
     set surfaceAtlasSet(arg0) {
-        wasm.__wbg_set_dynamicfontparameterobject_surfaceAtlasSet(this.__wbg_ptr, isLikeNone(arg0) ? 0 : addHeapObject(arg0));
+        wasm.__wbg_set_dynamicfontparam_surfaceAtlasSet(this.__wbg_ptr, isLikeNone(arg0) ? 0 : addHeapObject(arg0));
     }
 }
-__exports.DynamicFontParameterObject = DynamicFontParameterObject;
+__exports.DynamicFontParam = DynamicFontParam;
 /**
 */
 class EntityProperties {
@@ -961,11 +1328,11 @@ class EntityProperties {
 __exports.EntityProperties = EntityProperties;
 /**
 */
-class FilledRectParameter {
+class FilledRectParam {
 
     static __wrap(ptr) {
         ptr = ptr >>> 0;
-        const obj = Object.create(FilledRectParameter.prototype);
+        const obj = Object.create(FilledRectParam.prototype);
         obj.__wbg_ptr = ptr;
 
         return obj;
@@ -980,7 +1347,7 @@ class FilledRectParameter {
 
     free() {
         const ptr = this.__destroy_into_raw();
-        wasm.__wbg_filledrectparameter_free(ptr);
+        wasm.__wbg_filledrectparam_free(ptr);
     }
     /**
     * @returns {string}
@@ -990,7 +1357,7 @@ class FilledRectParameter {
         let deferred1_1;
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_filledrectparameter_cssColor(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_filledrectparam_cssColor(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             deferred1_0 = r0;
@@ -1007,33 +1374,33 @@ class FilledRectParameter {
     set cssColor(arg0) {
         const ptr0 = passStringToWasm0(arg0, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
-        wasm.__wbg_set_filledrectparameter_cssColor(this.__wbg_ptr, ptr0, len0);
+        wasm.__wbg_set_filledrectparam_cssColor(this.__wbg_ptr, ptr0, len0);
     }
     /**
     * @returns {number}
     */
     get width() {
-        const ret = wasm.__wbg_get_filledrectparameter_width(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_filledrectparam_width(this.__wbg_ptr);
         return ret;
     }
     /**
     * @param {number} arg0
     */
     set width(arg0) {
-        wasm.__wbg_set_filledrectparameter_width(this.__wbg_ptr, arg0);
+        wasm.__wbg_set_filledrectparam_width(this.__wbg_ptr, arg0);
     }
     /**
     * @returns {number}
     */
     get height() {
-        const ret = wasm.__wbg_get_filledrectparameter_height(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_filledrectparam_height(this.__wbg_ptr);
         return ret;
     }
     /**
     * @param {number} arg0
     */
     set height(arg0) {
-        wasm.__wbg_set_filledrectparameter_height(this.__wbg_ptr, arg0);
+        wasm.__wbg_set_filledrectparam_height(this.__wbg_ptr, arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1041,7 +1408,7 @@ class FilledRectParameter {
     get x() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_filledrectparameter_x(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_filledrectparam_x(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1053,7 +1420,7 @@ class FilledRectParameter {
     * @param {number | undefined} arg0
     */
     set x(arg0) {
-        wasm.__wbg_set_filledrectparameter_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_filledrectparam_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1061,7 +1428,7 @@ class FilledRectParameter {
     get y() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_filledrectparameter_y(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_filledrectparam_y(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1073,7 +1440,7 @@ class FilledRectParameter {
     * @param {number | undefined} arg0
     */
     set y(arg0) {
-        wasm.__wbg_set_filledrectparameter_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_filledrectparam_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1081,7 +1448,7 @@ class FilledRectParameter {
     get opacity() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_filledrectparameter_opacity(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_filledrectparam_opacity(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1093,7 +1460,7 @@ class FilledRectParameter {
     * @param {number | undefined} arg0
     */
     set opacity(arg0) {
-        wasm.__wbg_set_filledrectparameter_opacity(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_filledrectparam_opacity(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1101,7 +1468,7 @@ class FilledRectParameter {
     get scale_x() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_filledrectparameter_scale_x(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_filledrectparam_scale_x(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1113,7 +1480,7 @@ class FilledRectParameter {
     * @param {number | undefined} arg0
     */
     set scale_x(arg0) {
-        wasm.__wbg_set_filledrectparameter_scale_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_filledrectparam_scale_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1121,7 +1488,7 @@ class FilledRectParameter {
     get scale_y() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_filledrectparameter_scale_y(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_filledrectparam_scale_y(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1133,7 +1500,7 @@ class FilledRectParameter {
     * @param {number | undefined} arg0
     */
     set scale_y(arg0) {
-        wasm.__wbg_set_filledrectparameter_scale_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_filledrectparam_scale_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1141,7 +1508,7 @@ class FilledRectParameter {
     get angle() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_filledrectparameter_angle(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_filledrectparam_angle(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1153,7 +1520,7 @@ class FilledRectParameter {
     * @param {number | undefined} arg0
     */
     set angle(arg0) {
-        wasm.__wbg_set_filledrectparameter_angle(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_filledrectparam_angle(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1161,7 +1528,7 @@ class FilledRectParameter {
     get compositeOperation() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_filledrectparameter_compositeOperation(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_filledrectparam_compositeOperation(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1173,7 +1540,7 @@ class FilledRectParameter {
     * @param {number | undefined} arg0
     */
     set compositeOperation(arg0) {
-        wasm.__wbg_set_filledrectparameter_compositeOperation(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_filledrectparam_compositeOperation(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1181,7 +1548,7 @@ class FilledRectParameter {
     get anchor_x() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_filledrectparameter_anchor_x(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_filledrectparam_anchor_x(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1193,7 +1560,7 @@ class FilledRectParameter {
     * @param {number | undefined} arg0
     */
     set anchor_x(arg0) {
-        wasm.__wbg_set_filledrectparameter_anchor_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_filledrectparam_anchor_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1201,7 +1568,7 @@ class FilledRectParameter {
     get anchor_y() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_filledrectparameter_anchor_y(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_filledrectparam_anchor_y(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1213,46 +1580,46 @@ class FilledRectParameter {
     * @param {number | undefined} arg0
     */
     set anchor_y(arg0) {
-        wasm.__wbg_set_filledrectparameter_anchor_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_filledrectparam_anchor_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {any}
     */
     get scene() {
-        const ret = wasm.__wbg_get_filledrectparameter_scene(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_filledrectparam_scene(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any} arg0
     */
     set scene(arg0) {
-        wasm.__wbg_set_filledrectparameter_scene(this.__wbg_ptr, addHeapObject(arg0));
+        wasm.__wbg_set_filledrectparam_scene(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
     * @returns {boolean}
     */
     get local() {
-        const ret = wasm.__wbg_get_filledrectparameter_local(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_filledrectparam_local(this.__wbg_ptr);
         return ret !== 0;
     }
     /**
     * @param {boolean} arg0
     */
     set local(arg0) {
-        wasm.__wbg_set_filledrectparameter_local(this.__wbg_ptr, arg0);
+        wasm.__wbg_set_filledrectparam_local(this.__wbg_ptr, arg0);
     }
     /**
     * @returns {any}
     */
     get parent() {
-        const ret = wasm.__wbg_get_filledrectparameter_parent(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_filledrectparam_parent(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any} arg0
     */
     set parent(arg0) {
-        wasm.__wbg_set_filledrectparameter_parent(this.__wbg_ptr, addHeapObject(arg0));
+        wasm.__wbg_set_filledrectparam_parent(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
     * @returns {any[]}
@@ -1260,7 +1627,7 @@ class FilledRectParameter {
     get children() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_filledrectparameter_children(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_filledrectparam_children(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             var v1 = getArrayJsValueFromWasm0(r0, r1).slice();
@@ -1276,20 +1643,20 @@ class FilledRectParameter {
     set children(arg0) {
         const ptr0 = passArrayJsValueToWasm0(arg0, wasm.__wbindgen_malloc);
         const len0 = WASM_VECTOR_LEN;
-        wasm.__wbg_set_filledrectparameter_children(this.__wbg_ptr, ptr0, len0);
+        wasm.__wbg_set_filledrectparam_children(this.__wbg_ptr, ptr0, len0);
     }
     /**
     * @returns {boolean}
     */
     get touchable() {
-        const ret = wasm.__wbg_get_filledrectparameter_touchable(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_filledrectparam_touchable(this.__wbg_ptr);
         return ret !== 0;
     }
     /**
     * @param {boolean} arg0
     */
     set touchable(arg0) {
-        wasm.__wbg_set_filledrectparameter_touchable(this.__wbg_ptr, arg0);
+        wasm.__wbg_set_filledrectparam_touchable(this.__wbg_ptr, arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1297,7 +1664,7 @@ class FilledRectParameter {
     get id() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_filledrectparameter_id(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_filledrectparam_id(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1309,36 +1676,36 @@ class FilledRectParameter {
     * @param {number | undefined} arg0
     */
     set id(arg0) {
-        wasm.__wbg_set_filledrectparameter_id(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_filledrectparam_id(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {any}
     */
     get tag() {
-        const ret = wasm.__wbg_get_filledrectparameter_tag(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_filledrectparam_tag(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any} arg0
     */
     set tag(arg0) {
-        wasm.__wbg_set_filledrectparameter_tag(this.__wbg_ptr, addHeapObject(arg0));
+        wasm.__wbg_set_filledrectparam_tag(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
     * @returns {any | undefined}
     */
     get shaderProgram() {
-        const ret = wasm.__wbg_get_filledrectparameter_shaderProgram(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_filledrectparam_shaderProgram(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any | undefined} arg0
     */
     set shaderProgram(arg0) {
-        wasm.__wbg_set_filledrectparameter_shaderProgram(this.__wbg_ptr, isLikeNone(arg0) ? 0 : addHeapObject(arg0));
+        wasm.__wbg_set_filledrectparam_shaderProgram(this.__wbg_ptr, isLikeNone(arg0) ? 0 : addHeapObject(arg0));
     }
 }
-__exports.FilledRectParameter = FilledRectParameter;
+__exports.FilledRectParam = FilledRectParam;
 /**
 */
 class GlyphArea {
@@ -1492,11 +1859,11 @@ class GlyphArea {
 __exports.GlyphArea = GlyphArea;
 /**
 */
-class LabelParameterObject {
+class LabelParam {
 
     static __wrap(ptr) {
         ptr = ptr >>> 0;
-        const obj = Object.create(LabelParameterObject.prototype);
+        const obj = Object.create(LabelParam.prototype);
         obj.__wbg_ptr = ptr;
 
         return obj;
@@ -1511,7 +1878,7 @@ class LabelParameterObject {
 
     free() {
         const ptr = this.__destroy_into_raw();
-        wasm.__wbg_labelparameterobject_free(ptr);
+        wasm.__wbg_labelparam_free(ptr);
     }
     /**
     * @returns {string}
@@ -1521,7 +1888,7 @@ class LabelParameterObject {
         let deferred1_1;
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_text(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_text(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             deferred1_0 = r0;
@@ -1538,20 +1905,20 @@ class LabelParameterObject {
     set text(arg0) {
         const ptr0 = passStringToWasm0(arg0, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
-        wasm.__wbg_set_labelparameterobject_text(this.__wbg_ptr, ptr0, len0);
+        wasm.__wbg_set_labelparam_text(this.__wbg_ptr, ptr0, len0);
     }
     /**
     * @returns {any}
     */
     get font() {
-        const ret = wasm.__wbg_get_labelparameterobject_font(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_labelparam_font(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any} arg0
     */
     set font(arg0) {
-        wasm.__wbg_set_labelparameterobject_font(this.__wbg_ptr, addHeapObject(arg0));
+        wasm.__wbg_set_labelparam_font(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
     * @returns {number | undefined}
@@ -1559,7 +1926,7 @@ class LabelParameterObject {
     get fontSize() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_fontSize(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_fontSize(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1571,7 +1938,7 @@ class LabelParameterObject {
     * @param {number | undefined} arg0
     */
     set fontSize(arg0) {
-        wasm.__wbg_set_labelparameterobject_fontSize(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_labelparam_fontSize(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {string | undefined}
@@ -1579,7 +1946,7 @@ class LabelParameterObject {
     get textAlign() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_textAlign(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_textAlign(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             let v1;
@@ -1598,7 +1965,7 @@ class LabelParameterObject {
     set textAlign(arg0) {
         var ptr0 = isLikeNone(arg0) ? 0 : passStringToWasm0(arg0, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         var len0 = WASM_VECTOR_LEN;
-        wasm.__wbg_set_labelparameterobject_textAlign(this.__wbg_ptr, ptr0, len0);
+        wasm.__wbg_set_labelparam_textAlign(this.__wbg_ptr, ptr0, len0);
     }
     /**
     * @returns {number | undefined}
@@ -1606,7 +1973,7 @@ class LabelParameterObject {
     get maxWidth() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_maxWidth(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_maxWidth(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1618,20 +1985,20 @@ class LabelParameterObject {
     * @param {number | undefined} arg0
     */
     set maxWidth(arg0) {
-        wasm.__wbg_set_labelparameterobject_maxWidth(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_labelparam_maxWidth(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {boolean | undefined}
     */
     get widthAutoAdjust() {
-        const ret = wasm.__wbg_get_labelparameterobject_widthAutoAdjust(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_labelparam_widthAutoAdjust(this.__wbg_ptr);
         return ret === 0xFFFFFF ? undefined : ret !== 0;
     }
     /**
     * @param {boolean | undefined} arg0
     */
     set widthAutoAdjust(arg0) {
-        wasm.__wbg_set_labelparameterobject_widthAutoAdjust(this.__wbg_ptr, isLikeNone(arg0) ? 0xFFFFFF : arg0 ? 1 : 0);
+        wasm.__wbg_set_labelparam_widthAutoAdjust(this.__wbg_ptr, isLikeNone(arg0) ? 0xFFFFFF : arg0 ? 1 : 0);
     }
     /**
     * @returns {string | undefined}
@@ -1639,7 +2006,7 @@ class LabelParameterObject {
     get textColor() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_textColor(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_textColor(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             let v1;
@@ -1658,7 +2025,7 @@ class LabelParameterObject {
     set textColor(arg0) {
         var ptr0 = isLikeNone(arg0) ? 0 : passStringToWasm0(arg0, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         var len0 = WASM_VECTOR_LEN;
-        wasm.__wbg_set_labelparameterobject_textColor(this.__wbg_ptr, ptr0, len0);
+        wasm.__wbg_set_labelparam_textColor(this.__wbg_ptr, ptr0, len0);
     }
     /**
     * @returns {number | undefined}
@@ -1666,7 +2033,7 @@ class LabelParameterObject {
     get x() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_x(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_x(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1678,7 +2045,7 @@ class LabelParameterObject {
     * @param {number | undefined} arg0
     */
     set x(arg0) {
-        wasm.__wbg_set_labelparameterobject_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_labelparam_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1686,7 +2053,7 @@ class LabelParameterObject {
     get y() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_y(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_y(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1698,7 +2065,7 @@ class LabelParameterObject {
     * @param {number | undefined} arg0
     */
     set y(arg0) {
-        wasm.__wbg_set_labelparameterobject_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_labelparam_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1706,7 +2073,7 @@ class LabelParameterObject {
     get width() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_width(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_width(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1718,7 +2085,7 @@ class LabelParameterObject {
     * @param {number | undefined} arg0
     */
     set width(arg0) {
-        wasm.__wbg_set_labelparameterobject_width(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_labelparam_width(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1726,7 +2093,7 @@ class LabelParameterObject {
     get height() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_height(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_height(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1738,7 +2105,7 @@ class LabelParameterObject {
     * @param {number | undefined} arg0
     */
     set height(arg0) {
-        wasm.__wbg_set_labelparameterobject_height(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_labelparam_height(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1746,7 +2113,7 @@ class LabelParameterObject {
     get opacity() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_opacity(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_opacity(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1758,7 +2125,7 @@ class LabelParameterObject {
     * @param {number | undefined} arg0
     */
     set opacity(arg0) {
-        wasm.__wbg_set_labelparameterobject_opacity(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_labelparam_opacity(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1766,7 +2133,7 @@ class LabelParameterObject {
     get scale_x() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_scale_x(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_scale_x(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1778,7 +2145,7 @@ class LabelParameterObject {
     * @param {number | undefined} arg0
     */
     set scale_x(arg0) {
-        wasm.__wbg_set_labelparameterobject_scale_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_labelparam_scale_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1786,7 +2153,7 @@ class LabelParameterObject {
     get scale_y() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_scale_y(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_scale_y(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1798,7 +2165,7 @@ class LabelParameterObject {
     * @param {number | undefined} arg0
     */
     set scale_y(arg0) {
-        wasm.__wbg_set_labelparameterobject_scale_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_labelparam_scale_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1806,7 +2173,7 @@ class LabelParameterObject {
     get angle() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_angle(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_angle(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1818,7 +2185,7 @@ class LabelParameterObject {
     * @param {number | undefined} arg0
     */
     set angle(arg0) {
-        wasm.__wbg_set_labelparameterobject_angle(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_labelparam_angle(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1826,7 +2193,7 @@ class LabelParameterObject {
     get compositeOperation() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_compositeOperation(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_compositeOperation(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1838,7 +2205,7 @@ class LabelParameterObject {
     * @param {number | undefined} arg0
     */
     set compositeOperation(arg0) {
-        wasm.__wbg_set_labelparameterobject_compositeOperation(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_labelparam_compositeOperation(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1846,7 +2213,7 @@ class LabelParameterObject {
     get anchor_x() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_anchor_x(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_anchor_x(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1858,7 +2225,7 @@ class LabelParameterObject {
     * @param {number | undefined} arg0
     */
     set anchor_x(arg0) {
-        wasm.__wbg_set_labelparameterobject_anchor_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_labelparam_anchor_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1866,7 +2233,7 @@ class LabelParameterObject {
     get anchor_y() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_anchor_y(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_anchor_y(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1878,46 +2245,46 @@ class LabelParameterObject {
     * @param {number | undefined} arg0
     */
     set anchor_y(arg0) {
-        wasm.__wbg_set_labelparameterobject_anchor_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_labelparam_anchor_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {any}
     */
     get scene() {
-        const ret = wasm.__wbg_get_labelparameterobject_scene(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_labelparam_scene(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any} arg0
     */
     set scene(arg0) {
-        wasm.__wbg_set_labelparameterobject_scene(this.__wbg_ptr, addHeapObject(arg0));
+        wasm.__wbg_set_labelparam_scene(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
     * @returns {boolean}
     */
     get local() {
-        const ret = wasm.__wbg_get_labelparameterobject_local(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_labelparam_local(this.__wbg_ptr);
         return ret !== 0;
     }
     /**
     * @param {boolean} arg0
     */
     set local(arg0) {
-        wasm.__wbg_set_labelparameterobject_local(this.__wbg_ptr, arg0);
+        wasm.__wbg_set_labelparam_local(this.__wbg_ptr, arg0);
     }
     /**
     * @returns {any}
     */
     get parent() {
-        const ret = wasm.__wbg_get_labelparameterobject_parent(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_labelparam_parent(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any} arg0
     */
     set parent(arg0) {
-        wasm.__wbg_set_labelparameterobject_parent(this.__wbg_ptr, addHeapObject(arg0));
+        wasm.__wbg_set_labelparam_parent(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
     * @returns {any[]}
@@ -1925,7 +2292,7 @@ class LabelParameterObject {
     get children() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_children(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_children(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             var v1 = getArrayJsValueFromWasm0(r0, r1).slice();
@@ -1941,20 +2308,20 @@ class LabelParameterObject {
     set children(arg0) {
         const ptr0 = passArrayJsValueToWasm0(arg0, wasm.__wbindgen_malloc);
         const len0 = WASM_VECTOR_LEN;
-        wasm.__wbg_set_labelparameterobject_children(this.__wbg_ptr, ptr0, len0);
+        wasm.__wbg_set_labelparam_children(this.__wbg_ptr, ptr0, len0);
     }
     /**
     * @returns {boolean}
     */
     get touchable() {
-        const ret = wasm.__wbg_get_labelparameterobject_touchable(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_labelparam_touchable(this.__wbg_ptr);
         return ret !== 0;
     }
     /**
     * @param {boolean} arg0
     */
     set touchable(arg0) {
-        wasm.__wbg_set_labelparameterobject_touchable(this.__wbg_ptr, arg0);
+        wasm.__wbg_set_labelparam_touchable(this.__wbg_ptr, arg0);
     }
     /**
     * @returns {number | undefined}
@@ -1962,7 +2329,7 @@ class LabelParameterObject {
     get id() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_labelparameterobject_id(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_labelparam_id(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -1974,36 +2341,36 @@ class LabelParameterObject {
     * @param {number | undefined} arg0
     */
     set id(arg0) {
-        wasm.__wbg_set_labelparameterobject_id(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_labelparam_id(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {any}
     */
     get tag() {
-        const ret = wasm.__wbg_get_labelparameterobject_tag(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_labelparam_tag(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any} arg0
     */
     set tag(arg0) {
-        wasm.__wbg_set_labelparameterobject_tag(this.__wbg_ptr, addHeapObject(arg0));
+        wasm.__wbg_set_labelparam_tag(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
     * @returns {any | undefined}
     */
     get shaderProgram() {
-        const ret = wasm.__wbg_get_labelparameterobject_shaderProgram(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_labelparam_shaderProgram(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any | undefined} arg0
     */
     set shaderProgram(arg0) {
-        wasm.__wbg_set_labelparameterobject_shaderProgram(this.__wbg_ptr, isLikeNone(arg0) ? 0 : addHeapObject(arg0));
+        wasm.__wbg_set_labelparam_shaderProgram(this.__wbg_ptr, isLikeNone(arg0) ? 0 : addHeapObject(arg0));
     }
 }
-__exports.LabelParameterObject = LabelParameterObject;
+__exports.LabelParam = LabelParam;
 /**
 */
 class SceneParameterObject {
@@ -2143,11 +2510,11 @@ class SceneParameterObject {
 __exports.SceneParameterObject = SceneParameterObject;
 /**
 */
-class SpriteParameterObject {
+class SpriteParam {
 
     static __wrap(ptr) {
         ptr = ptr >>> 0;
-        const obj = Object.create(SpriteParameterObject.prototype);
+        const obj = Object.create(SpriteParam.prototype);
         obj.__wbg_ptr = ptr;
 
         return obj;
@@ -2162,20 +2529,20 @@ class SpriteParameterObject {
 
     free() {
         const ptr = this.__destroy_into_raw();
-        wasm.__wbg_spriteparameterobject_free(ptr);
+        wasm.__wbg_spriteparam_free(ptr);
     }
     /**
     * @returns {any}
     */
     get src() {
-        const ret = wasm.__wbg_get_spriteparameterobject_src(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_spriteparam_src(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any} arg0
     */
     set src(arg0) {
-        wasm.__wbg_set_spriteparameterobject_src(this.__wbg_ptr, addHeapObject(arg0));
+        wasm.__wbg_set_spriteparam_src(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
     * @returns {number | undefined}
@@ -2183,7 +2550,7 @@ class SpriteParameterObject {
     get srcWidth() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_spriteparameterobject_srcWidth(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_spriteparam_srcWidth(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -2195,7 +2562,7 @@ class SpriteParameterObject {
     * @param {number | undefined} arg0
     */
     set srcWidth(arg0) {
-        wasm.__wbg_set_spriteparameterobject_srcWidth(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_spriteparam_srcWidth(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -2203,7 +2570,7 @@ class SpriteParameterObject {
     get srcHeight() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_spriteparameterobject_srcHeight(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_spriteparam_srcHeight(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -2215,7 +2582,7 @@ class SpriteParameterObject {
     * @param {number | undefined} arg0
     */
     set srcHeight(arg0) {
-        wasm.__wbg_set_spriteparameterobject_srcHeight(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_spriteparam_srcHeight(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -2223,7 +2590,7 @@ class SpriteParameterObject {
     get srcX() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_spriteparameterobject_srcX(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_spriteparam_srcX(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -2235,7 +2602,7 @@ class SpriteParameterObject {
     * @param {number | undefined} arg0
     */
     set srcX(arg0) {
-        wasm.__wbg_set_spriteparameterobject_srcX(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_spriteparam_srcX(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -2243,7 +2610,7 @@ class SpriteParameterObject {
     get srcY() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_spriteparameterobject_srcY(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_spriteparam_srcY(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -2255,7 +2622,7 @@ class SpriteParameterObject {
     * @param {number | undefined} arg0
     */
     set srcY(arg0) {
-        wasm.__wbg_set_spriteparameterobject_srcY(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_spriteparam_srcY(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -2263,7 +2630,7 @@ class SpriteParameterObject {
     get x() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_spriteparameterobject_x(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_spriteparam_x(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -2275,7 +2642,7 @@ class SpriteParameterObject {
     * @param {number | undefined} arg0
     */
     set x(arg0) {
-        wasm.__wbg_set_spriteparameterobject_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_spriteparam_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -2283,7 +2650,7 @@ class SpriteParameterObject {
     get y() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_spriteparameterobject_y(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_spriteparam_y(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -2295,7 +2662,7 @@ class SpriteParameterObject {
     * @param {number | undefined} arg0
     */
     set y(arg0) {
-        wasm.__wbg_set_spriteparameterobject_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_spriteparam_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -2303,7 +2670,7 @@ class SpriteParameterObject {
     get width() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_spriteparameterobject_width(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_spriteparam_width(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -2315,7 +2682,7 @@ class SpriteParameterObject {
     * @param {number | undefined} arg0
     */
     set width(arg0) {
-        wasm.__wbg_set_spriteparameterobject_width(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_spriteparam_width(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -2323,7 +2690,7 @@ class SpriteParameterObject {
     get height() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_spriteparameterobject_height(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_spriteparam_height(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -2335,7 +2702,7 @@ class SpriteParameterObject {
     * @param {number | undefined} arg0
     */
     set height(arg0) {
-        wasm.__wbg_set_spriteparameterobject_height(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_spriteparam_height(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -2343,7 +2710,7 @@ class SpriteParameterObject {
     get opacity() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_spriteparameterobject_opacity(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_spriteparam_opacity(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -2355,7 +2722,7 @@ class SpriteParameterObject {
     * @param {number | undefined} arg0
     */
     set opacity(arg0) {
-        wasm.__wbg_set_spriteparameterobject_opacity(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_spriteparam_opacity(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -2363,7 +2730,7 @@ class SpriteParameterObject {
     get scale_x() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_spriteparameterobject_scale_x(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_spriteparam_scale_x(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -2375,7 +2742,7 @@ class SpriteParameterObject {
     * @param {number | undefined} arg0
     */
     set scale_x(arg0) {
-        wasm.__wbg_set_spriteparameterobject_scale_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_spriteparam_scale_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -2383,7 +2750,7 @@ class SpriteParameterObject {
     get scale_y() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_spriteparameterobject_scale_y(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_spriteparam_scale_y(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -2395,7 +2762,7 @@ class SpriteParameterObject {
     * @param {number | undefined} arg0
     */
     set scale_y(arg0) {
-        wasm.__wbg_set_spriteparameterobject_scale_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_spriteparam_scale_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -2403,7 +2770,7 @@ class SpriteParameterObject {
     get angle() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_spriteparameterobject_angle(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_spriteparam_angle(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -2415,7 +2782,7 @@ class SpriteParameterObject {
     * @param {number | undefined} arg0
     */
     set angle(arg0) {
-        wasm.__wbg_set_spriteparameterobject_angle(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_spriteparam_angle(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -2423,7 +2790,7 @@ class SpriteParameterObject {
     get compositeOperation() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_spriteparameterobject_compositeOperation(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_spriteparam_compositeOperation(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -2435,7 +2802,7 @@ class SpriteParameterObject {
     * @param {number | undefined} arg0
     */
     set compositeOperation(arg0) {
-        wasm.__wbg_set_spriteparameterobject_compositeOperation(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_spriteparam_compositeOperation(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -2443,7 +2810,7 @@ class SpriteParameterObject {
     get anchor_x() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_spriteparameterobject_anchor_x(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_spriteparam_anchor_x(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -2455,7 +2822,7 @@ class SpriteParameterObject {
     * @param {number | undefined} arg0
     */
     set anchor_x(arg0) {
-        wasm.__wbg_set_spriteparameterobject_anchor_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_spriteparam_anchor_x(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {number | undefined}
@@ -2463,7 +2830,7 @@ class SpriteParameterObject {
     get anchor_y() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_spriteparameterobject_anchor_y(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_spriteparam_anchor_y(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -2475,46 +2842,46 @@ class SpriteParameterObject {
     * @param {number | undefined} arg0
     */
     set anchor_y(arg0) {
-        wasm.__wbg_set_spriteparameterobject_anchor_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_spriteparam_anchor_y(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {any}
     */
     get scene() {
-        const ret = wasm.__wbg_get_spriteparameterobject_scene(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_spriteparam_scene(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any} arg0
     */
     set scene(arg0) {
-        wasm.__wbg_set_spriteparameterobject_scene(this.__wbg_ptr, addHeapObject(arg0));
+        wasm.__wbg_set_spriteparam_scene(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
     * @returns {boolean}
     */
     get local() {
-        const ret = wasm.__wbg_get_spriteparameterobject_local(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_spriteparam_local(this.__wbg_ptr);
         return ret !== 0;
     }
     /**
     * @param {boolean} arg0
     */
     set local(arg0) {
-        wasm.__wbg_set_spriteparameterobject_local(this.__wbg_ptr, arg0);
+        wasm.__wbg_set_spriteparam_local(this.__wbg_ptr, arg0);
     }
     /**
     * @returns {any}
     */
     get parent() {
-        const ret = wasm.__wbg_get_spriteparameterobject_parent(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_spriteparam_parent(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any} arg0
     */
     set parent(arg0) {
-        wasm.__wbg_set_spriteparameterobject_parent(this.__wbg_ptr, addHeapObject(arg0));
+        wasm.__wbg_set_spriteparam_parent(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
     * @returns {any[]}
@@ -2522,7 +2889,7 @@ class SpriteParameterObject {
     get children() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_spriteparameterobject_children(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_spriteparam_children(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             var v1 = getArrayJsValueFromWasm0(r0, r1).slice();
@@ -2538,20 +2905,20 @@ class SpriteParameterObject {
     set children(arg0) {
         const ptr0 = passArrayJsValueToWasm0(arg0, wasm.__wbindgen_malloc);
         const len0 = WASM_VECTOR_LEN;
-        wasm.__wbg_set_spriteparameterobject_children(this.__wbg_ptr, ptr0, len0);
+        wasm.__wbg_set_spriteparam_children(this.__wbg_ptr, ptr0, len0);
     }
     /**
     * @returns {boolean}
     */
     get touchable() {
-        const ret = wasm.__wbg_get_spriteparameterobject_touchable(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_spriteparam_touchable(this.__wbg_ptr);
         return ret !== 0;
     }
     /**
     * @param {boolean} arg0
     */
     set touchable(arg0) {
-        wasm.__wbg_set_spriteparameterobject_touchable(this.__wbg_ptr, arg0);
+        wasm.__wbg_set_spriteparam_touchable(this.__wbg_ptr, arg0);
     }
     /**
     * @returns {number | undefined}
@@ -2559,7 +2926,7 @@ class SpriteParameterObject {
     get id() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_spriteparameterobject_id(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_spriteparam_id(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getFloat32Memory0()[retptr / 4 + 1];
             return r0 === 0 ? undefined : r1;
@@ -2571,36 +2938,36 @@ class SpriteParameterObject {
     * @param {number | undefined} arg0
     */
     set id(arg0) {
-        wasm.__wbg_set_spriteparameterobject_id(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
+        wasm.__wbg_set_spriteparam_id(this.__wbg_ptr, !isLikeNone(arg0), isLikeNone(arg0) ? 0 : arg0);
     }
     /**
     * @returns {any}
     */
     get tag() {
-        const ret = wasm.__wbg_get_spriteparameterobject_tag(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_spriteparam_tag(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any} arg0
     */
     set tag(arg0) {
-        wasm.__wbg_set_spriteparameterobject_tag(this.__wbg_ptr, addHeapObject(arg0));
+        wasm.__wbg_set_spriteparam_tag(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
     * @returns {any | undefined}
     */
     get shaderProgram() {
-        const ret = wasm.__wbg_get_spriteparameterobject_shaderProgram(this.__wbg_ptr);
+        const ret = wasm.__wbg_get_spriteparam_shaderProgram(this.__wbg_ptr);
         return takeObject(ret);
     }
     /**
     * @param {any | undefined} arg0
     */
     set shaderProgram(arg0) {
-        wasm.__wbg_set_spriteparameterobject_shaderProgram(this.__wbg_ptr, isLikeNone(arg0) ? 0 : addHeapObject(arg0));
+        wasm.__wbg_set_spriteparam_shaderProgram(this.__wbg_ptr, isLikeNone(arg0) ? 0 : addHeapObject(arg0));
     }
 }
-__exports.SpriteParameterObject = SpriteParameterObject;
+__exports.SpriteParam = SpriteParam;
 
 async function __wbg_load(module, imports) {
     if (typeof Response === 'function' && module instanceof Response) {
@@ -2651,20 +3018,16 @@ function __wbg_get_imports() {
         getInt32Memory0()[arg0 / 4 + 1] = len1;
         getInt32Memory0()[arg0 / 4 + 0] = ptr1;
     };
-    imports.wbg.__wbg_getEntityProperties_632a0848651235ee = function(arg0) {
-        const ret = g.getEntityProperties(getObject(arg0));
-        return addHeapObject(ret);
+    imports.wbg.__wbindgen_boolean_get = function(arg0) {
+        const v = getObject(arg0);
+        const ret = typeof(v) === 'boolean' ? (v ? 1 : 0) : 2;
+        return ret;
     };
-    imports.wbg.__wbg_feedFilledRectProperties_a48109919dbc67a4 = function(arg0, arg1, arg2) {
-        let deferred0_0;
-        let deferred0_1;
-        try {
-            deferred0_0 = arg1;
-            deferred0_1 = arg2;
-            g.feedFilledRectProperties(getObject(arg0), getStringFromWasm0(arg1, arg2));
-        } finally {
-            wasm.__wbindgen_free(deferred0_0, deferred0_1, 1);
-        }
+    imports.wbg.__wbindgen_number_get = function(arg0, arg1) {
+        const obj = getObject(arg1);
+        const ret = typeof(obj) === 'number' ? obj : undefined;
+        getFloat64Memory0()[arg0 / 8 + 1] = isLikeNone(ret) ? 0 : ret;
+        getInt32Memory0()[arg0 / 4 + 0] = !isLikeNone(ret);
     };
     imports.wbg.__wbindgen_is_object = function(arg0) {
         const val = getObject(arg0);
@@ -2679,12 +3042,6 @@ function __wbg_get_imports() {
         const ret = getObject(arg0) in getObject(arg1);
         return ret;
     };
-    imports.wbg.__wbindgen_number_get = function(arg0, arg1) {
-        const obj = getObject(arg1);
-        const ret = typeof(obj) === 'number' ? obj : undefined;
-        getFloat64Memory0()[arg0 / 8 + 1] = isLikeNone(ret) ? 0 : ret;
-        getInt32Memory0()[arg0 / 4 + 0] = !isLikeNone(ret);
-    };
     imports.wbg.__wbindgen_is_bigint = function(arg0) {
         const ret = typeof(getObject(arg0)) === 'bigint';
         return ret;
@@ -2697,10 +3054,24 @@ function __wbg_get_imports() {
         const ret = getObject(arg0) === getObject(arg1);
         return ret;
     };
-    imports.wbg.__wbindgen_boolean_get = function(arg0) {
-        const v = getObject(arg0);
-        const ret = typeof(v) === 'boolean' ? (v ? 1 : 0) : 2;
-        return ret;
+    imports.wbg.__wbindgen_error_new = function(arg0, arg1) {
+        const ret = new Error(getStringFromWasm0(arg0, arg1));
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_getEntityProperties_632a0848651235ee = function(arg0) {
+        const ret = g.getEntityProperties(getObject(arg0));
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_feedFilledRectProperties_a48109919dbc67a4 = function(arg0, arg1, arg2) {
+        let deferred0_0;
+        let deferred0_1;
+        try {
+            deferred0_0 = arg1;
+            deferred0_1 = arg2;
+            g.feedFilledRectProperties(getObject(arg0), getStringFromWasm0(arg1, arg2));
+        } finally {
+            wasm.__wbindgen_free(deferred0_0, deferred0_1, 1);
+        }
     };
     imports.wbg.__wbg_feedLabelProperties_526d7a665d59f24c = function(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7) {
         let deferred0_0;
@@ -2726,12 +3097,8 @@ function __wbg_get_imports() {
     imports.wbg.__wbg_feedEntityProperties_44c673bde2497ac9 = function(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12) {
         g.feedEntityProperties(getObject(arg0), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8 === 0 ? undefined : arg9, arg10 === 0 ? undefined : arg11, arg12 !== 0);
     };
-    imports.wbg.__wbindgen_error_new = function(arg0, arg1) {
-        const ret = new Error(getStringFromWasm0(arg0, arg1));
-        return addHeapObject(ret);
-    };
     imports.wbg.__wbg_new_1ae86c6b8399795f = function(arg0) {
-        const ret = new g.Label(LabelParameterObject.__wrap(arg0));
+        const ret = new g.Label(LabelParam.__wrap(arg0));
         return addHeapObject(ret);
     };
     imports.wbg.__wbg_text_0011f2a8a6e5b5ba = function(arg0, arg1) {
@@ -2760,7 +3127,7 @@ function __wbg_get_imports() {
         return addHeapObject(ret);
     };
     imports.wbg.__wbg_new_5628fc2a52d267ef = function(arg0) {
-        const ret = new g.Sprite(SpriteParameterObject.__wrap(arg0));
+        const ret = new g.Sprite(SpriteParam.__wrap(arg0));
         return addHeapObject(ret);
     };
     imports.wbg.__wbg_width_7ebfa7eead2707f4 = function(arg0) {
@@ -2780,6 +3147,32 @@ function __wbg_get_imports() {
     imports.wbg.__wbg_setangle_9c05f06f597bf776 = function(arg0, arg1) {
         getObject(arg0).angle = arg1;
     };
+    imports.wbg.__wbindgen_string_new = function(arg0, arg1) {
+        const ret = getStringFromWasm0(arg0, arg1);
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbindgen_number_new = function(arg0) {
+        const ret = arg0;
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_data_8fdd18b5b2a4f747 = function(arg0, arg1) {
+        const ret = getObject(arg1).data;
+        const ptr1 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len1 = WASM_VECTOR_LEN;
+        getInt32Memory0()[arg0 / 4 + 1] = len1;
+        getInt32Memory0()[arg0 / 4 + 0] = ptr1;
+    };
+    imports.wbg.__wbg_id_6ca5403de5216c84 = function(arg0, arg1) {
+        const ret = getObject(arg1).id;
+        const ptr1 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len1 = WASM_VECTOR_LEN;
+        getInt32Memory0()[arg0 / 4 + 1] = len1;
+        getInt32Memory0()[arg0 / 4 + 0] = ptr1;
+    };
+    imports.wbg.__wbg_player_4036e913811318d0 = function(arg0) {
+        const ret = getObject(arg0).player;
+        return addHeapObject(ret);
+    };
     imports.wbg.__wbg_id_9b2310e9bec069bc = function(arg0, arg1) {
         const ret = getObject(arg1).id;
         const ptr1 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
@@ -2793,19 +3186,6 @@ function __wbg_get_imports() {
         const len1 = WASM_VECTOR_LEN;
         getInt32Memory0()[arg0 / 4 + 1] = len1;
         getInt32Memory0()[arg0 / 4 + 0] = ptr1;
-    };
-    imports.wbg.__wbg_id_12a1a14cc5946b59 = function(arg0) {
-        const ret = getObject(arg0).id;
-        return ret;
-    };
-    imports.wbg.__wbg_append_7f00302a861bc860 = function(arg0, arg1) {
-        getObject(arg0).append(takeObject(arg1));
-    };
-    imports.wbg.__wbg_destroy_549e71ecb131a195 = function(arg0) {
-        getObject(arg0).destroy();
-    };
-    imports.wbg.__wbg_modified_bf00aed1b07bc4a3 = function(arg0) {
-        getObject(arg0).modified();
     };
     imports.wbg.__wbg_getAllImages_5a7935ba8524b8f4 = function(arg0, arg1, arg2, arg3) {
         let deferred0_0;
@@ -2911,7 +3291,7 @@ function __wbg_get_imports() {
         return ret;
     };
     imports.wbg.__wbg_new_922693aeee367f21 = function(arg0) {
-        const ret = new g.FilledRect(FilledRectParameter.__wrap(arg0));
+        const ret = new g.FilledRect(FilledRectParam.__wrap(arg0));
         return addHeapObject(ret);
     };
     imports.wbg.__wbg_cssColor_6af5b452497db75b = function(arg0, arg1) {
@@ -2920,6 +3300,23 @@ function __wbg_get_imports() {
         const len1 = WASM_VECTOR_LEN;
         getInt32Memory0()[arg0 / 4 + 1] = len1;
         getInt32Memory0()[arg0 / 4 + 0] = ptr1;
+    };
+    imports.wbg.__wbg_new_c532a0303de2133e = function(arg0) {
+        const ret = new g.E(AkashicEntityParam.__wrap(arg0));
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_id_43b31a7ccc967443 = function(arg0) {
+        const ret = getObject(arg0).id;
+        return ret;
+    };
+    imports.wbg.__wbg_append_a49587659876cef5 = function(arg0, arg1) {
+        getObject(arg0).append(takeObject(arg1));
+    };
+    imports.wbg.__wbg_destroy_951d5729925dd7aa = function(arg0) {
+        getObject(arg0).destroy();
+    };
+    imports.wbg.__wbg_modified_b013564fb16080e9 = function(arg0) {
+        getObject(arg0).modified();
     };
     imports.wbg.__wbg_static_accessor_GAME_7c453f8c156b042d = function() {
         const ret = g.game;
@@ -2953,7 +3350,7 @@ function __wbg_get_imports() {
         return addHeapObject(ret);
     };
     imports.wbg.__wbg_new_513aaf26fbc0bced = function(arg0) {
-        const ret = new g.BitmapFont(BitmapFontParameter.__wrap(arg0));
+        const ret = new g.BitmapFont(BitmapFontParam.__wrap(arg0));
         return addHeapObject(ret);
     };
     imports.wbg.__wbg_point_3cbc30c2b4894fd8 = function(arg0) {
@@ -3011,32 +3408,6 @@ function __wbg_get_imports() {
         var len1 = WASM_VECTOR_LEN;
         getInt32Memory0()[arg0 / 4 + 1] = len1;
         getInt32Memory0()[arg0 / 4 + 0] = ptr1;
-    };
-    imports.wbg.__wbindgen_string_new = function(arg0, arg1) {
-        const ret = getStringFromWasm0(arg0, arg1);
-        return addHeapObject(ret);
-    };
-    imports.wbg.__wbindgen_number_new = function(arg0) {
-        const ret = arg0;
-        return addHeapObject(ret);
-    };
-    imports.wbg.__wbg_data_8fdd18b5b2a4f747 = function(arg0, arg1) {
-        const ret = getObject(arg1).data;
-        const ptr1 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-        const len1 = WASM_VECTOR_LEN;
-        getInt32Memory0()[arg0 / 4 + 1] = len1;
-        getInt32Memory0()[arg0 / 4 + 0] = ptr1;
-    };
-    imports.wbg.__wbg_id_6ca5403de5216c84 = function(arg0, arg1) {
-        const ret = getObject(arg1).id;
-        const ptr1 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-        const len1 = WASM_VECTOR_LEN;
-        getInt32Memory0()[arg0 / 4 + 1] = len1;
-        getInt32Memory0()[arg0 / 4 + 0] = ptr1;
-    };
-    imports.wbg.__wbg_player_4036e913811318d0 = function(arg0) {
-        const ret = getObject(arg0).player;
-        return addHeapObject(ret);
     };
     imports.wbg.__wbindgen_jsval_loose_eq = function(arg0, arg1) {
         const ret = getObject(arg0) == getObject(arg1);
@@ -3225,28 +3596,28 @@ function __wbg_get_imports() {
         const ret = wasm.memory;
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper379 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 266, __wbg_adapter_46);
+    imports.wbg.__wbindgen_closure_wrapper408 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 253, __wbg_adapter_46);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper1134 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 829, __wbg_adapter_49);
+    imports.wbg.__wbindgen_closure_wrapper1178 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 854, __wbg_adapter_49);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper1136 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 829, __wbg_adapter_52);
+    imports.wbg.__wbindgen_closure_wrapper1180 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 854, __wbg_adapter_52);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper1138 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 829, __wbg_adapter_52);
+    imports.wbg.__wbindgen_closure_wrapper1182 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 854, __wbg_adapter_52);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper1140 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 829, __wbg_adapter_52);
+    imports.wbg.__wbindgen_closure_wrapper1184 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 854, __wbg_adapter_52);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper1142 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 829, __wbg_adapter_52);
+    imports.wbg.__wbindgen_closure_wrapper1186 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 854, __wbg_adapter_52);
         return addHeapObject(ret);
     };
 

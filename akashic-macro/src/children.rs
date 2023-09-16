@@ -7,7 +7,7 @@ pub fn expand_children(entity_name: &Ident) -> TokenStream2 {
         #[wasm_bindgen]
         extern "C"{
             #[wasm_bindgen(js_namespace = g, method, getter)]
-            pub fn children(this: &#entity_name) -> Box<[crate::prelude::Entity]>;
+            pub fn children(this: &#entity_name) -> Box<[crate::prelude::AkashicEntity]>;
         }
     }
 }

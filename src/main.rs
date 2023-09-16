@@ -2,15 +2,16 @@ use std::panic;
 
 use bevy::app::{App, Startup, Update};
 use bevy::core::{FrameCount, FrameCountPlugin};
+use bevy::hierarchy::BuildChildren;
 use bevy::prelude::{Changed, Commands, Component, Event, EventReader, Query, Res, ResMut, Resource, Timer, Transform, With};
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
 use bevy::time::{Time, TimePlugin, TimerMode};
 
 use bevy_akashic_engine::akashic::console_log;
-use bevy_akashic_engine::akashic::font::bitmap::{BitmapFont, BitmapFontParameterBuilder};
-use bevy_akashic_engine::akashic::object2d::entity::cacheable::label::{Label, LabelParameterObjectBuilder};
+use bevy_akashic_engine::akashic::font::bitmap::BitmapFontBuilder;
+use bevy_akashic_engine::akashic::object2d::entity::cacheable::label::LabelBuilder;
 use bevy_akashic_engine::akashic::object2d::Object2D;
-use bevy_akashic_engine::akashic::prelude::{FilledRect, FilledRectParameterBuilder, Sprite, SpriteParameterObjectBuilder};
+use bevy_akashic_engine::akashic::prelude::{FilledRectBuilder, SpriteBuilder};
 use bevy_akashic_engine::component::object2d::entity_size::AkashicEntitySize;
 use bevy_akashic_engine::event::message::AddMessageEvent;
 use bevy_akashic_engine::event::message::raise_event::RaiseEvent;
@@ -72,7 +73,7 @@ fn spawn_player_system(
     time: Res<Time>,
 ) {
     if timer.0.tick(time.delta()).just_finished() {
-        for mut c in colors.iter_mut(){
+        for mut c in colors.iter_mut() {
             c.set_rgba(1., 0., 0., 1.);
         }
         for mut t in touches.iter_mut() {
@@ -101,34 +102,34 @@ fn label_sytem(
 fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res<GameInfo>) {
     console_log!("SETUP");
 
-    commands.spawn(FilledRect::new(FilledRectParameterBuilder::new("blue", 32., 32.).build()).into_bundle());
-
-    let src = server.image_by_id("font");
+    let akashic_entity = bevy_akashic_engine::akashic::object2d::entity::AkashicEntity::default();
     let font_glyphs = server.text_by_id("font_glyphs");
-
-    let label = Label::new(LabelParameterObjectBuilder::new(
+    let src = server.image_by_id("font");
+    let label = LabelBuilder::new(
         "あかさたな",
-        BitmapFont::new(BitmapFontParameterBuilder::new(src)
+        BitmapFontBuilder::new(src)
             .glyph_info(&font_glyphs.data())
-            .build()
-        ),
+            .build(),
     )
-        .build());
-
-    commands.spawn(label.into_bundle());
+        .build();
 
     let player_image_asset = server.image_by_id("player");
-    let param = SpriteParameterObjectBuilder::new(player_image_asset)
+    let player = SpriteBuilder::new(player_image_asset)
         .local(true)
         .touchable(true)
         .build();
 
-    let player = Sprite::new(param);
     player.set_x((game_size.width() - player.width()) / 2.);
     player.set_y((game_size.height() - player.height()) / 2.);
     player.set_angle(45.);
+
     commands
-        .spawn(player.into_bundle())
+        .spawn(akashic_entity.into_bundle())
+        .with_children(|parent| {
+            parent.spawn(label.into_bundle());
+            parent.spawn(player.into_bundle());
+            parent.spawn(FilledRectBuilder::new("blue", 32., 32.).build().into_bundle());
+        })
         .insert(Angel);
 }
 

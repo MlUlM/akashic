@@ -15,7 +15,7 @@ extern "C" {
     pub type DynamicFont;
 
     #[wasm_bindgen(js_namespace = g, constructor)]
-    pub fn new(param: DynamicFontParameterObject) -> DynamicFont;
+    pub fn new(param: DynamicFontParam) -> DynamicFont;
 }
 
 
@@ -35,7 +35,7 @@ custom_constructor,
 create_empty = "empty",
 build_fn(private, name = "fallible_build")
 )]
-pub struct DynamicFontParameterObject {
+pub struct DynamicFontParam {
     #[builder(default)]
     pub game: Game,
 
@@ -73,7 +73,7 @@ pub struct DynamicFontParameterObject {
 }
 
 
-impl DynamicFontParameterObjectBuilder {
+impl DynamicFontParamBuilder {
     #[inline]
     pub fn new(
         font_family: FontFamily,
@@ -82,13 +82,13 @@ impl DynamicFontParameterObjectBuilder {
         Self {
             font_family: Some(font_family),
             size: Some(size),
-            ..DynamicFontParameterObjectBuilder::empty()
+            ..DynamicFontParamBuilder::empty()
         }
     }
 
 
     #[inline]
-    pub fn build(&self) -> DynamicFontParameterObject {
+    pub fn build(&self) -> DynamicFontParam {
         self
             .fallible_build()
             .unwrap()

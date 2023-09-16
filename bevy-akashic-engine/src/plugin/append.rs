@@ -43,5 +43,5 @@ fn append_akashic_entities_system(
 
 
 #[derive(Default, Deref, DerefMut)]
-pub(crate) struct AkashicEntityMap(pub(crate) HashMap<Entity, akashic_rs::object2d::entity::Entity>);
+pub(crate) struct AkashicEntityMap(pub(crate) HashMap<Entity, akashic_rs::object2d::entity::AkashicEntity>);
 

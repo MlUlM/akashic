@@ -11,7 +11,7 @@ extern "C" {
     pub type FilledRect;
 
     #[wasm_bindgen(constructor)]
-    pub fn new(param: FilledRectParameter) -> FilledRect;
+    pub fn new(param: FilledRectParam) -> FilledRect;
 
     #[wasm_bindgen(method, getter, js_name=cssColor)]
     pub fn css_color(this: &FilledRect) -> String;
@@ -27,11 +27,12 @@ extern "C" {
 #[wasm_bindgen(getter_with_clone)]
 #[derive(Builder, EParamSetters)]
 #[builder(
+name="FilledRectBuilder",
 custom_constructor,
 create_empty = "empty",
 build_fn(private, name = "fallible_build")
 )]
-pub struct FilledRectParameter {
+pub struct FilledRectParam {
     #[wasm_bindgen(js_name = cssColor)]
     pub css_color: String,
     pub width: f32,
@@ -39,19 +40,19 @@ pub struct FilledRectParameter {
 }
 
 
-impl FilledRectParameterBuilder {
+impl FilledRectBuilder {
     pub fn new(css_color: impl Into<String>, width: f32, height: f32) -> Self{
         Self{
             css_color: Some(css_color.into()),
             width: Some(width),
             height: Some(height),
-            ..FilledRectParameterBuilder::empty()
+            ..FilledRectBuilder::empty()
         }
     }
 
 
     #[inline]
-    pub fn build(&self) -> FilledRectParameter{
-        self.fallible_build().unwrap()
+    pub fn build(&self) -> FilledRect {
+        FilledRect::new(self.fallible_build().unwrap())
     }
 }

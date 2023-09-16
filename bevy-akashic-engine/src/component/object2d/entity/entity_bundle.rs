@@ -6,6 +6,7 @@ use wasm_bindgen::prelude::wasm_bindgen;
 
 use akashic_rs::prelude::EntityObject2D;
 
+use crate::command::IntoBundle;
 use crate::component::{AkashicEntityId, NativeAkashicEntity};
 use crate::component::object2d::entity_size::AkashicEntitySize;
 use crate::component::object2d::touchable::Touchable;
@@ -32,7 +33,7 @@ impl AkashicEntityBundle {
             .with_scale(Vec3::new(properties.scale_x, properties.scale_y, 0.));
         let anchor = Anchor::new(properties.anchor_x, properties.anchor_y);
         let touchable = Touchable(properties.touchable);
-        let native: akashic_rs::object2d::entity::Entity = entity.into();
+        let native: akashic_rs::object2d::entity::AkashicEntity = entity.into();
 
         Self {
             id,
@@ -44,9 +45,19 @@ impl AkashicEntityBundle {
         }
     }
 }
-#[wasm_bindgen(js_namespace=g)]
+
+
+impl IntoBundle<AkashicEntityBundle> for akashic_rs::object2d::entity::AkashicEntity {
+    #[inline(always)]
+    fn into_bundle(self) -> AkashicEntityBundle {
+        AkashicEntityBundle::new(self)
+    }
+}
+
+
+#[wasm_bindgen(js_namespace = g)]
 extern {
-    #[wasm_bindgen(js_name=getEntityProperties)]
+    #[wasm_bindgen(js_name = getEntityProperties)]
     fn _entity_properties(entity: &JsValue) -> JsValue;
 }
 
@@ -83,6 +94,6 @@ struct EntityProperties {
 
     #[serde(rename = "anchorY")]
     pub anchor_y: Option<f32>,
-    
-    pub touchable: bool
+
+    pub touchable: bool,
 }

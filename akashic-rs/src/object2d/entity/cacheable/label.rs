@@ -14,7 +14,7 @@ extern "C" {
     pub type Label;
 
     #[wasm_bindgen(constructor)]
-    pub fn new(param: LabelParameterObject) -> Label;
+    pub fn new(param: LabelParam) -> Label;
 
     #[wasm_bindgen(method, getter)]
     pub fn text(this: &Label) -> String;
@@ -63,11 +63,12 @@ impl Label {
 #[wasm_bindgen(getter_with_clone)]
 #[derive(Debug, Builder, EParamSetters)]
 #[builder(
+name = "LabelBuilder",
 custom_constructor,
 create_empty = "empty",
 build_fn(private, name = "fallible_build")
 )]
-pub struct LabelParameterObject {
+pub struct LabelParam {
     #[builder(setter(into))]
     pub text: String,
 
@@ -96,7 +97,7 @@ pub struct LabelParameterObject {
 }
 
 
-impl LabelParameterObjectBuilder {
+impl LabelBuilder {
     #[inline]
     pub fn new(
         text: impl Into<String>,
@@ -105,21 +106,18 @@ impl LabelParameterObjectBuilder {
         Self {
             text: Some(text.into()),
             font: Some(font.into()),
-            ..LabelParameterObjectBuilder::empty()
+            ..LabelBuilder::empty()
         }
     }
-
-
+    
     pub fn text_alignment(&mut self, text_alignment: TextAlignment) -> &mut Self {
         self.text_align = Some(Some(text_alignment.into()));
         self
     }
 
     #[inline]
-    pub fn build(&self) -> LabelParameterObject {
-        self
-            .fallible_build()
-            .expect("All required fields were initialized")
+    pub fn build(&self) -> Label {
+        Label::new(self.fallible_build().unwrap())
     }
 }
 
