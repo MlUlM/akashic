@@ -5,3 +5,8 @@
 **/node_modules/
 **/*.wasm
 akashic/script/bevy-akashic.wasm
+/.vscode/
+chars.txt
+*.zip
+PixelMplus12-Regular.ttf
+*.lock
