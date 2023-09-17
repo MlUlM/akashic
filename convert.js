@@ -1,6 +1,6 @@
 const fs = require("fs")
-const js = fs.readFileSync("out/akashic-project.js")
-fs.copyFileSync("out/akashic-project_bg.wasm", "akashic/script/akashic.wasm")
+const js = fs.readFileSync("out/hello.js")
+fs.copyFileSync("out/hello_bg.wasm", "akashic/script/akashic.wasm")
 
 const mainJsPath = "./akashic/script/main.js"
 const wasmCode = js
@@ -56,14 +56,15 @@ fs.writeFileSync(mainJsPath, `
             }else if(!visible && entity.visible()){
                 entity.hide()
             }
+            entity.modified()
         }
-
+         
         if (typeof window == 'undefined') {
-            globalThis.crypto = {
+           globalThis.crypto = {
                 getRandomValues: (args) => new Uint8Array(args.map(_ => Math.floor(g.game.random.generate() * 255)))      
-            }
+           }
         }else{
-            g.game.renderers[0].surface.canvas.id = "bevy"
+           globalThis.crypto.getRandomValues = (args) => new Uint8Array(args.map(_ => Math.floor(g.game.random.generate() * 255)))   
         }
         
         

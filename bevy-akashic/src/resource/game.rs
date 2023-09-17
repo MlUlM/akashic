@@ -12,6 +12,8 @@ pub struct GameInfo {
     height: OnceCell<f32>,
     fps: OnceCell<f32>,
     self_id: OnceCell<Option<String>>,
+    half_width: OnceCell<f32>,
+    half_height: OnceCell<f32>
 }
 
 
@@ -47,6 +49,18 @@ impl GameInfo {
     #[inline]
     pub fn age(&self) -> f32 {
         GAME.age()
+    }
+    
+    
+    #[inline]
+    pub fn half_width(&self) -> f32{
+        *self.half_width.get_or_init(||self.width() / 2.)
+    }
+    
+    
+    #[inline]
+    pub fn half_height(&self) -> f32{
+        *self.half_height.get_or_init(||self.height() / 2.)
     }
 }
 

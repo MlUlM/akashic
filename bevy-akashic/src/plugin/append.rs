@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use bevy::app::{App, Last, Plugin};
 use bevy::prelude::{Added, Children, Deref, DerefMut, Entity, IntoSystemConfigs, NonSend, NonSendMut, Parent, Query};
+
 use akashic_rs::prelude::EntityObject2D;
 
 use crate::plugin::scene::NativeScene;
@@ -16,8 +17,9 @@ impl Plugin for AkashicAppendEntityPlugin {
         app
             .init_non_send_resource::<AkashicEntityMap>()
             .add_systems(Last, (
-                append_akashic_entities_system
-            ).in_set(AkashicSystemSet::Added));
+                append_akashic_entities_system,
+            )
+                .in_set(AkashicSystemSet::Added));
     }
 }
 
@@ -25,8 +27,8 @@ impl Plugin for AkashicAppendEntityPlugin {
 fn append_akashic_entities_system(
     mut entity_map: NonSendMut<AkashicEntityMap>,
     parents: Query<&NativeAkashicEntity, &Children>,
-    akashic_entities: Query<(Entity, &NativeAkashicEntity, Option<&Parent>), Added<NativeAkashicEntity>>,
     scene: NonSend<NativeScene>,
+    akashic_entities: Query<(Entity, &NativeAkashicEntity, Option<&Parent>), Added<NativeAkashicEntity>>,
 ) {
     for (entity, native, parent) in akashic_entities.iter() {
         entity_map.insert(entity, native.0.clone());

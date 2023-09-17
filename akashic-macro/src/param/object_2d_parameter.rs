@@ -4,7 +4,7 @@ use quote::quote;
 use syn::{FieldsNamed, ItemStruct};
 use syn::__private::TokenStream2;
 
-use crate::param::{expand_custom_setter_field, expand_snake_case_field, push_if_need, push_if_need_option_number};
+use crate::param::{expand_custom_setter_field, expand_snake_case_field, push_if_need, push_if_need_expand_option_number_anchor, push_if_need_option_number};
 
 #[inline]
 pub fn expand_object_2d_parameter(input: TokenStream) -> TokenStream {
@@ -34,8 +34,8 @@ fn expand_fields(fields: &mut FieldsNamed) {
     push_if_need_option_number(fields, "scale_y");
     push_if_need_option_number(fields, "angle");
     push_if_need(fields, "composite_operation", expand_custom_setter_field(expand_snake_case_field("compositeOperation", quote! {pub composite_operation: crate::option_number::OptionNumber})));
-    push_if_need_option_number(fields, "anchor_x");
-    push_if_need_option_number(fields, "anchor_y");
+    push_if_need_expand_option_number_anchor(fields, "anchor_x");
+    push_if_need_expand_option_number_anchor(fields, "anchor_y");
 }
 
 

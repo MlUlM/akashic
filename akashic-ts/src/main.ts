@@ -1,4 +1,4 @@
-import {EventIndex, JoinEvent} from "@akashic/akashic-engine";
+import {BodyType, Box2D} from "@akashic-extension/akashic-box2d";
 
 function main(param: any): void {
     console.log(g.game.selfId)
@@ -8,109 +8,86 @@ function main(param: any): void {
         // このシーンで利用するアセットのIDを列挙し、シーンに通知します
         assetIds: ["player", "shot", "se", "font", "font_glyphs"]
     });
-    
-    let streamerId: undefined | string = undefined;
-    g.game.onJoin.add((joinEvent) => {
-        console.log(joinEvent.player.id)
-        streamerId = joinEvent.player.id
-    })
-    console.log(g.game.selfId);
 
-    console.log(param)
     scene.onLoad.add(() => {
-        // ここからゲーム内容を記述します
-// 上で生成した font.png と font_glyphs.json に対応するアセットを取得
-        const fontAsset = g.game.scene().asset.getImageById("font");
-        const fontGlyphAsset = g.game.scene().asset.getTextById("font_glyphs");
-
-// テキストアセット (JSON) の内容をオブジェクトに変換
-        const glyphInfo = JSON.parse(fontGlyphAsset.data);
-        console.log(glyphInfo)
-// ビットマップフォントを生成
-        const font = new g.BitmapFont({
-            src: fontAsset,
-            glyphInfo: glyphInfo,
-
+        const box2d = new Box2D({
+            gravity: [0, 9.8],
+            scale: 50,
+            sleep: true
         });
 
-        const label = new g.Label({
-            font, scene: scene, text: "あかさたな",
-
-        });
-        
-        label.scene.append(label)
-        // 各アセットオブジェクトを取得します
-        const playerImageAsset = scene.asset.getImageById("player");
-        const shotImageAsset = scene.asset.getImageById("shot");
-        const seAudioAsset = scene.asset.getAudioById("se");
-        new g.FilledRect({});
-        // 自分のID
-        console.log(g.game.selfId);
-
-
-        g.game.onJoin.add((event) => {
-        })
-
-
-        seAudioAsset.play();
-        g.game.onJoin.add((event: JoinEvent) => {
-            event.player.id
-            console.log(event.eventFlags)
-        })
-
-        // プレイヤーを生成します
-        const player = new g.Sprite({
+        const ground = new g.FilledRect({
             scene: scene,
-            src: playerImageAsset,
-            width: playerImageAsset.width,
-            height: playerImageAsset.height
+            cssColor: "red",
+            width: 1000,
+            height: 20,
+            anchorX: 0.5,
+            anchorY: 0.5,
+            x: g.game.width / 2,
+            y: g.game.height / 2
         });
+        scene.append(ground);
+        ground.modified();
 
-        // プレイヤーの初期座標を、画面の中心に設定します
-        player.x = (g.game.width - player.width) / 2;
-        player.y = (g.game.height - player.height) / 2;
-
-        player.onUpdate.add(() => {
-            // 毎フレームでY座標を再計算し、プレイヤーの飛んでいる動きを表現します
-            // ここではMath.sinを利用して、時間経過によって増加するg.game.ageと組み合わせて
-            player.y = (g.game.height - player.height) / 2 + Math.sin(g.game.age % (g.game.fps * 10) / 4) * 10;
-
-            // プレイヤーの座標に変更があった場合、 modified() を実行して変更をゲームに通知します
-            player.modified();
+        const entityFixDef = box2d.createFixtureDef({
+            density: 1.0, // 密度
+            friction: 0.5, // 摩擦係数
+            restitution: 0.3, // 反発係数
+            shape: box2d.createRectShape(ground.width, ground.height)// 形状
         });
-
-        scene.asset.getAllTexts()
-
-        // 画面をタッチしたとき、SEを鳴らします
-        scene.onPointDownCapture.add(() => {
-            seAudioAsset.play();
-            scene.asset.getAllTexts()
-            // プレイヤーが発射する弾を生成します
-            const shot = new g.Sprite({
-                scene: scene,
-                src: shotImageAsset,
-                width: shotImageAsset.width,
-                height: shotImageAsset.height
-            });
-
-            // 弾の初期座標を、プレイヤーの少し右に設定します
-            shot.x = player.x + player.width;
-            shot.y = player.y;
-            shot.onUpdate.add(() => {
-                // 毎フレームで座標を確認し、画面外に出ていたら弾をシーンから取り除きます
-                if (shot.x > g.game.width) shot.destroy();
-
-                // 弾を右に動かし、弾の動きを表現します
-                shot.x += 10;
-                // 変更をゲームに通知します
-                shot.modified();
-            });
-            scene.append(shot);
+        const entityDef = box2d.createBodyDef({
+            type: BodyType.Static,
+            gravityScale: 0.5
         });
-        scene.append(player);
-        // ここまでゲーム内容を記述します
-    });
-    g.game.pushScene(scene);
+        box2d.createBody(ground, entityDef, entityFixDef);
+
+        let num = 30;
+        let rad = 10.0;
+
+        let shift = rad * 2.0 + rad;
+        let centerx = shift * (num / 2);
+        let centery = shift / 2.0;
+
+        let offset = -num * (rad * 2.0 + rad) * 0.5;
+
+        for (let j = 0; j < 20; j++) {
+            for (let i = 0; i < num; i++) {
+                let x = i * shift - centerx + offset + g.game.width * 0.8;
+                let y = g.game.height / 2 - (j * shift + centery + 30.0);
+                let entity = new g.FilledRect({
+                    cssColor: "blue",
+                    x,
+                    y,
+                    width: rad * 2,
+                    height: rad * 2,
+                    scene
+                });
+                scene.append(entity);
+                entity.modified();
+
+                const entityFixDef = box2d.createFixtureDef({
+                    density: 1.0, // 密度
+                    friction: 0.5, // 摩擦係数
+                    restitution: 0.3, // 反発係数
+                    shape: box2d.createRectShape(entity.width, entity.height) // 形状
+                });
+                const entityDef = box2d.createBodyDef({
+                    type: BodyType.Dynamic
+                });
+                box2d.createBody(entity, entityDef, entityFixDef);
+
+            }
+
+            offset -= 0.05 * rad * (num - 1.0);
+        }
+        scene.onUpdate.add(() => {
+            // 物理エンジンの世界をすすめる
+            box2d.step(1 / g.game.fps);
+        });
+    })
+
+    g.game.pushScene(scene)
 }
+
 
 export = main;

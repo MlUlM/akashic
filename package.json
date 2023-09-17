@@ -4,7 +4,7 @@
   "author": "elm",
   "license": "MIT",
   "scripts": {
-    "start": "cargo run --target wasm32-unknown-unknown --release",
+    "start": "cargo run --example hello --target wasm32-unknown-unknown --release",
     "sandbox": "akashic-sandbox akashic",
     "serve": "akashic serve akashic --target-service nicolive"
   },

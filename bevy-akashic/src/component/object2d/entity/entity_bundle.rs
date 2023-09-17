@@ -1,10 +1,9 @@
 use bevy::math::{Quat, Vec2, Vec3};
-use bevy::prelude::{Bundle, Transform, Visibility};
+use bevy::prelude::{Bundle, Transform, TransformBundle, Visibility};
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_rs::console_log;
 use akashic_rs::prelude::{AkashicEntity, EntityObject2D};
 
 use crate::command::IntoBundle;
@@ -17,7 +16,7 @@ use crate::prelude::object2d::anchor::Anchor;
 pub struct AkashicEntityBundle {
     id: AkashicEntityId,
     size: AkashicEntitySize,
-    transform: Transform,
+    transform: TransformBundle,
     anchor: Anchor,
     touchable: Touchable,
     native: NativeAkashicEntity,
@@ -27,17 +26,15 @@ pub struct AkashicEntityBundle {
 
 impl AkashicEntityBundle {
     pub fn new(entity: impl EntityObject2D) -> Self {
-        console_log!("ここ");
         let properties = entity_properties(&entity);
         let id = AkashicEntityId(properties.id);
         let size = AkashicEntitySize::new(Vec2::new(properties.width, properties.height));
-        let transform = Transform::from_xyz(properties.x, properties.y, 0.)
+        let transform = TransformBundle::from_transform(Transform::from_xyz(properties.x, properties.y, 0.)
             .with_rotation(Quat::from_rotation_z(properties.angle))
-            .with_scale(Vec3::new(properties.scale_x, properties.scale_y, 0.));
+            .with_scale(Vec3::new(properties.scale_x, properties.scale_y, 0.)));
         let anchor = Anchor::new(properties.anchor_x, properties.anchor_y);
         let touchable = Touchable(properties.touchable);
         let visibility = if properties.visible { Visibility::Visible } else { Visibility::Hidden };
-        console_log!("visible = {}", entity.visible());
         let native: AkashicEntity = entity.into();
 
         Self {

@@ -9,7 +9,7 @@
     "build": "rimraf ./script && tsc && akashic-cli-scan asset script",
     "update": "akashic-cli-scan asset && akashic-cli-scan globalScripts",
     "lint": "eslint -c .eslintrc.js \"src/**/*.ts\" --fix",
-    "start": "akashic-sandbox . -p 3001",
+    "typescript-start": "rimraf ./script && tsc && akashic-cli-scan asset script && akashic-sandbox . -p 3001",
     "nicolive": "akashic serve . --target-service nicolive",
     "export-zip": "rimraf game.zip && akashic-cli-export zip -o game.zip -s",
     "export-html": "rimraf game && akashic-cli-export html -o game",
@@ -33,5 +33,8 @@
     "rimraf": "^5.0.0",
     "ts-jest": "^29.0.3",
     "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "@akashic-extension/akashic-box2d": "^3.1.0"
   }
 }

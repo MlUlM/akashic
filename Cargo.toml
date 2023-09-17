@@ -10,12 +10,12 @@ members = [
     "bevy-akashic",
 ]
 
-[dependencies]
-bevy = { version = "0.11", default-features = false }
-bevy-akashic = { path = "bevy-akashic" }
-console_error_panic_hook = "0.1.7"
-serde = { workspace = true }
-once_cell = { workspace = true }
+
+[[example]]
+name = "hello"
+path = "examples/hello.rs"
+
+
 
 [workspace.dependencies]
 wasm-bindgen = { version = "0.2", features = ["serde-serialize"] }
@@ -30,3 +30,10 @@ derive_builder = "0.12.0"
 once_cell = "1.18.0"
 anyhow = "1.0.75"
 thiserror = "1.0.48"
+
+[dev-dependencies]
+bevy = { version = "0.11", default-features = false, features = ["x11"] }
+bevy_rapier2d = "0.22.0"
+bevy-akashic = { path = "bevy-akashic" }
+console_error_panic_hook = "0.1.7"
+serde = { version = "1.0.167", features = ["derive"] }

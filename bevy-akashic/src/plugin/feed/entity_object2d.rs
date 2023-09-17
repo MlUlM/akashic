@@ -1,16 +1,17 @@
 use std::f32::consts::PI;
 
 use bevy::app::{App, Last, Plugin};
-use bevy::prelude::{Changed, Commands, Entity, IntoSystemConfigs, Or, Query, Transform, Visibility};
+use bevy::prelude::{Changed, IntoSystemConfigs, Or, Query, Res, Transform, Visibility};
 use wasm_bindgen::prelude::wasm_bindgen;
-use akashic_rs::prelude::AkashicEntity;
-use crate::component::object2d::anchor::Anchor;
 
+use akashic_rs::prelude::AkashicEntity;
+
+use crate::component::object2d::anchor::Anchor;
 use crate::component::object2d::entity_size::AkashicEntitySize;
-use crate::plugin::modify::RequestModifyTarget;
 use crate::plugin::system_set::AkashicSystemSet;
 use crate::prelude::NativeAkashicEntity;
 use crate::prelude::object2d::touchable::Touchable;
+use crate::resource::game::GameInfo;
 
 pub struct AkashicEntityObject2DPlugin;
 
@@ -25,9 +26,8 @@ impl Plugin for AkashicEntityObject2DPlugin {
 
 
 fn feed_entity_objects(
-    mut commands: Commands,
-    mut transforms: Query<(
-        Entity,
+    game_info: Res<GameInfo>,
+    transforms: Query<(
         &NativeAkashicEntity,
         &Transform,
         &AkashicEntitySize,
@@ -45,22 +45,22 @@ fn feed_entity_objects(
     >,
 ) {
     for (
-        entity,
         native,
         transform,
         size,
         anchor,
         touchable,
         visibility
-    ) in transforms.iter_mut() {
+    ) in transforms.iter() {
         let akashic_entity = native.0.clone();
         let (_, rad) = transform.rotation.to_axis_angle();
+
         let angle = rad * 180. / PI;
 
         feed_entity_properties(
             &akashic_entity,
-            transform.translation.x,
-            transform.translation.y,
+            game_info.half_width() + transform.translation.x,
+            game_info.half_height() - transform.translation.y,
             angle,
             size.x,
             size.y,
@@ -69,10 +69,8 @@ fn feed_entity_objects(
             anchor.x,
             anchor.y,
             touchable.0,
-            matches!(visibility, Visibility::Visible)
+            matches!(visibility, Visibility::Visible),
         );
-
-        commands.entity(entity).insert(RequestModifyTarget);
     }
 }
 
@@ -92,6 +90,6 @@ extern "C" {
         anchor_x: Option<f32>,
         anchor_y: Option<f32>,
         touchable: bool,
-        visible: bool
+        visible: bool,
     );
 }
