@@ -8,7 +8,7 @@ function main(param: any): void {
         // このシーンで利用するアセットのIDを列挙し、シーンに通知します
         assetIds: ["player", "shot", "se", "font", "font_glyphs"]
     });
-
+    
     let streamerId: undefined | string = undefined;
     g.game.onJoin.add((joinEvent) => {
         console.log(joinEvent.player.id)
@@ -37,7 +37,7 @@ function main(param: any): void {
             font, scene: scene, text: "あかさたな",
 
         });
-
+        
         label.scene.append(label)
         // 各アセットオブジェクトを取得します
         const playerImageAsset = scene.asset.getImageById("player");

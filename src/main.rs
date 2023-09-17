@@ -3,7 +3,7 @@ use std::panic;
 use bevy::app::{App, Startup, Update};
 use bevy::core::{FrameCount, FrameCountPlugin};
 use bevy::hierarchy::BuildChildren;
-use bevy::prelude::{Changed, Commands, Component, Event, EventReader, Query, Res, ResMut, Resource, Timer, Transform, With};
+use bevy::prelude::{Changed, Commands, Component, Event, EventReader, Query, Res, ResMut, Resource, Timer, Transform, Visibility, With};
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
 use bevy::time::{Time, TimePlugin, TimerMode};
 
@@ -21,7 +21,6 @@ use bevy_akashic::event::point_move::OnPointMove;
 use bevy_akashic::event::point_up::OnPointUp;
 use bevy_akashic::plugin::asset::AkashicAssetServer;
 use bevy_akashic::prelude::*;
-use bevy_akashic::prelude::object2d::entity::filled_rect::CssColor;
 use bevy_akashic::prelude::object2d::touchable::Touchable;
 use bevy_akashic::prelude::scene::GameScene;
 use bevy_akashic::prelude::text::AkashicText;
@@ -69,16 +68,18 @@ struct MyTimer(Timer);
 
 fn spawn_player_system(
     mut timer: ResMut<MyTimer>,
-    mut touches: Query<&mut Touchable, With<Angel>>,
-    mut colors: Query<&mut CssColor>,
+    mut touches: Query<&mut Visibility, With<Angel>>,
     time: Res<Time>,
 ) {
     if timer.0.tick(time.delta()).just_finished() {
-        for mut c in colors.iter_mut() {
-            c.set_rgba(1., 0., 0., 1.);
-        }
+
         for mut t in touches.iter_mut() {
-            t.toggle();
+            let visible = matches!(*t, Visibility::Visible);
+            if visible {
+                *t = Visibility::Hidden;
+            } else{
+                *t = Visibility::Visible;
+            }
         }
     }
 }
@@ -128,10 +129,9 @@ fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res
         .spawn(akashic_entity.into_bundle())
         .with_children(|parent| {
             parent.spawn(label.into_bundle());
-            parent.spawn(player.into_bundle());
+            parent.spawn(player.into_bundle()) .insert(Angel);
             parent.spawn(FilledRectBuilder::new("blue", 32., 32.).build().into_bundle());
-        })
-        .insert(Angel);
+        });
 }
 
 

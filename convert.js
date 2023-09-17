@@ -1,6 +1,6 @@
 const fs = require("fs")
-const js = fs.readFileSync("out/bevy-akashic.js")
-fs.copyFileSync("out/bevy-akashic_bg.wasm", "akashic/script/bevy-akashic.wasm")
+const js = fs.readFileSync("out/akashic-project.js")
+fs.copyFileSync("out/akashic-project_bg.wasm", "akashic/script/akashic.wasm")
 
 const mainJsPath = "./akashic/script/main.js"
 const wasmCode = js
@@ -28,7 +28,8 @@ fs.writeFileSync(mainJsPath, `
             scaleY: entity.scaleY,
             anchorX: entity.anchorX,
             anchorY: entity.anchorY,
-            touchable: entity.touchable
+            touchable: entity.touchable,
+            visible: entity.visible()
         })
         
         g.feedFilledRectProperties = (entity, cssColor) => {
@@ -43,13 +44,18 @@ fs.writeFileSync(mainJsPath, `
             entity.widthAutoAdjust = widthAutoAdjust
         }
         
-        g.feedEntityProperties = (entity, x, y, angle, width, height, scaleX, scaleY, anchorX, anchorY, touchable) => {
+        g.feedEntityProperties = (entity, x, y, angle, width, height, scaleX, scaleY, anchorX, anchorY, touchable, visible) => {
             entity.angle = angle;
             entity.resizeTo(width, height)
             entity.moveTo(x, y)
             entity.scale(scaleX, scaleY)
             entity.anchor(anchorX, anchorY)
             entity.touchable = touchable
+            if(visible && !entity.visible()){
+                entity.show()
+            }else if(!visible && entity.visible()){
+                entity.hide()
+            }
         }
 
         if (typeof window == 'undefined') {

@@ -73,6 +73,9 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
             #[wasm_bindgen(method, getter, js_name=destroyed)]
             fn _destoryed(this: &#entity_name) -> bool;
 
+            #[wasm_bindgen(method, js_name=visible)]
+            fn _visible(this: &#entity_name) -> bool;
+
             #[wasm_bindgen(method, js_name=hide)]
             fn _hide(this: &#entity_name);
 
@@ -153,6 +156,11 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
            #[inline(always)]
             fn destroyed(&self) -> bool{
                 self._destoryed()
+            }
+
+            #[inline(always)]
+            fn visible(&self) -> bool{
+                self._visible()
             }
 
             #[inline(always)]

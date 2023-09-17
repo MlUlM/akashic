@@ -1,7 +1,7 @@
 use std::f32::consts::PI;
 
 use bevy::app::{App, Last, Plugin};
-use bevy::prelude::{Changed, Commands, Entity, IntoSystemConfigs, Or, Query, Transform};
+use bevy::prelude::{Changed, Commands, Entity, IntoSystemConfigs, Or, Query, Transform, Visibility};
 use wasm_bindgen::prelude::wasm_bindgen;
 use akashic_rs::prelude::AkashicEntity;
 use crate::component::object2d::anchor::Anchor;
@@ -32,12 +32,27 @@ fn feed_entity_objects(
         &Transform,
         &AkashicEntitySize,
         &Anchor,
-        &Touchable
+        &Touchable,
+        &Visibility
     ),
-        Or<(Changed<Transform>, Changed<AkashicEntitySize>, Changed<Anchor>, Changed<Touchable>)>
+        Or<(
+            Changed<Transform>,
+            Changed<AkashicEntitySize>,
+            Changed<Anchor>,
+            Changed<Touchable>,
+            Changed<Visibility>
+        )>
     >,
 ) {
-    for (entity, native, transform, size, anchor, touchable) in transforms.iter_mut() {
+    for (
+        entity,
+        native,
+        transform,
+        size,
+        anchor,
+        touchable,
+        visibility
+    ) in transforms.iter_mut() {
         let akashic_entity = native.0.clone();
         let (_, rad) = transform.rotation.to_axis_angle();
         let angle = rad * 180. / PI;
@@ -53,14 +68,13 @@ fn feed_entity_objects(
             transform.scale.y,
             anchor.x,
             anchor.y,
-            touchable.0
+            touchable.0,
+            matches!(visibility, Visibility::Visible)
         );
 
         commands.entity(entity).insert(RequestModifyTarget);
     }
 }
-
-
 
 
 #[wasm_bindgen(js_namespace = g)]
@@ -77,6 +91,7 @@ extern "C" {
         scale_y: f32,
         anchor_x: Option<f32>,
         anchor_y: Option<f32>,
-        touchable: bool
+        touchable: bool,
+        visible: bool
     );
 }
