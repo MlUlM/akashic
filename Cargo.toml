@@ -8,12 +8,18 @@ members = [
     "akashic-rs",
     "akashic-macro",
     "bevy-akashic",
+    "akashic-boot"
 ]
 
 
 [[example]]
 name = "hello"
 path = "examples/hello.rs"
+
+
+[[example]]
+name = "state"
+path = "examples/state.rs"
 
 
 

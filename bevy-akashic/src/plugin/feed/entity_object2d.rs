@@ -1,6 +1,7 @@
 use std::f32::consts::PI;
 
 use bevy::app::{App, Last, Plugin};
+use bevy::hierarchy::Parent;
 use bevy::prelude::{Changed, IntoSystemConfigs, Or, Query, Res, Transform, Visibility};
 use wasm_bindgen::prelude::wasm_bindgen;
 
@@ -33,7 +34,8 @@ fn feed_entity_objects(
         &AkashicEntitySize,
         &Anchor,
         &Touchable,
-        &Visibility
+        &Visibility,
+        Option<&Parent>
     ),
         Or<(
             Changed<Transform>,
@@ -50,7 +52,8 @@ fn feed_entity_objects(
         size,
         anchor,
         touchable,
-        visibility
+        visibility,
+        parent
     ) in transforms.iter() {
         let akashic_entity = native.0.clone();
         let (_, rad) = transform.rotation.to_axis_angle();
@@ -59,8 +62,8 @@ fn feed_entity_objects(
 
         feed_entity_properties(
             &akashic_entity,
-            game_info.half_width() + transform.translation.x,
-            game_info.half_height() - transform.translation.y,
+            if parent.is_some() {transform.translation.x} else {game_info.half_width() + transform.translation.x},
+            if parent.is_some() {transform.translation.y} else{game_info.half_height() - transform.translation.y},
             angle,
             size.x,
             size.y,

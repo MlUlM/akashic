@@ -66,7 +66,7 @@ pub fn expand_option_number_anchor(field_name: &str) -> TokenStream2 {
 
     quote! {
         #[wasm_bindgen::prelude::wasm_bindgen(js_name=#js_name_ref)]
-        #[builder(setter(into, strip_option), default="Some(0.5)")]
+        #[builder(setter(into, strip_option), default)]
         pub #field_name: crate::option_number::OptionNumber
     }
 }

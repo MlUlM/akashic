@@ -3,6 +3,7 @@
 use std::sync::{Arc, Mutex, MutexGuard};
 use bevy::prelude::Deref;
 use wasm_bindgen::JsValue;
+use akashic_rs::console_log;
 use akashic_rs::game::GAME;
 use akashic_rs::prelude::{Scene, SceneParameterObject};
 
@@ -40,6 +41,8 @@ impl<T> SharedObject<T> {
 
     #[inline(always)]
     pub fn lock(&self) -> MutexGuard<T> {
+
+        console_log!("lock");
         self.0.lock().unwrap()
     }
 }

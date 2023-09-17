@@ -10,9 +10,7 @@ pub enum AkashicSystemSet {
 
     Feed,
 
-    Despawn,
-    
-    Modify
+    Despawn
 }
 
 
@@ -29,7 +27,7 @@ impl Plugin for AkashicSystemSetPlugin {
                     AkashicSystemSet::PointEvents,
                     AkashicSystemSet::Feed,
                     AkashicSystemSet::Despawn,
-                    AkashicSystemSet::Modify
+
                 ),
             );
     }

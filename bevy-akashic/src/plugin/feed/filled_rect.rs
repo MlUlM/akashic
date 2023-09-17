@@ -1,8 +1,7 @@
 use bevy::app::{App, Last};
-use bevy::prelude::{Changed, Commands, Entity, IntoSystemConfigs, Plugin, Query};
+use bevy::prelude::{Changed, IntoSystemConfigs, Plugin, Query};
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use crate::plugin::modify::RequestInvalidateTarget;
 use crate::plugin::system_set::AkashicSystemSet;
 use crate::prelude::NativeAkashicEntity;
 use crate::prelude::object2d::entity::filled_rect::CssColor;
@@ -21,16 +20,13 @@ impl Plugin for FilledRectPlugin {
 
 
 fn feed_filled_rects_system(
-    mut commands: Commands,
-    filled_rects: Query<(Entity, &CssColor, &NativeAkashicEntity), Changed<CssColor>>,
+    filled_rects: Query<(&CssColor, &NativeAkashicEntity), Changed<CssColor>>,
 ) {
-    for (entity, css_color, native) in filled_rects.iter() {
+    for (css_color, native) in filled_rects.iter() {
         feed_filled_rect_properties(
             &native.0,
             css_color.0.clone(),
         );
-
-        commands.entity(entity).insert(RequestInvalidateTarget);
     }
 }
 

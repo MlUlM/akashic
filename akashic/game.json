@@ -49,18 +49,12 @@
       "path": "text/font_glyphs.json"
     }
   },
-  "moduleMainScripts": {
-    "crypto": "node_modules/crypto/index.js"
-  },
   "environment": {
     "sandbox-runtime": "3",
     "nicolive": {
       "supportedModes": [
         "multi_admission"
-      ],
-      "preferredSessionParameters": {
-        "totalTimeLimit": 20
-      }
+      ]
     }
   }
 }

@@ -11,7 +11,6 @@ use crate::plugin::feed::filled_rect::FilledRectPlugin;
 use crate::plugin::game_info::GameInfoPlugin;
 use crate::plugin::game_state::AkashicGameScorePlugin;
 use crate::plugin::join::AkashicJoinEventPlugin;
-use crate::plugin::modify::AkashicModifyPlugin;
 use crate::plugin::player_id::PlayerIdPlugin;
 use crate::plugin::random::AkashicRandomPlugin;
 use crate::plugin::scene::AkashicScenePlugin;
@@ -28,7 +27,7 @@ pub mod asset;
 pub mod random;
 pub mod game_state;
 pub mod system_set;
-pub mod modify;
+
 pub mod append;
 pub mod feed;
 pub mod scene;
@@ -67,7 +66,6 @@ impl PluginGroup for AkashicMinimumPlugins {
             .add(AkashicLabelPlugin)
             .add(FilledRectPlugin)
             .add(AkashicDespawnPlugin)
-            .add(AkashicModifyPlugin)
             .add(AkashicScheduleRunnerPlugin)
     }
 }

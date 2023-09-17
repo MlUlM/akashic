@@ -1,6 +1,6 @@
 const fs = require("fs")
-const js = fs.readFileSync("out/hello.js")
-fs.copyFileSync("out/hello_bg.wasm", "akashic/script/akashic.wasm")
+const js = fs.readFileSync("out/state.js")
+fs.copyFileSync("out/state_bg.wasm", "akashic/script/akashic.wasm")
 
 const mainJsPath = "./akashic/script/main.js"
 const wasmCode = js
@@ -34,14 +34,15 @@ fs.writeFileSync(mainJsPath, `
         
         g.feedFilledRectProperties = (entity, cssColor) => {
             entity.cssColor = cssColor
+            entity.modified()
         }
         
         g.feedLabelProperties = (entity, text, textAlign, textColor, widthAutoAdjust) => {
             entity.text = text
-            console.log(entity.text)
             entity.textAlign = textAlign
             entity.textColor = textColor
             entity.widthAutoAdjust = widthAutoAdjust
+            entity.invalidate()
         }
         
         g.feedEntityProperties = (entity, x, y, angle, width, height, scaleX, scaleY, anchorX, anchorY, touchable, visible) => {
@@ -64,7 +65,7 @@ fs.writeFileSync(mainJsPath, `
                 getRandomValues: (args) => new Uint8Array(args.map(_ => Math.floor(g.game.random.generate() * 255)))      
            }
         }else{
-           globalThis.crypto.getRandomValues = (args) => new Uint8Array(args.map(_ => Math.floor(g.game.random.generate() * 255)))   
+            globalThis.crypto.getRandomValues = (args) => new Uint8Array(args.map(_ => Math.floor(g.game.random.generate() * 255)))   
         }
         
         
@@ -81,7 +82,7 @@ fs.writeFileSync(mainJsPath, `
         scene.onLoad.addOnce(() => {
             ${wasmCode}
         })
-        
+
         g.game.pushScene(scene)
     }
 `)
