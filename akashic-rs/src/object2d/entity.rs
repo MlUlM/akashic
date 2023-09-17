@@ -91,6 +91,11 @@ pub trait EntityObject2D: Object2D + PointDownHandler + PointMoveHandler + Point
     /// このエンティティが破棄済みであるかを返す
     fn destroyed(&self) -> bool;
 
+
+    /// このエンティティが表示状態であるか?
+    fn visible(&self) -> bool;
+
+
     /// このEを非表示状態にする。
     ///
     /// this.show() が呼ばれるまでの間、このエンティティは各 Renderer によって描画されない。 また Game#findPointSource() で返されることもなくなる。 this#pointDown, pointMove, pointUp なども通常の方法ではfireされなくなる。
