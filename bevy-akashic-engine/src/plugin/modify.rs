@@ -1,5 +1,5 @@
 use bevy::app::{App, Last, Plugin};
-use bevy::prelude::{Commands, Component, Entity, IntoSystemConfigs, Query, With};
+use bevy::prelude::{Commands, Component, Entity, IntoSystemConfigs, Query, With, Without};
 use akashic_rs::object2d::entity::cacheable::CacheableEntityObject2D;
 use akashic_rs::prelude::EntityObject2D;
 
@@ -30,7 +30,7 @@ impl Plugin for AkashicModifyPlugin {
 
 fn modify_system(
     mut commands: Commands,
-    akashic_entities: Query<(Entity, &NativeAkashicEntity), With<RequestModifyTarget>>,
+    akashic_entities: Query<(Entity, &NativeAkashicEntity), (With<RequestModifyTarget>, Without<RequestInvalidateTarget>)>,
 ) {
     for (entity, NativeAkashicEntity(akashic_entity)) in akashic_entities.iter() {
         akashic_entity.modified();
@@ -45,6 +45,9 @@ fn invalidate_entity(
 ) {
     for (entity, NativeAkashicLabel(akashic_entity)) in akashic_entities.iter() {
         akashic_entity.invalidate();
-        commands.entity(entity).remove::<RequestInvalidateTarget>();
+        commands.entity(entity).remove::<(
+            RequestModifyTarget,
+            RequestInvalidateTarget,
+        )>();
     }
 }

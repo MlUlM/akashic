@@ -3,6 +3,7 @@ use std::f32::consts::PI;
 use bevy::app::{App, Last, Plugin};
 use bevy::prelude::{Changed, Commands, Entity, IntoSystemConfigs, Or, Query, Transform};
 use wasm_bindgen::prelude::wasm_bindgen;
+use akashic_rs::prelude::AkashicEntity;
 use crate::component::object2d::anchor::Anchor;
 
 use crate::component::object2d::entity_size::AkashicEntitySize;
@@ -66,7 +67,7 @@ fn feed_entity_objects(
 extern "C" {
     #[wasm_bindgen(js_name = feedEntityProperties)]
     fn feed_entity_properties(
-        entity: &akashic_rs::object2d::entity::AkashicEntity,
+        entity: &AkashicEntity,
         x: f32,
         y: f32,
         angle: f32,

@@ -23,7 +23,7 @@ macro_rules! trigger_plugin {
             fn build(&self, app: &mut App) {
                 app
                     .init_non_send_resource::<AkashicEventQueue<$native_event>>()
-                    .add_systems(bevy::prelude::Startup, |
+                    .add_systems(bevy::prelude::PreStartup, |
                         queue: NonSend<AkashicEventQueue<$native_event>>,
                         scene: NonSend<NativeScene>,
                     |{
