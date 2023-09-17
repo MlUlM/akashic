@@ -1,7 +1,7 @@
 /target
 /node_modules/
 /out/
-/.idea/
+**/.idea/
 **/node_modules/
 **/*.wasm
 akashic/script/bevy-akashic.wasm

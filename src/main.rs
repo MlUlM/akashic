@@ -7,25 +7,26 @@ use bevy::prelude::{Changed, Commands, Component, Event, EventReader, Query, Res
 use bevy::reflect::erased_serde::__private::serde::{Deserialize, Serialize};
 use bevy::time::{Time, TimePlugin, TimerMode};
 
-use bevy_akashic_engine::akashic::console_log;
-use bevy_akashic_engine::akashic::font::bitmap::BitmapFontBuilder;
-use bevy_akashic_engine::akashic::object2d::entity::cacheable::label::LabelBuilder;
-use bevy_akashic_engine::akashic::object2d::Object2D;
-use bevy_akashic_engine::akashic::prelude::{FilledRectBuilder, SpriteBuilder};
-use bevy_akashic_engine::component::object2d::entity_size::AkashicEntitySize;
-use bevy_akashic_engine::event::message::AddMessageEvent;
-use bevy_akashic_engine::event::message::raise_event::RaiseEvent;
-use bevy_akashic_engine::event::message::request_raise_event::RaiseEventRequester;
-use bevy_akashic_engine::event::point_down::OnPointDown;
-use bevy_akashic_engine::event::point_move::OnPointMove;
-use bevy_akashic_engine::event::point_up::OnPointUp;
-use bevy_akashic_engine::plugin::asset::AkashicAssetServer;
-use bevy_akashic_engine::prelude::*;
-use bevy_akashic_engine::prelude::object2d::entity::filled_rect::CssColor;
-use bevy_akashic_engine::prelude::object2d::touchable::Touchable;
-use bevy_akashic_engine::prelude::scene::GameScene;
-use bevy_akashic_engine::prelude::text::AkashicText;
-use bevy_akashic_engine::resource::game::GameInfo;
+use bevy_akashic::akashic::console_log;
+use bevy_akashic::akashic::font::bitmap::BitmapFontBuilder;
+use bevy_akashic::akashic::object2d::entity::cacheable::label::LabelBuilder;
+use bevy_akashic::akashic::object2d::Object2D;
+use bevy_akashic::akashic::prelude::{FilledRectBuilder, SpriteBuilder};
+use bevy_akashic::component::object2d::entity_size::AkashicEntitySize;
+use bevy_akashic::event::message::AddMessageEvent;
+use bevy_akashic::event::message::raise_event::RaiseEvent;
+use bevy_akashic::event::message::request_raise_event::RaiseEventRequester;
+use bevy_akashic::event::point_down::OnPointDown;
+use bevy_akashic::event::point_move::OnPointMove;
+use bevy_akashic::event::point_up::OnPointUp;
+use bevy_akashic::plugin::asset::AkashicAssetServer;
+use bevy_akashic::prelude::*;
+use bevy_akashic::prelude::object2d::entity::filled_rect::CssColor;
+use bevy_akashic::prelude::object2d::touchable::Touchable;
+use bevy_akashic::prelude::scene::GameScene;
+use bevy_akashic::prelude::text::AkashicText;
+use bevy_akashic::resource::game::GameInfo;
+
 
 #[derive(Component, Debug)]
 struct Angel;
@@ -102,7 +103,7 @@ fn label_sytem(
 fn setup(mut commands: Commands, server: Res<AkashicAssetServer>, game_size: Res<GameInfo>) {
     console_log!("SETUP");
 
-    let akashic_entity = bevy_akashic_engine::akashic::object2d::entity::AkashicEntity::default();
+    let akashic_entity = bevy_akashic::akashic::object2d::entity::AkashicEntity::default();
     let font_glyphs = server.text_by_id("font_glyphs");
     let src = server.image_by_id("font");
     let label = LabelBuilder::new(
