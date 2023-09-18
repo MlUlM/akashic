@@ -15,6 +15,7 @@ pub mod object2d;
 pub mod option_number;
 pub mod util;
 pub mod common_offset;
+pub mod resource_factory;
 
 pub mod prelude {
     pub use crate::{

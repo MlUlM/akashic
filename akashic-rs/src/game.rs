@@ -8,6 +8,7 @@ use crate::event::message::MessageEvent;
 use crate::game::vars::Vars;
 use crate::prelude::Trigger;
 use crate::random::RandomGenerator;
+use crate::resource_factory::ResourceFactory;
 use crate::scene::Scene;
 use crate::trigger::join::JoinHandler;
 use crate::trigger::NativeTrigger;
@@ -53,6 +54,9 @@ extern "C" {
 
     #[wasm_bindgen(method, getter)]
     pub fn vars(this: &Game) -> Vars;
+
+    #[wasm_bindgen(method, getter, js_name = resourceFactory)]
+    pub fn resource_factory(this: &Game) -> ResourceFactory;
 
     #[wasm_bindgen(method, js_name = pushScene)]
     pub fn push_scene(this: &Game, scene: Scene, options: JsValue) -> NativeTrigger;

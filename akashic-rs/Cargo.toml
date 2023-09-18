@@ -18,3 +18,4 @@ akashic-macro = { path = "../akashic-macro" }
 derive_builder = { workspace = true }
 anyhow = { workspace = true }
 thiserror = { workspace = true }
+web-sys = { version = "0.3.64", features = ["HtmlCanvasElement"] }

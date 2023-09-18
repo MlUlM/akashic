@@ -28,9 +28,11 @@ impl Into<Font> for DynamicFont {
 }
 
 
+#[non_exhaustive]
 #[wasm_bindgen(getter_with_clone)]
 #[derive(Clone, Debug, Builder)]
 #[builder(
+name = "DynamicFontBuilder",
 custom_constructor,
 create_empty = "empty",
 build_fn(private, name = "fallible_build")
@@ -73,7 +75,7 @@ pub struct DynamicFontParam {
 }
 
 
-impl DynamicFontParamBuilder {
+impl DynamicFontBuilder {
     #[inline]
     pub fn new(
         font_family: FontFamily,
@@ -82,16 +84,14 @@ impl DynamicFontParamBuilder {
         Self {
             font_family: Some(font_family),
             size: Some(size),
-            ..DynamicFontParamBuilder::empty()
+            ..DynamicFontBuilder::empty()
         }
     }
 
 
     #[inline]
-    pub fn build(&self) -> DynamicFontParam {
-        self
-            .fallible_build()
-            .unwrap()
+    pub fn build(&self) -> DynamicFont {
+        DynamicFont::new(self.fallible_build().unwrap())
     }
 }
 
