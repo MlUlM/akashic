@@ -1,8 +1,7 @@
 use std::f32::consts::PI;
 
 use bevy::app::{App, Last, Plugin};
-use bevy::hierarchy::Parent;
-use bevy::prelude::{Changed, IntoSystemConfigs, Or, Query, Res, Transform, Visibility};
+use bevy::prelude::{Changed, IntoSystemConfigs, Or, Query, Transform, Visibility};
 use wasm_bindgen::prelude::wasm_bindgen;
 
 use akashic_rs::prelude::AkashicEntity;
@@ -12,7 +11,6 @@ use crate::component::object2d::entity_size::AkashicEntitySize;
 use crate::plugin::system_set::AkashicSystemSet;
 use crate::prelude::NativeAkashicEntity;
 use crate::prelude::object2d::touchable::Touchable;
-use crate::resource::game::GameInfo;
 
 pub struct AkashicEntityObject2DPlugin;
 
@@ -27,7 +25,6 @@ impl Plugin for AkashicEntityObject2DPlugin {
 
 
 fn feed_entity_objects(
-    game_info: Res<GameInfo>,
     transforms: Query<(
         &NativeAkashicEntity,
         &Transform,
@@ -35,7 +32,6 @@ fn feed_entity_objects(
         &Anchor,
         &Touchable,
         &Visibility,
-        Option<&Parent>
     ),
         Or<(
             Changed<Transform>,
@@ -53,17 +49,15 @@ fn feed_entity_objects(
         anchor,
         touchable,
         visibility,
-        parent
     ) in transforms.iter() {
         let akashic_entity = native.0.clone();
         let (_, rad) = transform.rotation.to_axis_angle();
-
         let angle = rad * 180. / PI;
 
         feed_entity_properties(
             &akashic_entity,
-            if parent.is_some() {transform.translation.x} else {game_info.half_width() + transform.translation.x},
-            if parent.is_some() {transform.translation.y} else{game_info.half_height() - transform.translation.y},
+            transform.translation.x,
+            transform.translation.y,
             angle,
             size.x,
             size.y,

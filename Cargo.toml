@@ -21,7 +21,9 @@ path = "examples/hello.rs"
 name = "state"
 path = "examples/state.rs"
 
-
+[[example]]
+name = "sample"
+path = "examples/sample.rs"
 
 [workspace.dependencies]
 wasm-bindgen = { version = "0.2", features = ["serde-serialize"] }

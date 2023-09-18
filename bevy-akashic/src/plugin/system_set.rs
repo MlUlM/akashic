@@ -1,5 +1,5 @@
 use bevy::app::{App, Last};
-use bevy::prelude::{Plugin, SystemSet};
+use bevy::prelude::{IntoSystemSetConfigs, Plugin, SystemSet};
 
 #[derive(SystemSet, Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum AkashicSystemSet {
@@ -10,7 +10,7 @@ pub enum AkashicSystemSet {
 
     Feed,
 
-    Despawn
+    Despawn,
 }
 
 
@@ -27,8 +27,8 @@ impl Plugin for AkashicSystemSetPlugin {
                     AkashicSystemSet::PointEvents,
                     AkashicSystemSet::Feed,
                     AkashicSystemSet::Despawn,
-
-                ),
+                )
+                    .chain(),
             );
     }
 }

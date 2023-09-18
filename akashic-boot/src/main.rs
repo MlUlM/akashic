@@ -38,7 +38,10 @@ fn main() {
 
 fn build(example: &Option<String>, release: bool) {
     let mut cmd = Command::new("cargo");
-    cmd.arg("build");
+    cmd
+        .arg("build")
+        .args(["--target", "wasm32-unknown-unknown"]);
+
     if let Some(example) = example.as_ref() {
         cmd.args(["--example", example.as_str()]);
     }
@@ -117,10 +120,20 @@ fn convert_to_main_js() {
                 entity.invalidate()
             }}
 
+            const halfWidth =  g.game.width / 2
+            const halfHeight = g.game.height / 2
+
             g.feedEntityProperties = (entity, x, y, angle, width, height, scaleX, scaleY, anchorX, anchorY, touchable, visible) => {{
                 entity.angle = angle;
                 entity.resizeTo(width, height)
-                entity.moveTo(x, y)
+                const parent = entity.parent
+
+                if(parent && !(parent instanceof g.Scene)){{
+                    entity.moveTo(x + parent.width / 2, y + parent.height / 2)
+                }} else {{
+                    entity.moveTo(x + halfWidth, y + halfHeight)
+                }}
+
                 entity.scale(scaleX, scaleY)
                 entity.anchor(anchorX, anchorY)
                 entity.touchable = touchable

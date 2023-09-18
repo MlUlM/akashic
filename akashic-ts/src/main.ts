@@ -1,4 +1,5 @@
 import {BodyType, Box2D} from "@akashic-extension/akashic-box2d";
+import {Scene} from "@akashic/akashic-engine";
 
 function main(param: any): void {
     console.log(g.game.selfId)
@@ -10,6 +11,8 @@ function main(param: any): void {
     });
 
     scene.onLoad.add(() => {
+
+
         const box2d = new Box2D({
             gravity: [0, 9.8],
             scale: 50,
@@ -62,6 +65,12 @@ function main(param: any): void {
                     height: rad * 2,
                     scene
                 });
+                const parent = entity.parent;
+                if(parent instanceof g.Scene){
+
+                }else{
+                    parent.width
+                }
                 scene.append(entity);
                 entity.modified();
 
