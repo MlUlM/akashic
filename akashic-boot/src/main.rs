@@ -24,6 +24,7 @@ fn main() {
     build(&args.example, args.release);
     wasm_bindgen(&args.example, args.release);
     convert_to_main_js();
+
     move_akashic_wasm();
     remove_out_dir();
     if let Some(target) = args.target {
@@ -91,7 +92,45 @@ fn convert_to_main_js() {
         .replace("Object.assign(__wbg_init, { initSync }, __exports);", "Object.assign(__wbg_init, { initSync }, __exports)();");
 
     fs::write("akashic/script/main.js", format!(r#"
+        class CustomSprite extends g.Sprite {{
+            constructor(params) {{
+                super(params);
+                this.drawer = params.drawer;
+            }}
+
+            renderSelf(renderer, camera) {{
+                this.drawer.render();
+                super.renderSelf(renderer, camera);
+            }}
+        }}
+
         module.exports = () => {{
+            // const surface =  g.game.resourceFactory.createSurface(100, 100);
+            // if(surface._drawable){{
+            //     surface._drawable.id = "bevy"
+            // }}
+
+            g.isNode = () => (typeof window == 'undefined')
+            g.canvas = () => {{
+                const surface = g.game.resourceFactory.createSurface(g.game.width, g.game.height)
+                const gl = surface._drawable.getContext("webgl2")
+
+                const sprite = new g.Sprite({{
+                    scene: g.game.scene(),
+                    src: surface,
+                    anchorX: 0.5,
+                    anchorY: 0.5,
+                    x: g.game.width / 2,
+                    y: g.game.height / 2,
+                    width: g.game.width,
+                    height: g.game.height
+                }})
+                g.game.scene().append(sprite)
+                sprite.modified()
+
+                return surface._drawable
+            }}
+
             g.getEntityProperties = (entity) => ({{
                 id: entity.id,
                 x: entity.x,
@@ -149,8 +188,6 @@ fn convert_to_main_js() {
                globalThis.crypto = {{
                     getRandomValues: (args) => new Uint8Array(args.map(_ => Math.floor(g.game.random.generate() * 255)))
                }}
-            }} else {{
-                globalThis.crypto.getRandomValues = (args) => new Uint8Array(args.map(_ => Math.floor(g.game.random.generate() * 255)))
             }}
 
             const scene = new g.Scene({{
@@ -164,6 +201,23 @@ fn convert_to_main_js() {
             }})
 
             scene.onLoad.addOnce(() => {{
+                if (typeof window == 'undefined'){{
+                    return;
+                }}
+                 const surface = g.game.resourceFactory.createSurface(g.game.width, g.game.height)
+                surface._drawable.id = "bevy"
+                const sprite = new g.Sprite({{
+                    scene,
+                    src: surface
+                }})
+                scene.append(sprite)
+                sprite.modified()
+                g.create_3d = (param) => new CustomSprite({{
+                    scene,
+                    src: param.src,
+                    drawer: param.drawer
+                }})
+
                 {akashic_js}
             }})
 

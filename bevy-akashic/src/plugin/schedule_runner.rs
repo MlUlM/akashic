@@ -16,7 +16,19 @@ impl Plugin for AkashicScheduleRunnerPlugin {
                     .non_send_resource::<NativeScene>()
                     .on_update()
                     .add(move || {
-                        app.update();
+                        let mut finished_and_setup_done = false;
+                        if !finished_and_setup_done {
+                            if !app.ready(){
+                                return;
+                            }
+                            finished_and_setup_done = true;
+                            app.finish();
+                            app.cleanup();
+                        }
+
+                        if app.ready(){
+                            app.update();
+                        }
                     });
             });
     }

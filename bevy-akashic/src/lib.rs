@@ -1,8 +1,10 @@
 #![allow(clippy::type_complexity)]
 
 use std::sync::{Arc, Mutex, MutexGuard};
+
 use bevy::prelude::Deref;
 use wasm_bindgen::JsValue;
+
 use akashic_rs::game::GAME;
 use akashic_rs::prelude::{Scene, SceneParameterObject};
 
@@ -21,9 +23,9 @@ pub mod akashic {
 
 pub mod prelude {
     pub use crate::command::prelude::*;
-    pub use crate::plugin::prelude::*;
-    pub use crate::event::*;
     pub use crate::component::*;
+    pub use crate::event::*;
+    pub use crate::plugin::prelude::*;
 }
 
 
@@ -48,7 +50,7 @@ unsafe impl<T> Send for SharedObject<T> {}
 
 unsafe impl<T> Sync for SharedObject<T> {}
 
-impl<T> Clone for SharedObject<T>{
+impl<T> Clone for SharedObject<T> {
     #[inline(always)]
     fn clone(&self) -> Self {
         Self(Arc::clone(&self.0))

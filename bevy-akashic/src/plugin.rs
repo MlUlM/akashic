@@ -2,6 +2,7 @@ use bevy::app::{PluginGroup, PluginGroupBuilder};
 use bevy::prelude::TransformPlugin;
 
 use feed::label::AkashicLabelPlugin;
+use crate::plugin::akashic_3d::Akashic3DPlugin;
 
 use crate::plugin::append::AkashicAppendEntityPlugin;
 use crate::plugin::asset::AkashicAssetPlugin;
@@ -32,6 +33,9 @@ pub mod system_set;
 pub mod append;
 pub mod feed;
 pub mod scene;
+
+#[cfg(feature = "3d")]
+pub mod akashic_3d;
 
 
 pub mod prelude {
@@ -67,8 +71,8 @@ impl PluginGroup for AkashicMinimumPlugins {
             .add(AkashicLabelPlugin)
             .add(FilledRectPlugin)
             .add(AkashicDespawnPlugin)
+            .add(Akashic3DPlugin)
             .add(AkashicScheduleRunnerPlugin)
-            .add(TransformPlugin)
     }
 }
 

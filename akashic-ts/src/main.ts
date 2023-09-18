@@ -1,5 +1,5 @@
 import {BodyType, Box2D} from "@akashic-extension/akashic-box2d";
-import {Scene} from "@akashic/akashic-engine";
+
 
 function main(param: any): void {
     console.log(g.game.selfId)
@@ -66,13 +66,14 @@ function main(param: any): void {
                     scene
                 });
                 const parent = entity.parent;
-                if(parent instanceof g.Scene){
+                if (parent instanceof g.Scene) {
 
-                }else{
+                } else {
                     parent.width
                 }
                 scene.append(entity);
                 entity.modified();
+
 
                 const entityFixDef = box2d.createFixtureDef({
                     density: 1.0, // 密度

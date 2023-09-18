@@ -5,6 +5,7 @@ use bevy::time::TimePlugin;
 use bevy_rapier2d::prelude::*;
 
 use bevy_akashic::akashic::prelude::FilledRectBuilder;
+use bevy_akashic::plugin::akashic_3d::{Akashic3DPlugin, is_node};
 use bevy_akashic::prelude::*;
 use bevy_akashic::resource::game::GameInfo;
 

@@ -12,6 +12,7 @@ use bevy_akashic::event::message::AddMessageEvent;
 use bevy_akashic::event::message::raise_event::RaiseEvent;
 use bevy_akashic::event::message::request_raise_event::RaiseEventRequester;
 use bevy_akashic::event::point_down::OnPointDown;
+use bevy_akashic::plugin::akashic_3d::is_node;
 use bevy_akashic::prelude::*;
 use bevy_akashic::prelude::object2d::touchable::Touchable;
 use bevy_akashic::prelude::player_id::{PlayerId, SelfPlayerId};
@@ -39,7 +40,9 @@ enum GameState {
 
 fn main() {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
-
+    if is_node(){
+        return;
+    }
     App::new()
         .add_state::<GameState>()
         .init_resource::<JoinPlayers>()
