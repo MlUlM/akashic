@@ -129,9 +129,9 @@ fn convert_to_main_js() {
                 const parent = entity.parent
 
                 if(parent && !(parent instanceof g.Scene)){{
-                    entity.moveTo(x + parent.width / 2, y + parent.height / 2)
+                    entity.moveTo(x + parent.width / 2, parent.height / 2 - y)
                 }} else {{
-                    entity.moveTo(x + halfWidth, y + halfHeight)
+                    entity.moveTo(x + halfWidth, halfHeight - y)
                 }}
 
                 entity.scale(scaleX, scaleY)

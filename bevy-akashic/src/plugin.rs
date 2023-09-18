@@ -1,4 +1,5 @@
 use bevy::app::{PluginGroup, PluginGroupBuilder};
+use bevy::prelude::TransformPlugin;
 
 use feed::label::AkashicLabelPlugin;
 
@@ -67,6 +68,7 @@ impl PluginGroup for AkashicMinimumPlugins {
             .add(FilledRectPlugin)
             .add(AkashicDespawnPlugin)
             .add(AkashicScheduleRunnerPlugin)
+            .add(TransformPlugin)
     }
 }
 
