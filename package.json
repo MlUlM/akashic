@@ -4,7 +4,7 @@
   "author": "elm",
   "license": "MIT",
   "scripts": {
-    "dev-serve": "akashic-boot --release --example sample -t serve",
+    "dev-serve": "akashic-boot --example sample -t serve",
     "sandbox": "akashic-sandbox akashic",
     "serve": "akashic serve akashic --target-service nicolive",
     "boot-update": "cargo install --path akashic-boot"

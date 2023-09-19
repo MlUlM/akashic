@@ -3,6 +3,7 @@ use bevy::prelude::TransformPlugin;
 
 use feed::label::AkashicLabelPlugin;
 use crate::plugin::akashic_3d::Akashic3DPlugin;
+use crate::plugin::winit::AkashicWinitPlugin;
 
 use crate::plugin::append::AkashicAppendEntityPlugin;
 use crate::plugin::asset::AkashicAssetPlugin;
@@ -42,6 +43,9 @@ pub mod akashic_3d;
 #[cfg(feature = "3d")]
 pub mod webgl;
 
+#[cfg(feature = "3d")]
+pub mod winit;
+
 
 pub mod prelude {
     pub use crate::plugin::{
@@ -76,7 +80,7 @@ impl PluginGroup for AkashicMinimumPlugins {
             .add(AkashicLabelPlugin)
             .add(FilledRectPlugin)
             .add(AkashicDespawnPlugin)
-            .add(Akashic3DPlugin)
+            .add(AkashicWinitPlugin)
             .add(AkashicScheduleRunnerPlugin)
     }
 }

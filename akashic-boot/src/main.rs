@@ -105,11 +105,6 @@ fn convert_to_main_js() {
         }}
 
         module.exports = () => {{
-            // const surface =  g.game.resourceFactory.createSurface(100, 100);
-            // if(surface._drawable){{
-            //     surface._drawable.id = "bevy"
-            // }}
-
             g.isNode = () => (typeof window == 'undefined')
             g.canvas_only = (width, height) => {{
                 const surface = g.game.resourceFactory.createSurface(width, height)
@@ -208,14 +203,7 @@ fn convert_to_main_js() {
                 if (typeof window == 'undefined'){{
                     return;
                 }}
-                 const surface = g.game.resourceFactory.createSurface(g.game.width, g.game.height)
-                surface._drawable.id = "bevy"
-                const sprite = new g.Sprite({{
-                    scene,
-                    src: surface
-                }})
-                scene.append(sprite)
-                sprite.modified()
+
                 g.create_3d = (param) => new CustomSprite({{
                     scene,
                     src: param.src,
