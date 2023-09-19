@@ -17,6 +17,7 @@ use crate::plugin::player_id::PlayerIdPlugin;
 use crate::plugin::random::AkashicRandomPlugin;
 use crate::plugin::scene::AkashicScenePlugin;
 use crate::plugin::system_set::AkashicSystemSetPlugin;
+use crate::plugin::webgl::AkashicWebGlPlugin;
 use crate::prelude::AkashicScheduleRunnerPlugin;
 
 pub mod schedule_runner;
@@ -36,6 +37,10 @@ pub mod scene;
 
 #[cfg(feature = "3d")]
 pub mod akashic_3d;
+
+
+#[cfg(feature = "3d")]
+pub mod webgl;
 
 
 pub mod prelude {

@@ -111,8 +111,12 @@ fn convert_to_main_js() {
             // }}
 
             g.isNode = () => (typeof window == 'undefined')
-            g.canvas = () => {{
-                const surface = g.game.resourceFactory.createSurface(g.game.width, g.game.height)
+            g.canvas_only = (width, height) => {{
+                const surface = g.game.resourceFactory.createSurface(width, height)
+                return surface
+            }}
+            g.canvas = (width, height) => {{
+                const surface = g.game.resourceFactory.createSurface(width, height)
                 const gl = surface._drawable.getContext("webgl2")
 
                 const sprite = new g.Sprite({{
@@ -122,8 +126,8 @@ fn convert_to_main_js() {
                     anchorY: 0.5,
                     x: g.game.width / 2,
                     y: g.game.height / 2,
-                    width: g.game.width,
-                    height: g.game.height
+                    width,
+                    height
                 }})
                 g.game.scene().append(sprite)
                 sprite.modified()

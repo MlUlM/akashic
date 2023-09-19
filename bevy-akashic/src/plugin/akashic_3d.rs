@@ -4,6 +4,7 @@ use std::sync::{Arc, Mutex};
 use bevy::app::{App, Plugin, Startup, Update};
 use bevy::prelude::{Commands, Component, Deref, DerefMut, IntoSystemConfigs, NonSend, Query, Res, Resource, Transform, Vec3, With};
 use bevy::render::renderer::{RenderAdapter, RenderDevice, RenderQueue};
+use bevy::sprite::Sprite;
 use bevy::tasks::IoTaskPool;
 use wasm_bindgen::prelude::wasm_bindgen;
 use web_sys::HtmlCanvasElement;
@@ -23,20 +24,9 @@ struct FutureDevice(Arc<Mutex<Option<(
     Device,
     Adapter,
     Queue,
-    Instance
+    Instance,
+    AkashicSurface
 )>>>);
-
-
-#[derive(Deref, DerefMut)]
-struct AkashicRendererDevice(Arc<Device>);
-
-
-#[derive(Deref, DerefMut)]
-struct AkashicRendererAdapter(Adapter);
-
-
-#[derive(Deref, DerefMut)]
-struct AkashicRendererQueue(Arc<Queue>);
 
 
 #[derive(Deref)]
@@ -53,15 +43,16 @@ impl Plugin for Akashic3DPlugin {
         app
             .insert_non_send_resource(AkashicResourceFactory(resource_factory.clone()))
             .insert_non_send_resource(FutureDevice(Arc::clone(&future_device)))
-            // .add_systems(Startup, update.in_set(AkashicSystemSet::Despawn))
-            // .add_systems(Update, move_system)
+            .add_systems(Startup, update.in_set(AkashicSystemSet::Despawn))
+            .add_systems(Update, move_system)
         ;
         IoTaskPool::get()
             .spawn_local(async move {
                 let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::default());
 
+                let akshic_surface = canvas_only(100, 100);
                 let surface = instance
-                    .create_surface_from_canvas(canvas())
+                    .create_surface_from_canvas(akshic_surface.canvas())
                     .unwrap();
 
                 let request_adapter_options = wgpu::RequestAdapterOptions {
@@ -96,8 +87,8 @@ impl Plugin for Akashic3DPlugin {
                 let config = wgpu::SurfaceConfiguration {
                     usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
                     format: surface_format,
-                    width: GAME.width() as u32,
-                    height: GAME.height() as u32,
+                    width: 100 as u32,
+                    height: 100 as u32,
                     present_mode: surface_caps.present_modes[0],
                     alpha_mode: surface_caps.alpha_modes[0],
                     view_formats: vec![],
@@ -105,7 +96,7 @@ impl Plugin for Akashic3DPlugin {
                 surface.configure(&device, &config);
 
                 let mut future_device = future_device.lock().unwrap();
-                *future_device = Some((device, adapter, queue, instance));
+                *future_device = Some((device, adapter, queue, instance, AkashicSurface(akshic_surface)));
             })
             .detach();
     }
@@ -123,12 +114,13 @@ impl Plugin for Akashic3DPlugin {
 
     fn finish(&self, app: &mut App) {
         let Some(futures) = app.world.remove_non_send_resource::<FutureDevice>() else { return; };
-        let (device, adapter, queue, instance) = futures.lock().unwrap().take().unwrap();
+        let (device, adapter, queue, instance, akashic_surface) = futures.lock().unwrap().take().unwrap();
 
         app.insert_non_send_resource(RenderDevice::from(device));
         app.insert_non_send_resource(RenderAdapter(Arc::new(adapter)));
         app.insert_non_send_resource(RenderQueue(Arc::new(queue)));
         app.insert_non_send_resource(instance);
+        app.insert_non_send_resource(akashic_surface);
     }
 }
 
@@ -138,13 +130,14 @@ struct DADAD;
 fn update(
     mut commands: Commands,
     instance: NonSend<Instance>,
-    device: NonSend<AkashicRendererDevice>,
-    queue: NonSend<AkashicRendererQueue>,
-    adapter: NonSend<AkashicRendererAdapter>,
+    device: NonSend<RenderDevice>,
+    queue: NonSend<RenderQueue>,
+    adapter: NonSend<RenderAdapter>,
     factory: NonSend<AkashicResourceFactory>,
+    akashic_surface: NonSend<AkashicSurface>
 ) {
     let size = 300.;
-    let src = factory.create_surface(size, size);
+    let src = akashic_surface.0.clone();
     let canvas = src.canvas();
 
     let surface: Surface = instance.create_surface_from_canvas(canvas).unwrap();
@@ -159,22 +152,18 @@ fn update(
     let config = wgpu::SurfaceConfiguration {
         usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
         format: surface_format,
-        width: size as u32,
-        height: size as u32,
+        width: 1000,
+        height: 1000,
         present_mode: surface_caps.present_modes[0],
         alpha_mode: surface_caps.alpha_modes[0],
         view_formats: vec![],
     };
-    surface.configure(&device, &config);
+    surface.configure(device.wgpu_device(), &config);
     let surface = Arc::new(surface);
-    commands.spawn(create_3d(Param {
-        src,
-        drawer: Drawer {
-            device: Arc::clone(&device.0),
-            queue: Arc::clone(&queue.0),
-            surface: Arc::clone(&surface)
-        },
-    }).into_bundle())
+    commands.spawn(SpriteBuilder::new(src)
+        .width(size)
+        .height(size)
+        .build().into_bundle())
         .insert(DADAD);
     commands.insert_resource(SURFACE(surface));
 }
@@ -182,19 +171,53 @@ fn update(
 #[derive(Resource, Deref)]
 struct SURFACE(Arc<Surface>);
 
+
+#[derive(Deref)]
+struct AkashicSurface(akashic_rs::asset::surface::Surface);
+
 unsafe impl Send for SURFACE {}
 
 unsafe impl Sync for SURFACE {}
 
 fn move_system(
-    device: NonSend<AkashicRendererDevice>,
-    queue: NonSend<AkashicRendererQueue>,
+    device: NonSend<RenderDevice>,
+    queue: NonSend<RenderQueue>,
     mut sprite: Query<&mut Transform, With<DADAD>>,
     surface: Res<SURFACE>,
 ) {
     let mut sprite = sprite.single_mut();
     sprite.translation += Vec3::NEG_X * 1.2;
 
+    let output = surface.get_current_texture().expect("Failed current texture");
+    let view = output.texture.create_view(&wgpu::TextureViewDescriptor::default());
+
+    let mut encoder = device
+        .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+            label: Some("Render Encoder"),
+        });
+
+    {
+        let _render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+            label: Some("Render Pass"),
+            color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                view: &view,
+                resolve_target: None,
+                ops: wgpu::Operations {
+                    load: wgpu::LoadOp::Clear(wgpu::Color {
+                        r: 1.0,
+                        g: 0.2,
+                        b: 0.3,
+                        a: 1.0,
+                    }),
+                    store: true,
+                },
+            })],
+            depth_stencil_attachment: None,
+        });
+    }
+
+    queue.submit(iter::once(encoder.finish()));
+    output.present();
 }
 
 #[wasm_bindgen(getter_with_clone)]
@@ -209,7 +232,7 @@ pub struct Param {
 pub struct Drawer {
     device: Arc<Device>,
     queue: Arc<Queue>,
-    surface: Arc<Surface>
+    surface: Arc<Surface>,
 }
 
 #[wasm_bindgen]
@@ -261,8 +284,11 @@ extern {
     pub fn is_node() -> bool;
 
     #[wasm_bindgen(js_namespace = g)]
-    fn canvas() -> HtmlCanvasElement;
+    pub fn canvas(width: u32, height: u32) -> HtmlCanvasElement;
 
     #[wasm_bindgen(js_namespace = g)]
-    fn create_3d(param: Param) -> akashic_rs::object2d::entity::sprite::Sprite;
+    pub fn canvas_only(width: u32, height: u32) -> akashic_rs::asset::surface::Surface;
+
+    #[wasm_bindgen(js_namespace = g)]
+    pub fn create_3d(param: Param) -> akashic_rs::object2d::entity::sprite::Sprite;
 }
