@@ -8,7 +8,7 @@ use bevy::render::{Render, RenderApp};
 use bevy::render::renderer::{RenderAdapter, RenderDevice, RenderInstance, RenderQueue};
 use bevy::tasks::IoTaskPool;
 use wasm_bindgen::prelude::wasm_bindgen;
-use web_sys::HtmlCanvasElement;
+use web_sys::{HtmlCanvasElement, window};
 use wgpu::{Adapter, Device, include_wgsl, Instance, PowerPreference, Queue, Surface};
 
 use akashic_rs::console_log;
@@ -47,13 +47,13 @@ impl Plugin for Akashic3DPlugin {
         app
             .insert_non_send_resource(AkashicResourceFactory(resource_factory.clone()))
             .insert_non_send_resource(FutureDevice(Arc::clone(&future_device)))
-            // .add_systems(Startup, (
-            //     setup,
-            //     setup,
-            //     setup,
-            //     setup,
-            //     setup,
-            // ))
+            .add_systems(Startup, (
+                setup,
+                setup,
+                setup,
+                setup,
+                setup,
+            ))
             .add_systems(Update, move_system)
         ;
         IoTaskPool::get()
@@ -61,6 +61,7 @@ impl Plugin for Akashic3DPlugin {
                 let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::default());
 
                 let akshic_surface = canvas_only(GAME.width() as u32, GAME.height() as u32);
+                window().unwrap().document().unwrap().body().unwrap().append_child(&akshic_surface.canvas()).unwrap();
                 let can = akshic_surface.canvas();
                 can.set_id("bevy");
                 let surface = instance
@@ -131,22 +132,22 @@ impl Plugin for Akashic3DPlugin {
         let adapter = RenderAdapter(Arc::new(adapter));
         let queue = RenderQueue(Arc::new(queue));
 
-        let mut render = App::empty();
+        // let mut render = App::empty();
+        //
+        // render.main_schedule_label = Box::new(Render);
+        // render.insert_resource(device.clone());
+        // render.insert_resource(adapter.clone());
+        // render.insert_resource(queue.clone());
+        // render.insert_resource(RenderInstance(instance));
+        // // render.insert_non_send_resource(instance);
 
-        render.main_schedule_label = Box::new(Render);
-        render.insert_resource(device.clone());
-        render.insert_resource(adapter.clone());
-        render.insert_resource(queue.clone());
-        render.insert_resource(RenderInstance(instance));
-        // render.insert_non_send_resource(instance);
-
-        render.insert_resource(PipelineCache::new(device.clone()));
+        // render.insert_resource(PipelineCache::new(device.clone()));
 
         app.insert_resource(device);
         app.insert_resource(adapter);
         app.insert_resource(queue);
-        // app.insert_non_send_resource(instance);
-        // app.insert_non_send_resource(akashic_surface);
+        app.insert_non_send_resource(instance);
+        app.insert_non_send_resource(akashic_surface);
     }
 }
 
@@ -184,7 +185,7 @@ fn setup(
         alpha_mode: surface_caps.alpha_modes[0],
         view_formats: vec![],
     };
-    surface.configure(device.wgpu_device(), &config);
+    // surface.configure(device.wgpu_device(), &config);
     let shader = device.create_shader_module(include_wgsl!("shader.wgsl"));
     let pipeline_layout =
         device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
@@ -253,8 +254,8 @@ fn setup(
 struct SURFACE(Arc<Surface>);
 
 
-#[derive(Deref)]
-struct AkashicSurface(akashic_rs::asset::surface::Surface);
+#[derive(Deref, Clone)]
+pub struct AkashicSurface(pub akashic_rs::asset::surface::Surface);
 
 unsafe impl Send for SURFACE {}
 

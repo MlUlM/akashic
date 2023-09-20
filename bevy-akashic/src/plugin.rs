@@ -47,6 +47,10 @@ pub mod webgl;
 pub mod winit;
 
 
+#[cfg(feature = "3d")]
+pub mod akashic_3d2;
+
+
 pub mod prelude {
     pub use crate::plugin::{
         AkashicMinimumPlugins,
@@ -80,8 +84,8 @@ impl PluginGroup for AkashicMinimumPlugins {
             .add(AkashicLabelPlugin)
             .add(FilledRectPlugin)
             .add(AkashicDespawnPlugin)
-             .add(Akashic3DPlugin)
-            .add(AkashicWinitPlugin)
+             // .add(Akashic3DPlugin)
+            // .add(AkashicWinitPlugin)
             .add(AkashicScheduleRunnerPlugin)
     }
 }

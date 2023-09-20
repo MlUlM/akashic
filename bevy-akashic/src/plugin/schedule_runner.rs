@@ -1,4 +1,7 @@
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::Ordering::Relaxed;
 use bevy::app::{App, Plugin};
+use akashic_rs::console_log;
 
 use akashic_rs::prelude::UpdateHandler;
 
@@ -16,17 +19,21 @@ impl Plugin for AkashicScheduleRunnerPlugin {
                     .non_send_resource::<NativeScene>()
                     .on_update()
                     .add(move || {
-                        let mut finished_and_setup_done = false;
-                        if !finished_and_setup_done {
-                            if !app.ready(){
+                        static  finished_and_setup_done: AtomicBool = AtomicBool::new(false);
+                        if !finished_and_setup_done.load(Ordering::Relaxed) {
+                            if !app.ready() {
                                 return;
                             }
-                            finished_and_setup_done = true;
+                            finished_and_setup_done.store(true, Ordering::Relaxed);
                             app.finish();
                             app.cleanup();
                         }
 
-                        if app.ready(){
+                        static  DADA: AtomicBool = AtomicBool::new(true);
+                        if app.ready()  {
+                            DADA.store(false, Relaxed);
+
+                            console_log!("UPDATE GAME");
                             app.update();
                         }
                     });
