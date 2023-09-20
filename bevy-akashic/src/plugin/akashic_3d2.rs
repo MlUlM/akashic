@@ -172,13 +172,6 @@ impl render_graph::Node for GameOfLifeNode {
         console_log!("run");
         let pipeline = world.resource::<GameOfLifePipeline>();
         let device = world.resource::<RenderDevice>();
-        // let view_entity = graph_context.view_entity();
-        // We get the data we need from the world based on the view entity passed to the node.
-        // // The data is the query that was defined earlier in the [`PostProcessNode`]
-        // let Ok(view_target) = self.query.get_manual(world, view_entity) else {
-        //     console_log!("nothing view target");
-        //     return Ok(());
-        // };
         let queue = world.resource::<RenderQueue>();
         let pipeline_cache = world.resource::<PipelineCache>();
         let output = pipeline.surface.get_current_texture().expect("Failed current texture");
@@ -213,6 +206,7 @@ impl render_graph::Node for GameOfLifeNode {
             console_log!(" pipeline dada");
         }
         queue.submit(std::iter::once(encoder.finish()));
+        output.present();
 
         Ok(())
     }

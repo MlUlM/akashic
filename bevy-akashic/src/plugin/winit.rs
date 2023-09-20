@@ -30,11 +30,11 @@ impl Plugin for AkashicWinitPlugin {
         //     .with_canvas(Some(surface.canvas()))
         //     .build(&event_loop)
         //     .unwrap();
-        // let sprite = SpriteBuilder::new(surface.clone())
-        //     .width(GAME.width())
-        //     .height(GAME.height())
-        //     .build();
-        // app.world.spawn(sprite.into_bundle());
+        let sprite = SpriteBuilder::new(surface.clone())
+            .width(GAME.width())
+            .height(GAME.height())
+            .build();
+       app.world.spawn(sprite.into_bundle());
 
         let mut state: SystemState<
             Query<Entity, With<Window>>

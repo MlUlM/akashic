@@ -9,7 +9,7 @@ use bevy::render::renderer::{RenderAdapter, RenderDevice, RenderInstance, Render
 use bevy::tasks::IoTaskPool;
 use wasm_bindgen::prelude::wasm_bindgen;
 use web_sys::{HtmlCanvasElement, window};
-use wgpu::{Adapter, Device, include_wgsl, Instance, PowerPreference, Queue, Surface};
+use wgpu::{Adapter, Device, include_wgsl, Instance, PowerPreference, Queue, Surface, TextureUsages};
 
 use akashic_rs::console_log;
 use akashic_rs::game::GAME;
@@ -177,10 +177,10 @@ fn setup(
         .find(|f| f.is_srgb())
         .unwrap_or(surface_caps.formats[0]);
     let config = wgpu::SurfaceConfiguration {
-        usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
+        usage: wgpu::TextureUsages::TEXTURE_BINDING | TextureUsages::RENDER_ATTACHMENT,
         format: surface_format,
-        width: 100,
-        height: 100,
+        width: GAME.width() as u32,
+        height: GAME.height() as u32,
         present_mode: surface_caps.present_modes[0],
         alpha_mode: surface_caps.alpha_modes[0],
         view_formats: vec![],

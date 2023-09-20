@@ -68,30 +68,10 @@ fn setup2(
     mut commands: Commands,
     asset: Res<AkashicAssetServer>,
     akashic_surface: NonSend<AkashicSurface>,
-    //  mut meshes: ResMut<Assets<Mesh>>,
-    // mut materials: ResMut<Assets<StandardMaterial>>,
+
 ) {
     let src = akashic_surface.0.clone();
-    let canvas = src.canvas();
-    // cube
-    // commands.spawn(MaterialMeshBundle {
-    //     mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
-    //     transform: Transform::from_xyz(0.0, 0.5, 0.0),
-    //     material: materials.add(CustomMaterial {}),
-    //     ..default()
-    // });
 
-    // camera
-    commands.spawn(Camera2dBundle::default());
-    // commands.spawn((
-    //     PbrBundle {
-    //         mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
-    //         material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
-    //         transform: Transform::from_xyz(0.0, 0.5, 0.0),
-    //         ..default()
-    //     },
-    //
-    // ));
     commands.spawn(SpriteBuilder::new(src)
         .width(100.)
         .height(100.)
@@ -100,12 +80,6 @@ fn setup2(
     )
     .insert(Cube);
 
-    commands.spawn(SpriteBuilder::new(asset.image_by_id("player"))
-
-        .build()
-        .into_bundle()
-    )
-        ;
     // commands.spawn(SpriteBundle {
     //     sprite: Sprite {
     //         color: Color::rgb(1., 0.25, 0.75),
