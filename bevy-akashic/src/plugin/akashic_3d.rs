@@ -61,9 +61,9 @@ impl Plugin for Akashic3DPlugin {
                 let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::default());
 
                 let akshic_surface = canvas_only(GAME.width() as u32, GAME.height() as u32);
-                window().unwrap().document().unwrap().body().unwrap().append_child(&akshic_surface.canvas()).unwrap();
+                // window().unwrap().document().unwrap().body().unwrap().append_child(&akshic_surface.canvas()).unwrap();
                 let can = akshic_surface.canvas();
-                can.set_id("bevy");
+
                 let surface = instance
                     .create_surface_from_canvas(can)
                     .unwrap();
@@ -161,9 +161,7 @@ fn setup(
     mut commands: Commands,
     instance: NonSend<Instance>,
     device: Res<RenderDevice>,
-    queue: Res<RenderQueue>,
     adapter: Res<RenderAdapter>,
-    factory: NonSend<AkashicResourceFactory>,
     akashic_surface: NonSend<AkashicSurface>,
 ) {
     let size = 100.;
@@ -177,7 +175,7 @@ fn setup(
         .find(|f| f.is_srgb())
         .unwrap_or(surface_caps.formats[0]);
     let config = wgpu::SurfaceConfiguration {
-        usage: wgpu::TextureUsages::TEXTURE_BINDING | TextureUsages::RENDER_ATTACHMENT,
+        usage: TextureUsages::RENDER_ATTACHMENT,
         format: surface_format,
         width: GAME.width() as u32,
         height: GAME.height() as u32,
@@ -185,7 +183,7 @@ fn setup(
         alpha_mode: surface_caps.alpha_modes[0],
         view_formats: vec![],
     };
-    // surface.configure(device.wgpu_device(), &config);
+    surface.configure(device.wgpu_device(), &config);
     let shader = device.create_shader_module(include_wgsl!("shader.wgsl"));
     let pipeline_layout =
         device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
@@ -266,7 +264,6 @@ fn move_system(
     queue: Res<RenderQueue>,
     mut sprite: Query<&mut Transform, With<DADAD>>,
     surface: Res<SURFACE>,
-    instance: NonSend<Instance>,
     pipe_line: Res<PipeLineTest>,
     random: Res<AkashicRandomGenerator>,
 ) {

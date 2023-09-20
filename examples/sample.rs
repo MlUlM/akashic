@@ -14,7 +14,7 @@ use bevy::time::TimePlugin;
 
 use bevy_akashic::akashic::prelude::SpriteBuilder;
 use bevy_akashic::plugin::akashic_3d2::Akashic3D2Plugin;
-use bevy_akashic::plugin::akashic_3d::AkashicSurface;
+use bevy_akashic::plugin::akashic_3d::{Akashic3DPlugin, AkashicSurface};
 use bevy_akashic::plugin::asset::AkashicAssetServer;
 use bevy_akashic::plugin::winit::AkashicWinitPlugin;
 use bevy_akashic::prelude::*;
@@ -40,7 +40,7 @@ fn main() {
                 }),
                 ..default()
             },
-            AkashicWinitPlugin,
+            // AkashicWinitPlugin,
             TimePlugin,
             TransformPlugin,
             HierarchyPlugin,
@@ -51,11 +51,11 @@ fn main() {
         .add_plugins((
             AssetPlugin::default(),
             ScenePlugin,
-            RenderPlugin::default(),
-            ImagePlugin::default(),
-            CorePipelinePlugin,
+            // RenderPlugin::default(),
+            // ImagePlugin::default(),
+            // CorePipelinePlugin,
             AkashicMinimumPlugins,
-            Akashic3D2Plugin,
+            Akashic3DPlugin,
             // PbrPlugin::default()
         ))
         .add_systems(Startup, setup2)
@@ -68,7 +68,6 @@ fn setup2(
     mut commands: Commands,
     asset: Res<AkashicAssetServer>,
     akashic_surface: NonSend<AkashicSurface>,
-
 ) {
     let src = akashic_surface.0.clone();
 
@@ -78,7 +77,7 @@ fn setup2(
         .build()
         .into_bundle()
     )
-    .insert(Cube);
+        .insert(Cube);
 
     // commands.spawn(SpriteBundle {
     //     sprite: Sprite {
