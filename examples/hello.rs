@@ -31,7 +31,6 @@ fn setup(mut commands: Commands, game_info: Res<GameInfo>) {
         .into_bundle()
     );
 
-
     let ground_size = 500.0;
     let ground_height = 10.0;
     let rect = FilledRectBuilder::new("red", ground_size * 2., ground_height * 2.).build();
@@ -41,7 +40,7 @@ fn setup(mut commands: Commands, game_info: Res<GameInfo>) {
         Collider::cuboid(ground_size, ground_height),
     ));
 
-    let num = 30;
+    let num = 300;
     let rad = 10.0;
 
     let shift = rad * 2.0 + rad;

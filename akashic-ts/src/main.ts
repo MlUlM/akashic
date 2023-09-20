@@ -11,8 +11,6 @@ function main(param: any): void {
     });
 
     scene.onLoad.add(() => {
-
-
         const box2d = new Box2D({
             gravity: [0, 9.8],
             scale: 50,
@@ -44,7 +42,7 @@ function main(param: any): void {
         });
         box2d.createBody(ground, entityDef, entityFixDef);
 
-        let num = 30;
+        let num = 300;
         let rad = 10.0;
 
         let shift = rad * 2.0 + rad;
@@ -52,6 +50,7 @@ function main(param: any): void {
         let centery = shift / 2.0;
 
         let offset = -num * (rad * 2.0 + rad) * 0.5;
+      
 
         for (let j = 0; j < 20; j++) {
             for (let i = 0; i < num; i++) {
@@ -65,15 +64,9 @@ function main(param: any): void {
                     height: rad * 2,
                     scene
                 });
-                const parent = entity.parent;
-                if (parent instanceof g.Scene) {
 
-                } else {
-                    parent.width
-                }
                 scene.append(entity);
                 entity.modified();
-
 
                 const entityFixDef = box2d.createFixtureDef({
                     density: 1.0, // 密度

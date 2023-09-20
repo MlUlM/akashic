@@ -80,6 +80,7 @@ impl PluginGroup for AkashicMinimumPlugins {
             .add(AkashicLabelPlugin)
             .add(FilledRectPlugin)
             .add(AkashicDespawnPlugin)
+             .add(Akashic3DPlugin)
             .add(AkashicWinitPlugin)
             .add(AkashicScheduleRunnerPlugin)
     }

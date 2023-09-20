@@ -2,9 +2,10 @@ use std::iter;
 use std::sync::{Arc, Mutex};
 
 use bevy::app::{App, Plugin, Startup, Update};
-use bevy::prelude::{Commands, Component, Deref, DerefMut, IntoSystemConfigs, NonSend, Query, Res, Resource, Transform, Vec3, With};
-use bevy::render::render_resource::RenderPipeline;
-use bevy::render::renderer::{RenderAdapter, RenderDevice, RenderQueue};
+use bevy::prelude::{Commands, Component, Deref, DerefMut, IntoSystemConfigs, NonSend, Query, Res, Resource, Shader, Transform, Vec3, With};
+use bevy::render::render_resource::{PipelineCache, RenderPipeline, ShaderLoader};
+use bevy::render::{Render, RenderApp};
+use bevy::render::renderer::{RenderAdapter, RenderDevice, RenderInstance, RenderQueue};
 use bevy::tasks::IoTaskPool;
 use wasm_bindgen::prelude::wasm_bindgen;
 use web_sys::HtmlCanvasElement;
@@ -13,7 +14,6 @@ use wgpu::{Adapter, Device, include_wgsl, Instance, PowerPreference, Queue, Surf
 use akashic_rs::console_log;
 use akashic_rs::game::GAME;
 use akashic_rs::prelude::SpriteBuilder;
-use akashic_rs::random::RandomGenerator;
 use akashic_rs::resource_factory::ResourceFactory;
 
 use crate::command::IntoBundle;
@@ -39,12 +39,21 @@ pub struct Akashic3DPlugin;
 
 impl Plugin for Akashic3DPlugin {
     fn build(&self, app: &mut App) {
+        // app
+        //     // .init_asset::<Shader>()
+        //     .init_asset_loader::<ShaderLoader>();
         let future_device = Arc::new(Mutex::new(None));
         let resource_factory = GAME.resource_factory();
         app
             .insert_non_send_resource(AkashicResourceFactory(resource_factory.clone()))
             .insert_non_send_resource(FutureDevice(Arc::clone(&future_device)))
-            .add_systems(Startup, update.in_set(AkashicSystemSet::Despawn))
+            // .add_systems(Startup, (
+            //     setup,
+            //     setup,
+            //     setup,
+            //     setup,
+            //     setup,
+            // ))
             .add_systems(Update, move_system)
         ;
         IoTaskPool::get()
@@ -118,12 +127,26 @@ impl Plugin for Akashic3DPlugin {
     fn finish(&self, app: &mut App) {
         let Some(futures) = app.world.remove_non_send_resource::<FutureDevice>() else { return; };
         let (device, adapter, queue, instance, akashic_surface) = futures.lock().unwrap().take().unwrap();
+        let device = RenderDevice::from(device);
+        let adapter = RenderAdapter(Arc::new(adapter));
+        let queue = RenderQueue(Arc::new(queue));
 
-        app.insert_resource(RenderDevice::from(device));
-        app.insert_resource(RenderAdapter(Arc::new(adapter)));
-        app.insert_resource(RenderQueue(Arc::new(queue)));
-        app.insert_non_send_resource(instance);
-        app.insert_non_send_resource(akashic_surface);
+        let mut render = App::empty();
+
+        render.main_schedule_label = Box::new(Render);
+        render.insert_resource(device.clone());
+        render.insert_resource(adapter.clone());
+        render.insert_resource(queue.clone());
+        render.insert_resource(RenderInstance(instance));
+        // render.insert_non_send_resource(instance);
+
+        render.insert_resource(PipelineCache::new(device.clone()));
+
+        app.insert_resource(device);
+        app.insert_resource(adapter);
+        app.insert_resource(queue);
+        // app.insert_non_send_resource(instance);
+        // app.insert_non_send_resource(akashic_surface);
     }
 }
 
@@ -133,7 +156,7 @@ struct DADAD;
 #[derive(Resource, Deref)]
 pub struct PipeLineTest(Arc<RenderPipeline>);
 
-fn update(
+fn setup(
     mut commands: Commands,
     instance: NonSend<Instance>,
     device: Res<RenderDevice>,
@@ -142,15 +165,12 @@ fn update(
     factory: NonSend<AkashicResourceFactory>,
     akashic_surface: NonSend<AkashicSurface>,
 ) {
-    let size = 300.;
+    let size = 100.;
     let src = akashic_surface.0.clone();
     let canvas = src.canvas();
 
     let surface: Surface = instance.create_surface_from_canvas(canvas).unwrap();
     let surface_caps = surface.get_capabilities(&adapter);
-    // Shader code in this tutorial assumes an sRGB surface texture. Using a different
-    // one will result all the colors coming out darker. If you want to support non
-    // sRGB surfaces, you'll need to account for that when drawing to the frame.
     let surface_format = surface_caps.formats.iter()
         .copied()
         .find(|f| f.is_srgb())
@@ -158,8 +178,8 @@ fn update(
     let config = wgpu::SurfaceConfiguration {
         usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
         format: surface_format,
-        width: 1000,
-        height: 1000,
+        width: 100,
+        height: 100,
         present_mode: surface_caps.present_modes[0],
         alpha_mode: surface_caps.alpha_modes[0],
         view_formats: vec![],
@@ -221,8 +241,10 @@ fn update(
     commands.spawn(SpriteBuilder::new(src)
         .width(size)
         .height(size)
-        .build().into_bundle())
-        .insert(DADAD);
+        .x(GAME.random().generate() * 100.)
+        .y(GAME.random().generate() * 100.)
+        .build().into_bundle()
+    ).insert(DADAD);
     commands.insert_resource(SURFACE(surface));
     commands.insert_resource(PipeLineTest(Arc::new(pipeline)));
 }
@@ -243,11 +265,14 @@ fn move_system(
     queue: Res<RenderQueue>,
     mut sprite: Query<&mut Transform, With<DADAD>>,
     surface: Res<SURFACE>,
+    instance: NonSend<Instance>,
     pipe_line: Res<PipeLineTest>,
     random: Res<AkashicRandomGenerator>,
 ) {
-    let mut sprite = sprite.single_mut();
-    sprite.translation += Vec3::NEG_X * 1.2;
+    for mut t in sprite.iter_mut() {
+        t.translation += Vec3::X;
+    }
+
 
     let output = surface.get_current_texture().expect("Failed current texture");
     let view = output.texture.create_view(&wgpu::TextureViewDescriptor::default());
@@ -265,10 +290,10 @@ fn move_system(
                 resolve_target: None,
                 ops: wgpu::Operations {
                     load: wgpu::LoadOp::Clear(wgpu::Color {
-                        r: random.generate() as f64,
+                        r: 1. as f64,
                         g: random.generate() as f64,
-                        b:random.generate() as f64,
-                        a: random.generate() as f64,
+                        b: random.generate() as f64,
+                        a: 1. as f64,
                     }),
                     store: true,
                 },
@@ -283,63 +308,6 @@ fn move_system(
     output.present();
 }
 
-#[wasm_bindgen(getter_with_clone)]
-pub struct Param {
-    pub src: akashic_rs::asset::surface::Surface,
-    pub drawer: Drawer,
-}
-
-
-#[wasm_bindgen]
-#[derive(Clone)]
-pub struct Drawer {
-    device: Arc<Device>,
-    queue: Arc<Queue>,
-    surface: Arc<Surface>,
-}
-
-#[wasm_bindgen]
-impl Drawer {
-    pub fn render(&self) {
-        console_log!("RENDERER");
-
-        let surface = &self.surface;
-        let device = &self.device;
-        let queue = &self.queue;
-
-        let output = surface.get_current_texture().expect("Failed current texture");
-        let view = output.texture.create_view(&wgpu::TextureViewDescriptor::default());
-
-        let mut encoder = device
-            .create_command_encoder(&wgpu::CommandEncoderDescriptor {
-                label: Some("Render Encoder"),
-            });
-
-        {
-            let _render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                label: Some("Render Pass"),
-                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                    view: &view,
-                    resolve_target: None,
-                    ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(wgpu::Color {
-                            r: 1.0,
-                            g: 0.2,
-                            b: 0.3,
-                            a: 1.0,
-                        }),
-                        store: true,
-                    },
-                })],
-                depth_stencil_attachment: None,
-            });
-        }
-
-        queue.submit(iter::once(encoder.finish()));
-        output.present();
-    }
-}
-
 
 #[wasm_bindgen]
 extern {
@@ -351,7 +319,4 @@ extern {
 
     #[wasm_bindgen(js_namespace = g)]
     pub fn canvas_only(width: u32, height: u32) -> akashic_rs::asset::surface::Surface;
-
-    #[wasm_bindgen(js_namespace = g)]
-    pub fn create_3d(param: Param) -> akashic_rs::object2d::entity::sprite::Sprite;
 }

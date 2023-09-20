@@ -41,16 +41,11 @@ fn main() {
         .add_plugins((
             AssetPlugin::default(),
             ScenePlugin,
-            RenderPlugin{
-                wgpu_settings: WgpuSettings{
-                    backends: Some(Backends::GL),
-                    ..default()
-                }
-            },
+            RenderPlugin::default(),
             ImagePlugin::default(),
             CorePipelinePlugin,
-            PbrPlugin::default(),
-            MaterialPlugin::<CustomMaterial>::default()
+
+
         ))
         .add_systems(Startup, setup2)
         // .add_systems(Update, read)
@@ -60,21 +55,27 @@ fn main() {
 
 fn setup2(
     mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<CustomMaterial>>,
+
 ) {
     console_log!("DADA");
     // cube
-    commands.spawn(MaterialMeshBundle {
-        mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
-        transform: Transform::from_xyz(0.0, 0.5, 0.0),
-        material: materials.add(CustomMaterial {}),
-        ..default()
-    });
+    // commands.spawn(MaterialMeshBundle {
+    //     mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
+    //     transform: Transform::from_xyz(0.0, 0.5, 0.0),
+    //     material: materials.add(CustomMaterial {}),
+    //     ..default()
+    // });
 
     // camera
-    commands.spawn(Camera3dBundle {
-        transform: Transform::from_xyz(-2.0, 2.5, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
+    commands.spawn(Camera2dBundle::default());
+
+    commands.spawn(SpriteBundle {
+        sprite: Sprite {
+            color: Color::rgb(1., 0.25, 0.75),
+            custom_size: Some(Vec2::new(50.0, 100.0)),
+            ..default()
+        },
+        transform: Transform::from_translation(Vec3::new(-50., 0., 0.)),
         ..default()
     });
 }

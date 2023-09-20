@@ -10,7 +10,7 @@
     "update": "akashic-cli-scan asset && akashic-cli-scan globalScripts",
     "lint": "eslint -c .eslintrc.js \"src/**/*.ts\" --fix",
     "typescript-start": "rimraf ./script && tsc && akashic-cli-scan asset script && akashic-sandbox . -p 3001",
-    "nicolive": "akashic serve . --target-service nicolive",
+    "nicolive": "akashic serve . --target-service nicolive --port 3301",
     "export-zip": "rimraf game.zip && akashic-cli-export zip -o game.zip -s",
     "export-html": "rimraf game && akashic-cli-export html -o game",
     "test": "jest"
