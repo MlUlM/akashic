@@ -12,7 +12,7 @@ use wgpu::CommandEncoderDescriptor;
 use akashic_rs::console_log;
 use akashic_rs::game::GAME;
 
-use crate::plugin::akashic_3d::{AkashicSurface, ScreenSurface};
+use crate::plugin::akashic_3d::{AkashicSurface};
 
 pub struct Akashic3D2Plugin;
 

@@ -1,8 +1,8 @@
 use bevy::prelude::{FromWorld, Resource, World};
 use bevy::render::renderer::RenderDevice;
-use wgpu::{Buffer, FragmentState, include_wgsl, RenderPipeline, SurfaceConfiguration, VertexState};
+use wgpu::{Buffer, include_wgsl, RenderPipeline, TextureFormat};
 use wgpu::util::{BufferInitDescriptor, DeviceExt};
-use crate::plugin::akashic_3d::SurfaceConfig;
+
 
 #[derive(Resource)]
 pub struct BufferPipeline {
@@ -31,7 +31,7 @@ impl FromWorld for BufferPipeline {
         let renderer_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
             label: Some("Buffer Pipeline"),
             layout: Some(&pipeline_layout),
-          vertex: wgpu::VertexState {
+            vertex: wgpu::VertexState {
                 module: &shader,
                 entry_point: "vs_main",
                 buffers: &[BufferVertex::layout()],
@@ -40,7 +40,7 @@ impl FromWorld for BufferPipeline {
                 module: &shader,
                 entry_point: "fs_main",
                 targets: &[Some(wgpu::ColorTargetState {
-                    format: world.non_send_resource::<SurfaceConfig>().format,
+                    format: *world.non_send_resource::<TextureFormat>(),
                     blend: Some(wgpu::BlendState {
                         color: wgpu::BlendComponent::REPLACE,
                         alpha: wgpu::BlendComponent::REPLACE,
@@ -98,7 +98,7 @@ impl BufferVertex {
             array_stride: std::mem::size_of::<BufferVertex>() as wgpu::BufferAddress,
             step_mode: wgpu::VertexStepMode::Vertex,
             attributes: &[
-                 wgpu::VertexAttribute {
+                wgpu::VertexAttribute {
                     offset: 0,
                     shader_location: 0,
                     format: wgpu::VertexFormat::Float32x3,

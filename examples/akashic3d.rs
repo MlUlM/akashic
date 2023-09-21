@@ -5,11 +5,12 @@ use bevy::diagnostic::DiagnosticsPlugin;
 use bevy::input::InputPlugin;
 use bevy::log::LogPlugin;
 use bevy::prelude::*;
+use bevy::render::renderer::{RenderAdapter, RenderDevice};
 use bevy::scene::ScenePlugin;
 use bevy::time::TimePlugin;
 
 use bevy_akashic::akashic::prelude::SpriteBuilder;
-use bevy_akashic::plugin::akashic_3d::{Akashic3DPlugin, AkashicSurface};
+use bevy_akashic::plugin::akashic_3d::{Akashic3DPlugin, AkashicSurface, WgpuInstance};
 use bevy_akashic::prelude::*;
 
 #[derive(Component)]
@@ -20,7 +21,6 @@ fn main() {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
 
     App::new()
-
         .add_plugins((
             LogPlugin::default(),
             TaskPoolPlugin::default(),
@@ -46,23 +46,27 @@ fn main() {
             AkashicMinimumPlugins,
             Akashic3DPlugin,
         ))
-        .add_systems(Startup, setup2)
+        .add_systems(Startup, setup)
         .add_systems(Update, move_cube)
         .run();
 }
 
 
-fn setup2(
+fn setup(
     mut commands: Commands,
     akashic_surface: NonSend<AkashicSurface>,
+    instance: Res<WgpuInstance>,
+    adapter: Res<RenderAdapter>,
+    device: Res<RenderDevice>
 ) {
     commands.spawn(SpriteBuilder::new(akashic_surface.0.clone())
-        .width(100.)
-        .height(100.)
+        .width(200.)
+        .height(200.)
         .build()
         .into_bundle()
     )
-        .insert(Cube);
+        .insert(Cube)
+        .insert(instance.create_surface(Vec2::new(200., 200.), &akashic_surface, &adapter, &device));
 }
 
 
@@ -73,13 +77,3 @@ fn move_cube(
         transform.translation += Vec3::X;
     }
 }
-//
-// #[derive(AsBindGroup, TypeUuid, TypePath, Debug, Clone)]
-// #[uuid = "a3d71c04-d054-4946-80f8-ba6cfbc90cad"]
-// struct CustomMaterial {}
-//
-// impl Material for CustomMaterial {
-//     fn fragment_shader() -> ShaderRef {
-//         "shaders/animate_shader.wgsl".into()
-//     }
-// }

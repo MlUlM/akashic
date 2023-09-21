@@ -24,7 +24,6 @@ fn main() {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
 
     App::new()
-
         .add_plugins((
             LogPlugin::default(),
             TaskPoolPlugin::default(),

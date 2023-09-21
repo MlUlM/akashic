@@ -22,13 +22,13 @@ name = "state"
 path = "examples/state.rs"
 
 [[example]]
-name = "sample"
-path = "examples/sample.rs"
+name = "akashic3d"
+path = "examples/akashic3d.rs"
 
 
 [[example]]
-name = "akashic_3d_with_default"
-path = "examples/akashic_3d_with_default.rs"
+name = "akashic3d_with_default"
+path = "examples/akashic3d_with_default.rs"
 
 [workspace.dependencies]
 wasm-bindgen = { version = "0.2", features = ["serde-serialize"] }

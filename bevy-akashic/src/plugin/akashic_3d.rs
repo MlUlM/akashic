@@ -2,13 +2,16 @@ use std::iter;
 use std::sync::{Arc, Mutex};
 
 use bevy::app::{App, Plugin, Startup, Update};
+use bevy::math::Vec2;
 use bevy::prelude::{Commands, Component, Deref, DerefMut, NonSend, Query, Res, Resource, Transform, Vec3, With};
+use bevy::render::render_resource::TextureUsages;
 use bevy::render::renderer::{RenderAdapter, RenderDevice, RenderQueue};
 use bevy::tasks::IoTaskPool;
 use wasm_bindgen::prelude::wasm_bindgen;
 use web_sys::HtmlCanvasElement;
-use wgpu::{Adapter, Device, include_wgsl, Instance, PowerPreference, Queue, Surface, SurfaceConfiguration, TextureUsages};
+use wgpu::{Adapter, Device, Instance, PowerPreference, Queue, Surface, SurfaceConfiguration, TextureFormat};
 
+use akashic_rs::console_log;
 use akashic_rs::game::GAME;
 use akashic_rs::prelude::SpriteBuilder;
 use akashic_rs::resource_factory::ResourceFactory;
@@ -25,6 +28,7 @@ struct FutureDevice(Arc<Mutex<Option<(
     Queue,
     Instance,
     AkashicSurface,
+    TextureFormat
 )>>>);
 
 
@@ -34,6 +38,37 @@ struct AkashicResourceFactory(ResourceFactory);
 #[derive(Deref)]
 pub struct SurfaceConfig(pub SurfaceConfiguration);
 
+#[derive(Deref, Resource)]
+pub struct WgpuInstance(Instance);
+
+impl WgpuInstance {
+    pub fn create_surface(
+        &self,
+        size: Vec2,
+        akashic_surface: &AkashicSurface,
+        adapter: &RenderAdapter,
+        device: &RenderDevice,
+    ) -> EntitySurface {
+        let surface = self.create_surface_from_canvas(akashic_surface.canvas()).unwrap();
+        let surface_caps = surface.get_capabilities(&adapter);
+        let surface_format = surface_caps.formats.iter()
+            .copied()
+            .find(|f| f.is_srgb())
+            .unwrap_or(surface_caps.formats[0]);
+        let config = wgpu::SurfaceConfiguration {
+            usage: TextureUsages::RENDER_ATTACHMENT,
+            format: surface_format,
+            width: size.x as u32,
+            height: size.y as u32,
+            present_mode: surface_caps.present_modes[0],
+            alpha_mode: surface_caps.alpha_modes[0],
+            view_formats: vec![],
+        };
+        surface.configure(device.wgpu_device(), &config);
+
+        EntitySurface(surface)
+    }
+}
 
 pub struct Akashic3DPlugin;
 
@@ -82,7 +117,23 @@ impl Plugin for Akashic3DPlugin {
                     .unwrap();
 
                 let mut future_device = future_device.lock().unwrap();
-                *future_device = Some((device, adapter, queue, instance, AkashicSurface(akashic_surface)));
+                let surface_caps = surface.get_capabilities(&adapter);
+                let texture_format = surface_caps.formats.iter()
+                    .copied()
+                    .find(|f| f.is_srgb())
+                    .unwrap_or(surface_caps.formats[0]);
+                let config = wgpu::SurfaceConfiguration {
+                    usage: TextureUsages::RENDER_ATTACHMENT,
+                    format: texture_format,
+                    width: GAME.width() as u32,
+                    height: GAME.height() as u32,
+                    present_mode: surface_caps.present_modes[0],
+                    alpha_mode: surface_caps.alpha_modes[0],
+                    view_formats: vec![],
+                };
+                surface.configure(&device, &config);
+
+                *future_device = Some((device, adapter, queue, instance, AkashicSurface(akashic_surface), texture_format));
             })
             .detach();
     }
@@ -100,7 +151,7 @@ impl Plugin for Akashic3DPlugin {
 
     fn finish(&self, app: &mut App) {
         let Some(futures) = app.world.remove_non_send_resource::<FutureDevice>() else { return; };
-        let (device, adapter, queue, instance, akashic_surface) = futures.lock().unwrap().take().unwrap();
+        let (device, adapter, queue, instance, akashic_surface, texture_format) = futures.lock().unwrap().take().unwrap();
         let device = RenderDevice::from(device);
         let adapter = RenderAdapter(Arc::new(adapter));
         let queue = RenderQueue(Arc::new(queue));
@@ -112,10 +163,11 @@ impl Plugin for Akashic3DPlugin {
             .into_bundle()
         );
 
+        app.insert_non_send_resource(texture_format);
         app.insert_resource(device);
         app.insert_resource(adapter);
         app.insert_resource(queue);
-        app.insert_non_send_resource(instance);
+        app.insert_resource(WgpuInstance(instance));
         app.insert_non_send_resource(akashic_surface);
         app.init_resource::<BufferPipeline>();
     }
@@ -128,6 +180,9 @@ pub struct AkashicPipeline(Arc<wgpu::RenderPipeline>);
 fn setup(
     mut commands: Commands,
     akashic_surface: NonSend<AkashicSurface>,
+    instance: Res<WgpuInstance>,
+    adapter: Res<RenderAdapter>,
+    device: Res<RenderDevice>,
 ) {
     let size = 100.;
     let src = akashic_surface.clone();
@@ -139,76 +194,61 @@ fn setup(
         .y(GAME.random().generate() * 100.)
         .build().into_bundle()
     )
-        .insert(Cube);
+        .insert(Cube)
+        .insert(instance.create_surface(Vec2::new(200., 200.), &akashic_surface, &adapter, &device));
 }
 
 #[derive(Clone, Deref)]
 pub struct AkashicSurface(pub akashic_rs::asset::surface::Surface);
 
+#[derive(Component, Deref)]
+pub struct EntitySurface(pub Surface);
+
 #[derive(Component)]
 struct Cube;
 
 fn move_system(
-    mut sprite: Query<&mut Transform, With<Cube>>,
-    instance: NonSend<Instance>,
+    mut sprite: Query<(&mut Transform, &EntitySurface), With<Cube>>,
     device: Res<RenderDevice>,
     queue: Res<RenderQueue>,
-    akashic_surface: NonSend<AkashicSurface>,
     pipe_line: Res<BufferPipeline>,
-    adapter: Res<RenderAdapter>,
 ) {
-    for mut t in sprite.iter_mut() {
+    for (mut t, surface) in sprite.iter_mut() {
         t.translation += Vec3::X;
+        console_log!("MOVE");
+        let output = surface.get_current_texture().expect("Failed current texture");
+        let view = output.texture.create_view(&wgpu::TextureViewDescriptor::default());
+
+        let mut encoder = device
+            .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                label: Some("Render Encoder"),
+            });
+        {
+            let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                label: Some("Render Pass"),
+                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                    view: &view,
+                    resolve_target: None,
+                    ops: wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(wgpu::Color {
+                            r: 0.1,
+                            g: 0.2,
+                            b: 1.,
+                            a: 1.0,
+                        }),
+                        store: true,
+                    },
+                })],
+                depth_stencil_attachment: None,
+            });
+            render_pass.set_pipeline(&pipe_line.renderer_pipeline);
+            render_pass.set_vertex_buffer(0, pipe_line.vertex_buffer.slice(..));
+            render_pass.draw(0..pipe_line.num_vertices, 0..1);
+        }
+
+        queue.submit(iter::once(encoder.finish()));
+        output.present();
     }
-
-    let surface = instance.create_surface_from_canvas(akashic_surface.canvas()).unwrap();
-    let surface_caps = surface.get_capabilities(&adapter);
-    let surface_format = surface_caps.formats.iter()
-        .copied()
-        .find(|f| f.is_srgb())
-        .unwrap_or(surface_caps.formats[0]);
-    let config = wgpu::SurfaceConfiguration {
-        usage: TextureUsages::RENDER_ATTACHMENT,
-        format: surface_format,
-        width: 100,
-        height: 100,
-        present_mode: surface_caps.present_modes[0],
-        alpha_mode: surface_caps.alpha_modes[0],
-        view_formats: vec![],
-    };
-    surface.configure(device.wgpu_device(), &config);
-    let output = surface.get_current_texture().expect("Failed current texture");
-    let view = output.texture.create_view(&wgpu::TextureViewDescriptor::default());
-
-    let mut encoder = device
-        .create_command_encoder(&wgpu::CommandEncoderDescriptor {
-            label: Some("Render Encoder"),
-        });
-    {
-        let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-            label: Some("Render Pass"),
-            color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                view: &view,
-                resolve_target: None,
-                ops: wgpu::Operations {
-                    load: wgpu::LoadOp::Clear(wgpu::Color {
-                        r: 0.1,
-                        g: 0.2,
-                        b: 1.,
-                        a: 1.0,
-                    }),
-                    store: true,
-                },
-            })],
-            depth_stencil_attachment: None,
-        });
-        render_pass.set_pipeline(&pipe_line.renderer_pipeline);
-        render_pass.set_vertex_buffer(0, pipe_line.vertex_buffer.slice(..));
-        render_pass.draw(0..pipe_line.num_vertices, 0..1);
-    }
-
-    queue.submit(iter::once(encoder.finish()));
-    output.present();
 }
 
 
