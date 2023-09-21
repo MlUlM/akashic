@@ -3,7 +3,6 @@ use bevy::render::renderer::RenderDevice;
 use wgpu::{Buffer, include_wgsl, RenderPipeline, TextureFormat};
 use wgpu::util::{BufferInitDescriptor, DeviceExt};
 
-
 #[derive(Resource)]
 pub struct BufferPipeline {
     pub renderer_pipeline: RenderPipeline,
@@ -19,9 +18,8 @@ impl FromWorld for BufferPipeline {
         let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
             label: Some("Vertex Buffer"),
             contents: bytemuck::cast_slice(VERTICES),
-            usage: wgpu::BufferUsages::VERTEX,
+            usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST,
         });
-
         let pipeline_layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
                 label: Some("Buffer Pipeline Layout"),
@@ -83,7 +81,7 @@ impl FromWorld for BufferPipeline {
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, bytemuck::Pod, bytemuck::Zeroable)]
-struct BufferVertex {
+pub struct BufferVertex {
     position: [f32; 3],
     color: [f32; 3],
 }
@@ -114,7 +112,16 @@ impl BufferVertex {
 }
 
 const VERTICES: &[BufferVertex] = &[
-    BufferVertex { position: [0.0, 0.5, 0.0], color: [1.0, 0.0, 0.0] },
+    BufferVertex { position: [0.0, 0.5, 1.0], color: [1.0, 0.0, 0.0] },
     BufferVertex { position: [-0.5, -0.5, 0.0], color: [0.0, 1.0, 0.0] },
-    BufferVertex { position: [0.5, -0.5, 0.0], color: [0.0, 0.0, 1.0] },
+    BufferVertex { position: [0.5, -0.5, -1.], color: [0.0, 0.0, 1.0] },
 ];
+
+
+pub(crate) fn vertex(z: f32) -> Vec<BufferVertex> {
+    vec![
+        BufferVertex { position: [0.0, 0.5, 0.], color: [1.0, 0.0, 0.0] },
+        BufferVertex { position: [-0.5, -0.5, z], color: [0.0, 1.0, 0.0] },
+        BufferVertex { position: [0.5, -0.5, -z], color: [0.0, 0.0, 1.0] },
+    ]
+}

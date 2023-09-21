@@ -2,22 +2,22 @@ use std::iter;
 use std::sync::{Arc, Mutex};
 
 use bevy::app::{App, Plugin, Startup, Update};
-use bevy::math::Vec2;
-use bevy::prelude::{Commands, Component, Deref, DerefMut, NonSend, Query, Res, Resource, Transform, Vec3, With};
+use bevy::math::{Vec2, Vec3};
+use bevy::prelude::{Commands, Component, Deref, DerefMut, NonSend, Query, Res, Resource, Transform, With};
 use bevy::render::render_resource::TextureUsages;
 use bevy::render::renderer::{RenderAdapter, RenderDevice, RenderQueue};
 use bevy::tasks::IoTaskPool;
+use bevy::time::Time;
 use wasm_bindgen::prelude::wasm_bindgen;
 use web_sys::HtmlCanvasElement;
 use wgpu::{Adapter, Device, Instance, PowerPreference, Queue, Surface, SurfaceConfiguration, TextureFormat};
 
-use akashic_rs::console_log;
 use akashic_rs::game::GAME;
 use akashic_rs::prelude::SpriteBuilder;
 use akashic_rs::resource_factory::ResourceFactory;
 
 use crate::command::IntoBundle;
-use crate::plugin::akashic_3d::buffer::BufferPipeline;
+use crate::plugin::akashic_3d::buffer::{BufferPipeline, vertex};
 
 mod buffer;
 
@@ -82,10 +82,7 @@ impl Plugin for Akashic3DPlugin {
             .insert_non_send_resource(FutureDevice(Arc::clone(&future_device)))
             .add_systems(Startup, (
                 setup,
-                setup,
-                setup,
-                setup,
-                setup,
+
             ))
             .add_systems(Update, move_system);
 
@@ -155,13 +152,13 @@ impl Plugin for Akashic3DPlugin {
         let device = RenderDevice::from(device);
         let adapter = RenderAdapter(Arc::new(adapter));
         let queue = RenderQueue(Arc::new(queue));
-
-        app.world.spawn(SpriteBuilder::new(akashic_surface.0.clone())
-            .width(GAME.width())
-            .height(GAME.height())
-            .build()
-            .into_bundle()
-        );
+        //
+        // app.world.spawn(SpriteBuilder::new(akashic_surface.0.clone())
+        //     .width(GAME.width())
+        //     .height(GAME.height())
+        //     .build()
+        //     .into_bundle()
+        // );
 
         app.insert_non_send_resource(texture_format);
         app.insert_resource(device);
@@ -184,7 +181,7 @@ fn setup(
     adapter: Res<RenderAdapter>,
     device: Res<RenderDevice>,
 ) {
-    let size = 100.;
+    let size = 300.;
     let src = akashic_surface.clone();
 
     commands.spawn(SpriteBuilder::new(src.0)
@@ -195,7 +192,7 @@ fn setup(
         .build().into_bundle()
     )
         .insert(Cube)
-        .insert(instance.create_surface(Vec2::new(200., 200.), &akashic_surface, &adapter, &device));
+        .insert(instance.create_surface(Vec2::new(size, size), &akashic_surface, &adapter, &device));
 }
 
 #[derive(Clone, Deref)]
@@ -214,8 +211,9 @@ fn move_system(
     pipe_line: Res<BufferPipeline>,
 ) {
     for (mut t, surface) in sprite.iter_mut() {
+        t.rotate_z(1. / 20.);
         t.translation += Vec3::X;
-        console_log!("MOVE");
+
         let output = surface.get_current_texture().expect("Failed current texture");
         let view = output.texture.create_view(&wgpu::TextureViewDescriptor::default());
 
@@ -234,7 +232,7 @@ fn move_system(
                             r: 0.1,
                             g: 0.2,
                             b: 1.,
-                            a: 1.0,
+                            a: 0.0,
                         }),
                         store: true,
                     },
@@ -246,6 +244,7 @@ fn move_system(
             render_pass.draw(0..pipe_line.num_vertices, 0..1);
         }
 
+        queue.write_buffer(&pipe_line.vertex_buffer, 0, bytemuck::cast_slice(&vertex(t.rotation.z)));
         queue.submit(iter::once(encoder.finish()));
         output.present();
     }

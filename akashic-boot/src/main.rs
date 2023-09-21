@@ -105,6 +105,7 @@ fn convert_to_main_js() {
         }}
 
         module.exports = () => {{
+            g.E.prototype.z = 0
             g.isNode = () => (typeof window == 'undefined')
             g.canvas_only = (width, height) => {{
                 const surface = g.game.resourceFactory.createSurface(width, height)
@@ -134,6 +135,7 @@ fn convert_to_main_js() {
                 id: entity.id,
                 x: entity.x,
                 y: entity.y,
+                z: entity.z,
                 width: entity.width,
                 height: entity.height,
                 angle: entity.angle,
@@ -161,8 +163,9 @@ fn convert_to_main_js() {
             const halfWidth =  g.game.width / 2
             const halfHeight = g.game.height / 2
 
-            g.feedEntityProperties = (entity, x, y, angle, width, height, scaleX, scaleY, anchorX, anchorY, touchable, visible) => {{
+            g.feedEntityProperties = (entity, x, y, z, angle, width, height, scaleX, scaleY, anchorX, anchorY, touchable, visible) => {{
                 entity.angle = angle;
+                entity.z = z
                 entity.resizeTo(width, height)
                 const parent = entity.parent
 

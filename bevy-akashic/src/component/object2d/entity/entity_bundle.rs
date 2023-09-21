@@ -31,7 +31,7 @@ impl AkashicEntityBundle {
         let size = AkashicEntitySize::new(Vec2::new(properties.width, properties.height));
         let transform = TransformBundle::from_transform(Transform::from_xyz(properties.x, properties.y, 0.)
             .with_rotation(Quat::from_rotation_z(properties.angle))
-            .with_scale(Vec3::new(properties.scale_x, properties.scale_y, 0.)));
+            .with_scale(Vec3::new(properties.scale_x, properties.scale_y, properties.y)));
         let anchor = Anchor::new(properties.anchor_x, properties.anchor_y);
         let touchable = Touchable(properties.touchable);
         let visibility = if properties.visible { Visibility::Visible } else { Visibility::Hidden };
@@ -79,6 +79,8 @@ struct EntityProperties {
     pub x: f32,
 
     pub y: f32,
+
+    pub z: f32,
 
     pub width: f32,
 
