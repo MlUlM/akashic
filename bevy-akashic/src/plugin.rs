@@ -1,9 +1,6 @@
 use bevy::app::{PluginGroup, PluginGroupBuilder};
-use bevy::prelude::TransformPlugin;
 
 use feed::label::AkashicLabelPlugin;
-use crate::plugin::akashic_3d::Akashic3DPlugin;
-use crate::plugin::winit::AkashicWinitPlugin;
 
 use crate::plugin::append::AkashicAppendEntityPlugin;
 use crate::plugin::asset::AkashicAssetPlugin;
@@ -18,7 +15,6 @@ use crate::plugin::player_id::PlayerIdPlugin;
 use crate::plugin::random::AkashicRandomPlugin;
 use crate::plugin::scene::AkashicScenePlugin;
 use crate::plugin::system_set::AkashicSystemSetPlugin;
-use crate::plugin::webgl::AkashicWebGlPlugin;
 use crate::prelude::AkashicScheduleRunnerPlugin;
 
 pub mod schedule_runner;
@@ -38,10 +34,6 @@ pub mod scene;
 
 #[cfg(feature = "3d")]
 pub mod akashic_3d;
-
-
-#[cfg(feature = "3d")]
-pub mod webgl;
 
 #[cfg(feature = "3d")]
 pub mod winit;
@@ -84,9 +76,11 @@ impl PluginGroup for AkashicMinimumPlugins {
             .add(AkashicLabelPlugin)
             .add(FilledRectPlugin)
             .add(AkashicDespawnPlugin)
-             // .add(Akashic3DPlugin)
+            // .add(Akashic3DPlugin)
             // .add(AkashicWinitPlugin)
             .add(AkashicScheduleRunnerPlugin)
     }
 }
+
+
 
