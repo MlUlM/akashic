@@ -6,14 +6,13 @@ use bevy::diagnostic::DiagnosticsPlugin;
 use bevy::input::InputPlugin;
 use bevy::log::LogPlugin;
 use bevy::prelude::*;
-use bevy::render::render_phase::RenderPhase;
 use bevy::render::RenderPlugin;
 use bevy::scene::ScenePlugin;
 use bevy::time::TimePlugin;
 
 use bevy_akashic::akashic::prelude::SpriteBuilder;
+use bevy_akashic::plugin::akashic_3d2::Akashic3D2Plugin;
 use bevy_akashic::plugin::akashic_3d::AkashicSurface;
-use bevy_akashic::plugin::akashic_3d2::{Akashic3D2Plugin, PhaseAkashic};
 use bevy_akashic::plugin::winit::AkashicWinitPlugin;
 use bevy_akashic::prelude::*;
 
@@ -58,7 +57,7 @@ fn main() {
         .add_systems(Startup, (
             setup2,
             setup2
-            ))
+        ))
         .add_systems(Update, move_cube)
         .run();
 }
@@ -76,8 +75,7 @@ fn setup2(
         .build()
         .into_bundle()
     )
-        .insert(Cube)
-        .insert(RenderPhase::<PhaseAkashic>::default());
+        .insert(Cube);
 }
 
 

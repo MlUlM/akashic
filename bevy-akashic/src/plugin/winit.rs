@@ -1,9 +1,16 @@
+use std::mem::forget;
+
 use bevy::app::App;
 use bevy::ecs::system::SystemState;
 use bevy::prelude::{Entity, FromWorld, Msaa, Plugin, Query, With};
+use bevy::render::RenderApp;
 use bevy::window::{RawHandleWrapper, Window};
 use raw_window_handle::{RawDisplayHandle, RawWindowHandle, WebDisplayHandle, WebWindowHandle};
 use web_sys::window;
+use winit::event_loop::EventLoopBuilder;
+use winit::platform::web::WindowBuilderExtWebSys;
+use winit::window::WindowBuilder;
+use akashic_rs::console_log;
 
 use akashic_rs::game::GAME;
 use akashic_rs::prelude::SpriteBuilder;
@@ -23,11 +30,11 @@ impl Plugin for AkashicWinitPlugin {
         //     .with_canvas(Some(surface.canvas()))
         //     .build(&event_loop)
         //     .unwrap();
-        // let sprite = SpriteBuilder::new(surface.clone())
-        //     .width(GAME.width())
-        //     .height(GAME.height())
-        //     .build();
-        // app.world.spawn(sprite.into_bundle());
+        let sprite = SpriteBuilder::new(surface.clone())
+            .width(GAME.width())
+            .height(GAME.height())
+            .build();
+       app.world.spawn(sprite.into_bundle());
 
         let mut state: SystemState<
             Query<Entity, With<Window>>
@@ -48,5 +55,7 @@ impl Plugin for AkashicWinitPlugin {
                 display_handle: RawDisplayHandle::Web(display_handle),
             });
         app.world.insert_non_send_resource(AkashicSurface(surface));
+
+        console_log!("finished akashic winit");
     }
 }

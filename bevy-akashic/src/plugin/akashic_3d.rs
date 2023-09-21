@@ -16,10 +16,11 @@ use akashic_rs::prelude::SpriteBuilder;
 use akashic_rs::resource_factory::ResourceFactory;
 
 use crate::command::IntoBundle;
-use crate::plugin::akashic_3d::buffer::{BufferPipeline, vertex, VERTICES};
+use crate::plugin::akashic_3d::buffer::{BufferPipeline, vertex};
 
 mod buffer;
 mod texture;
+mod sprite;
 
 #[derive(Default, Deref, DerefMut)]
 struct FutureDevice(Arc<Mutex<Option<(
