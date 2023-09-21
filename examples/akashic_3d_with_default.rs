@@ -1,15 +1,19 @@
 use std::panic;
 
 use bevy::a11y::AccessibilityPlugin;
+use bevy::core_pipeline::CorePipelinePlugin;
 use bevy::diagnostic::DiagnosticsPlugin;
 use bevy::input::InputPlugin;
 use bevy::log::LogPlugin;
 use bevy::prelude::*;
+use bevy::render::RenderPlugin;
 use bevy::scene::ScenePlugin;
 use bevy::time::TimePlugin;
 
 use bevy_akashic::akashic::prelude::SpriteBuilder;
-use bevy_akashic::plugin::akashic_3d::{Akashic3DPlugin, AkashicSurface};
+use bevy_akashic::plugin::akashic_3d::AkashicSurface;
+use bevy_akashic::plugin::akashic_3d2::Akashic3D2Plugin;
+use bevy_akashic::plugin::winit::AkashicWinitPlugin;
 use bevy_akashic::prelude::*;
 
 #[derive(Component)]
@@ -33,6 +37,7 @@ fn main() {
                 }),
                 ..default()
             },
+            AkashicWinitPlugin,
             TimePlugin,
             TransformPlugin,
             HierarchyPlugin,
@@ -43,8 +48,12 @@ fn main() {
         .add_plugins((
             AssetPlugin::default(),
             ScenePlugin,
+            RenderPlugin::default(),
+            ImagePlugin::default(),
+            CorePipelinePlugin,
             AkashicMinimumPlugins,
-            Akashic3DPlugin,
+            Akashic3D2Plugin,
+            // PbrPlugin::default()
         ))
         .add_systems(Startup, setup2)
         .add_systems(Update, move_cube)

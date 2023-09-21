@@ -5,12 +5,11 @@ use bevy::window::{RawHandleWrapper, Window};
 use raw_window_handle::{RawDisplayHandle, RawWindowHandle, WebDisplayHandle, WebWindowHandle};
 use web_sys::window;
 
-use akashic_rs::console_log;
 use akashic_rs::game::GAME;
 use akashic_rs::prelude::SpriteBuilder;
 
 use crate::command::IntoBundle;
-use crate::plugin::akashic_3d::canvas_only;
+use crate::plugin::akashic_3d::{AkashicSurface, canvas_only};
 
 pub struct AkashicWinitPlugin;
 
@@ -48,8 +47,6 @@ impl Plugin for AkashicWinitPlugin {
                 window_handle: RawWindowHandle::Web(window_handle),
                 display_handle: RawDisplayHandle::Web(display_handle),
             });
-        // app.world.insert_non_send_resource(AkashicSurface(surface));
-
-        console_log!("finished akashic winit");
+        app.world.insert_non_send_resource(AkashicSurface(surface));
     }
 }
