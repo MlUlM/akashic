@@ -4,10 +4,9 @@ use std::sync::{Arc, Mutex};
 use bevy::app::{App, Plugin, Startup, Update};
 use bevy::math::{Vec2, Vec3};
 use bevy::prelude::{Commands, Component, Deref, DerefMut, NonSend, Query, Res, Resource, Transform, With};
-use bevy::render::render_resource::TextureUsages;
+use bevy::render::render_resource::{IndexFormat, TextureUsages};
 use bevy::render::renderer::{RenderAdapter, RenderDevice, RenderQueue};
 use bevy::tasks::IoTaskPool;
-use bevy::time::Time;
 use wasm_bindgen::prelude::wasm_bindgen;
 use web_sys::HtmlCanvasElement;
 use wgpu::{Adapter, Device, Instance, PowerPreference, Queue, Surface, SurfaceConfiguration, TextureFormat};
@@ -17,9 +16,10 @@ use akashic_rs::prelude::SpriteBuilder;
 use akashic_rs::resource_factory::ResourceFactory;
 
 use crate::command::IntoBundle;
-use crate::plugin::akashic_3d::buffer::{BufferPipeline, vertex};
+use crate::plugin::akashic_3d::buffer::{BufferPipeline, vertex, VERTICES};
 
 mod buffer;
+mod texture;
 
 #[derive(Default, Deref, DerefMut)]
 struct FutureDevice(Arc<Mutex<Option<(
@@ -82,7 +82,6 @@ impl Plugin for Akashic3DPlugin {
             .insert_non_send_resource(FutureDevice(Arc::clone(&future_device)))
             .add_systems(Startup, (
                 setup,
-
             ))
             .add_systems(Update, move_system);
 
@@ -152,13 +151,6 @@ impl Plugin for Akashic3DPlugin {
         let device = RenderDevice::from(device);
         let adapter = RenderAdapter(Arc::new(adapter));
         let queue = RenderQueue(Arc::new(queue));
-        //
-        // app.world.spawn(SpriteBuilder::new(akashic_surface.0.clone())
-        //     .width(GAME.width())
-        //     .height(GAME.height())
-        //     .build()
-        //     .into_bundle()
-        // );
 
         app.insert_non_send_resource(texture_format);
         app.insert_resource(device);
@@ -211,7 +203,7 @@ fn move_system(
     pipe_line: Res<BufferPipeline>,
 ) {
     for (mut t, surface) in sprite.iter_mut() {
-        t.rotate_z(1. / 20.);
+        t.rotate_y(1. / 20.);
         t.translation += Vec3::X;
 
         let output = surface.get_current_texture().expect("Failed current texture");
@@ -239,12 +231,15 @@ fn move_system(
                 })],
                 depth_stencil_attachment: None,
             });
+
+            queue.write_buffer(&pipe_line.vertex_buffer, 0, bytemuck::cast_slice(&vertex(t.rotation.y)));
             render_pass.set_pipeline(&pipe_line.renderer_pipeline);
+            render_pass.set_bind_group(0, &pipe_line.bind_group, &[]);
+            render_pass.set_index_buffer(pipe_line.index_buffer.slice(..), IndexFormat::Uint16);
             render_pass.set_vertex_buffer(0, pipe_line.vertex_buffer.slice(..));
-            render_pass.draw(0..pipe_line.num_vertices, 0..1);
+            render_pass.draw_indexed(0..pipe_line.num_vertices, 0, 0..1);
         }
 
-        queue.write_buffer(&pipe_line.vertex_buffer, 0, bytemuck::cast_slice(&vertex(t.rotation.z)));
         queue.submit(iter::once(encoder.finish()));
         output.present();
     }

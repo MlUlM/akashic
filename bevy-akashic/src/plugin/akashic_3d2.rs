@@ -1,18 +1,24 @@
 use bevy::app::App;
 use bevy::asset::{Handle, load_internal_asset};
+use bevy::core_pipeline::core_3d::Transparent3d;
+use bevy::ecs::query::ROQueryItem;
+use bevy::ecs::system::lifetimeless::{Read, SRes};
+use bevy::ecs::system::SystemParamItem;
 use bevy::prelude::*;
 use bevy::reflect::TypeUuid;
-use bevy::render::{render_graph, RenderApp};
 use bevy::render::extract_resource::ExtractResource;
 use bevy::render::render_graph::RenderGraph;
-use bevy::render::render_resource::{BindGroup, BlendComponent, BlendState, CachedRenderPipelineId, ColorTargetState, ColorWrites, FragmentState, PipelineCache, PrimitiveState, RenderPipelineDescriptor, VertexState};
-use bevy::render::renderer::{RenderAdapter, RenderContext, RenderDevice, RenderInstance, RenderQueue};
-use wgpu::CommandEncoderDescriptor;
+use bevy::render::render_phase::{AddRenderCommand, DrawFunctionId, DrawFunctions, PhaseItem, RenderCommand, RenderCommandResult, RenderPhase, TrackedRenderPass};
+use bevy::render::render_resource::{BindGroup, BlendComponent, BlendState, CachedRenderPipelineId, ColorTargetState, ColorWrites, FragmentState, PipelineCache, PrimitiveState, RawRenderPipelineDescriptor, RenderPipeline, RenderPipelineDescriptor, VertexState};
+use bevy::render::{Extract, Render, RenderApp, RenderSet};
+use bevy::render::renderer::{RenderAdapter, RenderDevice, RenderInstance};
+use bevy::render::view::{ExtractedView, VisibleEntities};
+use wgpu::include_wgsl;
 
 use akashic_rs::console_log;
 use akashic_rs::game::GAME;
 
-use crate::plugin::akashic_3d::{AkashicSurface};
+use crate::plugin::akashic_3d::{AkashicSurface, EntitySurface};
 
 pub struct Akashic3D2Plugin;
 
@@ -28,16 +34,13 @@ impl Plugin for Akashic3D2Plugin {
         let akashic_surface = app.world.non_send_resource::<AkashicSurface>().clone();
 
 
-        let render_app = app.sub_app_mut(RenderApp);
+        let render_app = app.sub_app_mut(RenderApp)
+              .add_systems(ExtractSchedule, extract_core_2d_camera_phases)
+            .init_resource::<DrawFunctions<PhaseAkashic>>()
+            .add_render_command::<PhaseAkashic, AkashicRenderCommand>()
+            .add_systems(Render, queue_colored_mesh2d.in_set(RenderSet::Queue));
+
         render_app.world.insert_non_send_resource(akashic_surface);
-        let mut render_graph = render_app.world.resource_mut::<RenderGraph>();
-
-        render_graph.add_node("game_of_life", GameOfLifeNode::default());
-        //
-        // render_app.add_systems(Render, queue_bind_group.in_set(RenderSet::Queue));
-
-
-        console_log!("build");
     }
 
     fn finish(&self, app: &mut App) {
@@ -90,6 +93,7 @@ impl FromWorld for GameOfLifePipeline {
         };
         surface.configure(device.wgpu_device(), &config);
         let pipeline_cache = world.resource::<PipelineCache>();
+        let shader = device.create_shader_module(include_wgsl!("shader.wgsl"));
         let pipeline_id = pipeline_cache.queue_render_pipeline(RenderPipelineDescriptor {
             label: Some("Render Pipeline".into()),
             layout: vec![],
@@ -143,72 +147,95 @@ impl FromWorld for GameOfLifePipeline {
 }
 
 
+pub struct PhaseAkashic {
+    pub entity: Entity,
+    pub pipeline: CachedRenderPipelineId,
+    pub draw_function: DrawFunctionId,
+}
+
+impl PhaseItem for PhaseAkashic {
+    type SortKey = usize;
+
+    #[inline]
+    fn entity(&self) -> Entity {
+        self.entity
+    }
+
+    #[inline]
+    fn sort_key(&self) -> Self::SortKey {
+        self.pipeline.id()
+    }
+
+    #[inline]
+    fn draw_function(&self) -> DrawFunctionId {
+        self.draw_function
+    }
+
+    #[inline]
+    fn sort(items: &mut [Self]) {
+        items.sort_by_key(|item| item.sort_key());
+    }
+}
+
 #[derive(Default)]
-struct GameOfLifeNode {
+struct AkashicRenderCommand {
     // query: QueryState<&'static ViewTarget, With<ExtractedView>>,
 }
 
-// impl FromWorld for GameOfLifeNode {
-//     fn from_world(world: &mut World) -> Self {
-//         Self {
-//             query: QueryState::new(world),
-//         }
-//     }
-// }
 
+impl<P: PhaseItem> RenderCommand<P> for AkashicRenderCommand {
+    type Param = (SRes<GameOfLifePipeline>, SRes<PipelineCache>);
+    type ViewWorldQuery = ();
+    type ItemWorldQuery = Read<EntitySurface>;
 
-impl render_graph::Node for GameOfLifeNode {
-    fn update(&mut self, world: &mut World) {
-        // console_log!("update");
-        // self.query.update_archetypes(world);
-    }
+    #[inline]
+    fn render<'w>(
+        _item: &P,
+        _view: (),
+        _: ROQueryItem<'w, Self::ItemWorldQuery>,
+        (pipeline, cache): SystemParamItem<'w, '_, Self::Param>,
+        pass: &mut TrackedRenderPass<'w>,
+    ) -> RenderCommandResult {
+        console_log!("RENDER");
 
-    fn run(
-        &self,
-        graph_context: &mut render_graph::RenderGraphContext,
-        render_context: &mut RenderContext,
-        world: &World,
-    ) -> Result<(), render_graph::NodeRunError> {
-        console_log!("run");
-        let pipeline = world.resource::<GameOfLifePipeline>();
-        let device = world.resource::<RenderDevice>();
-        let queue = world.resource::<RenderQueue>();
-        let pipeline_cache = world.resource::<PipelineCache>();
-        let output = pipeline.surface.get_current_texture().expect("Failed current texture");
-        let view = output.texture.create_view(&wgpu::TextureViewDescriptor::default());
+        pass.set_render_pipeline(cache.into_inner().get_render_pipeline(pipeline.into_inner().pipeline_id).unwrap());
+        pass.draw(0..3, 0..1);
 
-        let mut encoder = device.create_command_encoder(&CommandEncoderDescriptor::default());
-        {
-            let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                label: Some("Render Pass"),
-                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                    view: &view,
-                    resolve_target: None,
-                    ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(wgpu::Color {
-                            r: GAME.random().generate() as f64,
-                            g: GAME.random().generate() as f64,
-                            b: GAME.random().generate() as f64,
-                            a: 1.,
-                        }),
-                        store: true,
-                    },
-                })],
-                depth_stencil_attachment: None,
-            });
-            let Some(pipeline) = pipeline_cache.get_render_pipeline(pipeline.pipeline_id) else {
-                console_log!("pipeline nothing");
-                return Ok(());
-            };
-            console_log!("pipeline");
-            render_pass.set_pipeline(pipeline);
-            render_pass.draw(0..3, 0..1);
-            console_log!(" pipeline dada");
-        }
-        queue.submit(std::iter::once(encoder.finish()));
-        output.present();
-
-        Ok(())
+        RenderCommandResult::Success
     }
 }
 
+#[allow(clippy::too_many_arguments)]
+pub fn queue_colored_mesh2d(
+    transparent_draw_functions: Res<DrawFunctions<PhaseAkashic>>,
+    colored_mesh2d_pipeline: Res<GameOfLifePipeline>,
+    mut views: Query<(
+        Entity,
+        &mut RenderPhase<PhaseAkashic>,
+    )>,
+) {
+  console_log!("queue_colored_mesh2d");
+    // Iterate each view (a camera is a view)
+    for (visible_entities, mut transparent_phase) in &mut views {
+
+        let draw_colored_mesh2d = transparent_draw_functions.read().id::<AkashicRenderCommand>();
+
+        // Queue all entities visible to that view
+      transparent_phase.add(PhaseAkashic {
+                    entity: visible_entities,
+                    draw_function: draw_colored_mesh2d,
+                    pipeline: colored_mesh2d_pipeline.pipeline_id,
+                });
+    }
+}
+
+pub fn extract_core_2d_camera_phases(
+    mut commands: Commands,
+    cameras_2d: Extract<Query<(Entity), With<Camera2d>>>,
+) {
+    for (entity) in &cameras_2d {
+        commands
+                .get_or_spawn(entity)
+                .insert(RenderPhase::<PhaseAkashic>::default());
+    }
+}

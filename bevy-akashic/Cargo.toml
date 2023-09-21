@@ -7,6 +7,7 @@ edition = "2021"
 [lib]
 
 [dependencies]
+anyhow = { workspace = true }
 akashic-rs = { path = "../akashic-rs" }
 bevy = { workspace = true }
 wasm-bindgen = { workspace = true }
@@ -27,6 +28,7 @@ web-sys = { version = "0.3.64", optional = true, features = [
 winit = "0.28.6"
 raw-window-handle = "0.5.2"
 bytemuck = { version = "1.14.0", features = ["derive"] }
+image = { version = "0.24.7", features = ["png"] }
 
 
 [features]
