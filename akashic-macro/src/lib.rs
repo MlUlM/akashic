@@ -16,8 +16,6 @@ use crate::scene::expand_scene;
 
 mod trigger;
 mod scene;
-mod children;
-mod modified;
 mod asset;
 mod param;
 mod event;

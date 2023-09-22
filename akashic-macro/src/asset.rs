@@ -1,19 +1,9 @@
 use proc_macro::TokenStream;
-
-use proc_macro2::Ident;
 use quote::quote;
 use syn::__private::TokenStream2;
 use syn::ItemStruct;
 
-pub fn expand_getter_asset_accessor(entity_name: &Ident) -> TokenStream2 {
-    quote! {
-        #[wasm_bindgen]
-        extern "C"{
-            #[wasm_bindgen(js_namespace = g, method, getter)]
-            pub fn asset(this: &#entity_name) -> crate::asset::AssetAccessor;
-        }
-    }
-}
+
 
 
 #[inline]
