@@ -4,7 +4,6 @@ use std::process::Command;
 
 use clap::{arg, Parser};
 
-
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
@@ -91,7 +90,7 @@ fn convert_to_main_js() {
         .replace("input = fetch(input)", "input = fetch(g.game._assetManager.configuration.wasm.path)")
         .replace("Object.assign(__wbg_init, { initSync }, __exports);", "Object.assign(__wbg_init, { initSync }, __exports)();");
 
-    fs::write("akashic/script/main.js", format!(r#"
+    fs::write("game/script/main.js", format!(r#"
         class CustomSprite extends g.Sprite {{
             constructor(params) {{
                 super(params);
@@ -224,7 +223,7 @@ fn convert_to_main_js() {
 
 
 fn move_akashic_wasm() {
-    fs::rename("out/akashic_bg.wasm", "akashic/script/akashic.wasm").unwrap();
+    fs::rename("out/akashic_bg.wasm", "game/script/akashic.wasm").unwrap();
 }
 
 
@@ -237,7 +236,7 @@ fn akashic_serve() {
     Command::new("npx.cmd")
         .arg("akashic")
         .arg("serve")
-        .arg("akashic")
+        .arg("game")
         .args(["--target-service", "nicolive"])
         .status()
         .unwrap();
@@ -247,7 +246,7 @@ fn akashic_serve() {
 fn akashic_sandbox() {
     Command::new("npx.cmd")
         .arg("akashic-sandbox")
-        .arg("akashic")
+        .arg("game")
         .status()
         .unwrap();
 }

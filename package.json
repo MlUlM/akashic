@@ -6,8 +6,6 @@
   "scripts": {
     "dev-serve": "akashic-boot --release --example akashic3d -t serve",
     "dev-3d-default": "akashic-boot --release --example akashic3d_with_default -t serve",
-    "sandbox": "akashic-sandbox akashic",
-    "serve": "akashic serve akashic --target-service nicolive",
     "boot-update": "cargo install --path akashic-boot"
   },
   "dependencies": {
