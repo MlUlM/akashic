@@ -27,27 +27,37 @@ pub mod prelude {
 }
 
 
+/// アカシックエンティティオブジェクトが実装するプロパティやメソッド群を提供します。
+///
+/// アカシックエンジンにおける[E](https://akashic-games.github.io/akashic-engine/v3/classes/E.html)を表し、
+/// [`E`]を継承する全てのエンティティ([`FilledRect`](filled_rect::FilledRect)や[`Sprite`](sprite::Sprite)など)もこのトレイトが実装されます。
+///
+///
+/// より詳細な情報は[akashic-engineのリファレンス](https://akashic-games.github.io/akashic-engine/v3/classes/E.html)を参照してください。
 pub trait EntityObject2D: Object2D + PointDownHandler + PointMoveHandler + PointMoveHandler + UpdateHandler + Into<AkashicEntity> {
     /// このエンティティに割り振られる Game 単位で一意のID。(ただし local が真である場合を除く)
     fn id(&self) -> isize;
 
 
-    /// このエンティティが属する[`Scene`]を取得する。
+    /// このエンティティが属する[`Scene`](crate::scene::Scene)を取得します。
     fn scene(&self) -> Scene;
 
 
-    /// このエンティティが属する[`Game`](crate::game::Game)を返す。
+    /// このエンティティが属する[`Game`](crate::game::Game)を返します。
     fn game(&self) -> Game;
 
 
-    /// 自身の子となるエンティティをすべて取得する。
+    /// 自身の子となるエンティティをすべて取得します。
     fn children(&self) -> Box<[AkashicEntity]>;
 
 
+    /// 自身の親を返します。
+    ///
+    /// 親が存在しない場合、Noneが返されます。
     fn parent(&self) -> Option<Parent>;
 
 
-    /// 指定されたエンティティが自身の子に属す場合、そのエンティティを削除する。
+    /// 指定されたエンティティが自身の子に属す場合、そのエンティティを削除します。
     ///
     /// ## Panics
     ///
@@ -55,7 +65,7 @@ pub trait EntityObject2D: Object2D + PointDownHandler + PointMoveHandler + Point
     fn remove_child(&self, child_entity: impl Into<AkashicEntity>);
 
 
-    /// 自身を親から削除する。
+    /// 自身を親から削除します。
     ///
     /// ## Panics
     ///
@@ -66,57 +76,77 @@ pub trait EntityObject2D: Object2D + PointDownHandler + PointMoveHandler + Point
     /// TODO: shader_programメソッドを定義する
     // fn shader_program(&self);
 
-    /// プレイヤーにとって触れられるオブジェクトであるかを表す。
+    /// プレイヤーにとって触れられるオブジェクトであるかを表します。
     ///
-    /// この値が偽である場合、ポインティングイベントの対象にならない。 初期値は false である。
+    /// 値がfalseである場合、ポインティングイベントの対象になりません。
+    /// デフォルトはfalseです。
     ///
-    /// E の他のプロパティと異なり、この値の変更後に this.modified() を呼び出す必要はない。
+    /// [`EntityObject2D`](EntityObject2D)の他のプロパティと異なり、この値の変更後に this.modified() を呼び出す必要はありません。
     fn touchable(&self) -> bool;
 
 
-    /// 子を追加する。
+    /// 子を追加します。
     fn append(&self, child: impl Into<AkashicEntity>);
 
 
-    /// 子を挿入する。
+    /// 子をtargetの直前に挿入します。
     ///
-    /// target がthis の子でない場合、append(e) と同じ動作となる。
+    /// targetが自身の子でない場合、append(e) と同じ動作となります。
     fn insert_before(&self, child: impl Into<AkashicEntity>, target: Option<AkashicEntity>);
 
 
-    /// このエンティティを破棄する。
+    /// このエンティティを破棄します。
     fn destroy(&self);
 
 
-    /// このエンティティが破棄済みであるかを返す
+    /// このエンティティが破棄済みであるかを返します。
     fn destroyed(&self) -> bool;
 
 
-    /// このエンティティが表示状態であるか?
+    /// このエンティティが表示状態であるかを返します。
     fn visible(&self) -> bool;
 
 
-    /// このEを非表示状態にする。
+    /// 自身を表示状態にします。
+    fn show(&self);
+
+
+    /// 自身を非表示状態にします。
     ///
-    /// this.show() が呼ばれるまでの間、このエンティティは各 Renderer によって描画されない。 また Game#findPointSource() で返されることもなくなる。 this#pointDown, pointMove, pointUp なども通常の方法ではfireされなくなる。
+    /// [`show`](EntityObject2D::show) が呼ばれるまでの間、このエンティティは各 Renderer によって描画されず、Game#findPointSource() で返されることもなくなります。
+    ///
+    /// this#pointDown, pointMove, pointUp なども通常の方法ではfireされなくなります。
     fn hide(&self);
 
-    /// このエンティティに対する変更をエンジンに通知する。
+
+    /// このエンティティに対する変更をエンジンに通知します。
     ///
-    /// このメソッドの呼び出し後、 this に対する変更が各 Renderer の描画に反映される。 ただし逆は真ではない。すなわち、再描画は他の要因によって行われることもある。 ゲーム開発者は、このメソッドを呼び出していないことをもって再描画が行われていないことを仮定してはならない。
+    /// このメソッドの呼び出し後、 自身に対する変更が各Rendererの描画に反映されます。
     ///
-    /// 本メソッドは、このオブジェクトの Object2D 由来のプロパティ (x, y, angle など) を変更した場合にも呼びだす必要がある。 本メソッドは、描画キャッシュの無効化処理を含まない。描画キャッシュを持つエンティティは、このメソッドとは別に invalidate() を提供している。 描画キャッシュの無効化も必要な場合は、このメソッドではなくそちらを呼び出す必要がある。
+    /// ## Notes
+    ///
+    /// - このオブジェクトの Object2D 由来のプロパティ (x, y, angle など) を変更した場合にも呼びだす必要があります。
+    ///
+    /// - このメソッドは描画キャッシュの無効化処理を含みません。描画キャッシュを持つエンティティは、このメソッドとは別に[`invalidate`](cacheable::CacheableEntityObject2D::invalidate) が提供されており、
+    /// そちらを呼び出す必要があります。
     fn modified(&self);
 
+
+    /// 自身を表すJsValueをクローンして返します。
     fn as_js_value(&self) -> JsValue;
 
 
+    /// 自身を表すJsValueの不変参照を返します。
     fn js_value_ref(&self) -> &JsValue;
 }
 
 
 #[wasm_bindgen(js_namespace = g)]
+
 extern {
+    /// アカシックエンティティの基底クラスを表します。
+    ///
+    /// これはアカシックの[`E`](https://akashic-games.github.io/akashic-engine/v3/classes/E.html)と同等のものです。
     #[derive(Clone, EntityObject2D, Debug)]
     #[wasm_bindgen(js_name = "E")]
     pub type AkashicEntity;
@@ -134,6 +164,7 @@ impl Default for AkashicEntity {
 }
 
 
+#[non_exhaustive]
 #[object_e_parameter]
 #[wasm_bindgen(getter_with_clone)]
 #[derive(Default, Debug, Builder, EParamSetters)]

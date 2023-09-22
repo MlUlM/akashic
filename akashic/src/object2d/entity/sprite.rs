@@ -15,9 +15,6 @@ extern "C" {
 
     #[wasm_bindgen(js_namespace = g, constructor)]
     pub fn new(param: SpriteParam) -> Sprite;
-
-    #[wasm_bindgen(js_namespace = g, method, getter)]
-    pub fn local(this: &Sprite) -> String;
 }
 
 
