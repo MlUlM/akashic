@@ -1,8 +1,8 @@
 use bevy::app::{App, Plugin};
 use bevy::prelude::{Commands, EventWriter, PreUpdate, Res};
 
-use akashic_rs::game::GAME;
-use akashic_rs::trigger::join::JoinHandler;
+use akashic::game::GAME;
+use akashic::trigger::join::JoinHandler;
 
 use crate::event::AkashicEventQueue;
 use crate::event::join::JoinEvent;

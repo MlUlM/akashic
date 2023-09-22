@@ -9,8 +9,8 @@ use bevy::render::render_resource::{BindGroup, BlendComponent, BlendState, Cache
 use bevy::render::renderer::{RenderAdapter, RenderContext, RenderDevice, RenderInstance, RenderQueue};
 use wgpu::CommandEncoderDescriptor;
 
-use akashic_rs::console_log;
-use akashic_rs::game::GAME;
+use akashic::console_log;
+use akashic::game::GAME;
 
 use crate::plugin::akashic_3d::{AkashicSurface};
 

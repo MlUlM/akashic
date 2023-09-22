@@ -1,6 +1,6 @@
 use bevy::prelude::{Component, Deref};
 
-use akashic_rs::event::point::point_move::PointMoveEvent;
+use akashic::event::point::point_move::PointMoveEvent;
 
 use crate::event::event_inner::PointDeltaEventInner;
 

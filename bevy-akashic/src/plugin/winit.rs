@@ -5,9 +5,9 @@ use bevy::window::{RawHandleWrapper, Window};
 use raw_window_handle::{RawDisplayHandle, RawWindowHandle, WebDisplayHandle, WebWindowHandle};
 use web_sys::window;
 
-use akashic_rs::console_log;
-use akashic_rs::game::GAME;
-use akashic_rs::prelude::SpriteBuilder;
+use akashic::console_log;
+use akashic::game::GAME;
+use akashic::prelude::SpriteBuilder;
 
 use crate::command::IntoBundle;
 use crate::plugin::akashic_3d::{AkashicSurface, canvas_only};

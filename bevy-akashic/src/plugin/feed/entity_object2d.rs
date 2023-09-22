@@ -3,9 +3,8 @@ use std::f32::consts::PI;
 use bevy::app::{App, Last, Plugin};
 use bevy::prelude::{Changed, IntoSystemConfigs, Or, Query, Transform, Visibility};
 use wasm_bindgen::prelude::wasm_bindgen;
-use akashic_rs::console_log;
 
-use akashic_rs::prelude::AkashicEntity;
+use akashic::prelude::AkashicEntity;
 
 use crate::component::object2d::anchor::Anchor;
 use crate::component::object2d::entity_size::AkashicEntitySize;

@@ -1,7 +1,7 @@
 use bevy::prelude::Resource;
 
-use akashic_rs::game::GAME;
-use akashic_rs::game::vars::game_state::GameState;
+use akashic::game::GAME;
+use akashic::game::vars::game_state::GameState;
 
 #[derive(Debug, Resource)]
 pub struct GameScore {

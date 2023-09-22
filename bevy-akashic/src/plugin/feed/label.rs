@@ -1,7 +1,7 @@
 use bevy::app::{App, Last};
 use bevy::prelude::{Changed, IntoSystemConfigs, Plugin, Query};
 use wasm_bindgen::prelude::wasm_bindgen;
-use akashic_rs::prelude::AkashicEntity;
+use akashic::prelude::AkashicEntity;
 use crate::component::NativeAkashicEntity;
 
 use crate::component::text::AkashicText;

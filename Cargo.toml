@@ -5,7 +5,7 @@ edition = "2021"
 
 [workspace]
 members = [
-    "akashic-rs",
+    "akashic",
     "akashic-macro",
     "bevy-akashic",
     "akashic-boot"

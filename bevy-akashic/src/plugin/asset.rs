@@ -3,10 +3,10 @@ use std::collections::HashMap;
 use bevy::app::{App, Plugin};
 use bevy::prelude::Resource;
 
-use akashic_rs::asset::audio::AudioAsset;
-use akashic_rs::asset::image::ImageAsset;
-use akashic_rs::asset::text::TextAsset;
-use akashic_rs::prelude::GAME;
+use akashic::asset::audio::AudioAsset;
+use akashic::asset::image::ImageAsset;
+use akashic::asset::text::TextAsset;
+use akashic::prelude::GAME;
 
 use crate::SharedObject;
 
@@ -70,16 +70,16 @@ impl AkashicAssetServer {
 
 
     #[inline]
-    pub fn text_by_id(&self, asset_id: &str) -> TextAsset{
+    pub fn text_by_id(&self, asset_id: &str) -> TextAsset {
         self.get_text_by_id(asset_id).unwrap_or_else(|| panic!("Not found text asset; id={asset_id}"))
     }
 
 
-    pub fn get_text_by_id(&self, asset_id: &str) -> Option<TextAsset>{
+    pub fn get_text_by_id(&self, asset_id: &str) -> Option<TextAsset> {
         self
             .texts
             .get(asset_id)
-            .map(|o|o.lock().clone())
+            .map(|o| o.lock().clone())
     }
 }
 
@@ -97,7 +97,7 @@ impl Default for AkashicAssetServer {
 }
 
 #[allow(clippy::boxed_local)]
-fn convert_to_hash_map<A: akashic_rs::asset::Asset + Clone>(assets: Box<[A]>) -> HashMap<String, SharedObject<A>> {
+fn convert_to_hash_map<A: akashic::asset::Asset + Clone>(assets: Box<[A]>) -> HashMap<String, SharedObject<A>> {
     assets
         .iter()
         .map(|asset| (asset.id(), asset.clone()))

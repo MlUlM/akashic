@@ -1,5 +1,5 @@
 use bevy::prelude::{Component, Deref};
-use akashic_rs::event::point::point_up::PointUpEvent;
+use akashic::event::point::point_up::PointUpEvent;
 
 use crate::event::event_inner::PointDeltaEventInner;
 
@@ -9,7 +9,7 @@ pub struct OnPointUp(PointDeltaEventInner<PointUpEvent>);
 
 impl OnPointUp {
     #[inline(always)]
-    pub(crate) fn new(native_event: PointUpEvent) -> Self{
+    pub(crate) fn new(native_event: PointUpEvent) -> Self {
         Self(PointDeltaEventInner::new(native_event))
     }
 }

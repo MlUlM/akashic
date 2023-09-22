@@ -1,7 +1,5 @@
-
-
 use bevy::math::{Vec3};
-use akashic_rs::prelude::CommonOffset;
+use akashic::prelude::CommonOffset;
 
 pub trait AsVec3 {
     fn as_vec3(&self) -> Vec3;

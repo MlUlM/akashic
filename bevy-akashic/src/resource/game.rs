@@ -2,7 +2,7 @@ use bevy::math::Vec2;
 use bevy::prelude::Resource;
 use once_cell::sync::OnceCell;
 
-use akashic_rs::prelude::GAME;
+use akashic::prelude::GAME;
 
 // TODO: 遅延初期化?
 #[derive(Resource, Default)]
@@ -13,7 +13,7 @@ pub struct GameInfo {
     fps: OnceCell<f32>,
     self_id: OnceCell<Option<String>>,
     half_width: OnceCell<f32>,
-    half_height: OnceCell<f32>
+    half_height: OnceCell<f32>,
 }
 
 
@@ -50,17 +50,17 @@ impl GameInfo {
     pub fn age(&self) -> f32 {
         GAME.age()
     }
-    
-    
+
+
     #[inline]
-    pub fn half_width(&self) -> f32{
-        *self.half_width.get_or_init(||self.width() / 2.)
+    pub fn half_width(&self) -> f32 {
+        *self.half_width.get_or_init(|| self.width() / 2.)
     }
-    
-    
+
+
     #[inline]
-    pub fn half_height(&self) -> f32{
-        *self.half_height.get_or_init(||self.height() / 2.)
+    pub fn half_height(&self) -> f32 {
+        *self.half_height.get_or_init(|| self.height() / 2.)
     }
 }
 

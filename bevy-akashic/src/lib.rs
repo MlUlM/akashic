@@ -5,8 +5,8 @@ use std::sync::{Arc, Mutex, MutexGuard};
 use bevy::prelude::Deref;
 use wasm_bindgen::JsValue;
 
-use akashic_rs::game::GAME;
-use akashic_rs::prelude::{Scene, SceneParameterObject};
+use akashic::game::GAME;
+use akashic::prelude::{Scene, SceneParameterObject};
 
 pub mod command;
 
@@ -17,9 +17,7 @@ pub mod extensions;
 pub mod resource;
 pub mod run_criteria;
 
-pub mod akashic {
-    pub use akashic_rs::*;
-}
+pub use akashic::*;
 
 pub mod prelude {
     pub use crate::command::prelude::*;

@@ -1,4 +1,4 @@
-use akashic_rs::asset::audio::AudioAsset;
+use akashic::asset::audio::AudioAsset;
 use crate::SharedObject;
 
 mod play;

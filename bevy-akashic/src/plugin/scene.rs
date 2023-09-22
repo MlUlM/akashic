@@ -1,8 +1,8 @@
 use bevy::app::{App, Plugin, PreStartup};
 use bevy::prelude::{Commands, Deref, NonSend};
 
-use akashic_rs::game::GAME;
-use akashic_rs::prelude::Scene;
+use akashic::game::GAME;
+use akashic::prelude::Scene;
 
 use crate::prelude::scene::GameScene;
 

@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use bevy::app::{App, Last, Plugin};
 use bevy::prelude::{Added, Children, Deref, DerefMut, Entity, IntoSystemConfigs, NonSend, NonSendMut, Parent, Query};
 
-use akashic_rs::prelude::EntityObject2D;
+use akashic::prelude::EntityObject2D;
 
 use crate::plugin::scene::NativeScene;
 use crate::plugin::system_set::AkashicSystemSet;
@@ -45,5 +45,5 @@ fn append_akashic_entities_system(
 
 
 #[derive(Default, Deref, DerefMut)]
-pub(crate) struct AkashicEntityMap(pub(crate) HashMap<Entity, akashic_rs::object2d::entity::AkashicEntity>);
+pub(crate) struct AkashicEntityMap(pub(crate) HashMap<Entity, akashic::object2d::entity::AkashicEntity>);
 

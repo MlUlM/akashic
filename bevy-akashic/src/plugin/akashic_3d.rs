@@ -11,9 +11,9 @@ use wasm_bindgen::prelude::wasm_bindgen;
 use web_sys::HtmlCanvasElement;
 use wgpu::{Adapter, Device, Instance, PowerPreference, Queue, Surface, SurfaceConfiguration, TextureFormat};
 
-use akashic_rs::game::GAME;
-use akashic_rs::prelude::SpriteBuilder;
-use akashic_rs::resource_factory::ResourceFactory;
+use akashic::game::GAME;
+use akashic::prelude::SpriteBuilder;
+use akashic::resource_factory::ResourceFactory;
 
 use crate::command::IntoBundle;
 use crate::plugin::akashic_3d::buffer::{BufferPipeline, vertex};
@@ -189,7 +189,7 @@ fn setup(
 }
 
 #[derive(Clone, Deref)]
-pub struct AkashicSurface(pub akashic_rs::asset::surface::Surface);
+pub struct AkashicSurface(pub akashic::asset::surface::Surface);
 
 #[derive(Component, Deref)]
 pub struct EntitySurface(pub Surface);
@@ -256,5 +256,5 @@ extern {
     pub fn canvas(width: u32, height: u32) -> HtmlCanvasElement;
 
     #[wasm_bindgen(js_namespace = g)]
-    pub fn canvas_only(width: u32, height: u32) -> akashic_rs::asset::surface::Surface;
+    pub fn canvas_only(width: u32, height: u32) -> akashic::asset::surface::Surface;
 }

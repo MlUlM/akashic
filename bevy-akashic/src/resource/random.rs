@@ -1,14 +1,13 @@
 use std::fmt::Debug;
 use bevy::prelude::{Deref, Resource};
-use akashic_rs::game::GAME;
-use akashic_rs::random::RandomGenerator;
+use akashic::game::GAME;
+use akashic::random::RandomGenerator;
 
 #[derive(Resource, Debug, Deref)]
 pub struct AkashicRandomGenerator(RandomGenerator);
 
 
-
-impl Default for AkashicRandomGenerator{
+impl Default for AkashicRandomGenerator {
     fn default() -> Self {
         Self(GAME.random())
     }
@@ -19,15 +18,15 @@ impl Default for AkashicRandomGenerator{
 ///
 /// シングルスレッドにおける実行環境のみを想定しているため将来的にマルチスレッドに対応された場合
 /// 修正する必要があります。
-unsafe impl Send for AkashicRandomGenerator{}
-unsafe impl Sync for AkashicRandomGenerator{}
+unsafe impl Send for AkashicRandomGenerator {}
 
+unsafe impl Sync for AkashicRandomGenerator {}
 
 
 #[derive(Resource, Debug, Deref)]
 pub struct AkashicLocalRandomGenerator(RandomGenerator);
 
-impl Default for AkashicLocalRandomGenerator{
+impl Default for AkashicLocalRandomGenerator {
     fn default() -> Self {
         Self(GAME.local_random())
     }
@@ -38,5 +37,6 @@ impl Default for AkashicLocalRandomGenerator{
 ///
 /// シングルスレッドにおける実行環境のみを想定しているため将来的にマルチスレッドに対応された場合
 /// 修正する必要があります。
-unsafe impl Send for AkashicLocalRandomGenerator{}
-unsafe impl Sync for AkashicLocalRandomGenerator{}
+unsafe impl Send for AkashicLocalRandomGenerator {}
+
+unsafe impl Sync for AkashicLocalRandomGenerator {}

@@ -15,7 +15,7 @@ pub struct AkashicEntityId(pub(crate) isize);
 
 
 #[derive(Component, Clone, Debug, Deref)]
-pub(crate) struct NativeAkashicEntity(pub(crate) akashic_rs::object2d::entity::AkashicEntity);
+pub(crate) struct NativeAkashicEntity(pub(crate) akashic::object2d::entity::AkashicEntity);
 
 
 unsafe impl Send for NativeAkashicEntity {}

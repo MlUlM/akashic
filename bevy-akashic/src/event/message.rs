@@ -4,8 +4,8 @@ use bevy::reflect::erased_serde::__private::serde;
 use bevy::reflect::erased_serde::__private::serde::de::DeserializeOwned;
 use bevy::reflect::erased_serde::__private::serde::Serialize;
 
-use akashic_rs::game::GAME;
-use akashic_rs::prelude::MessageHandler;
+use akashic::game::GAME;
+use akashic::prelude::MessageHandler;
 
 use crate::event::AkashicEventQueue;
 use crate::event::message::raise_event::RaiseEvent;

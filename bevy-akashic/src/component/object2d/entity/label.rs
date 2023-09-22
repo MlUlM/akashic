@@ -1,6 +1,6 @@
 use bevy::prelude::{Bundle, Component};
 
-use akashic_rs::object2d::entity::cacheable::label::Label;
+use akashic::object2d::entity::cacheable::label::Label;
 
 use crate::command::IntoBundle;
 use crate::component::text::{AkashicText, AkashicTextStyle};
@@ -10,7 +10,7 @@ use crate::prelude::object2d::entity::entity_bundle::AkashicEntityBundle;
 pub struct AkashicLabelBundle {
     basic: AkashicEntityBundle,
     text: AkashicText,
-    native_label: NativeAkashicLabel
+    native_label: NativeAkashicLabel,
 }
 
 
@@ -27,7 +27,7 @@ impl IntoBundle<AkashicLabelBundle> for Label {
                 },
             },
             basic: AkashicEntityBundle::new(self.clone()),
-            native_label: NativeAkashicLabel(self)
+            native_label: NativeAkashicLabel(self),
         }
     }
 }

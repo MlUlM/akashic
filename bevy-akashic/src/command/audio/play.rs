@@ -1,6 +1,6 @@
 use bevy::ecs::system::Command;
 use bevy::prelude::{Commands, World};
-use akashic_rs::asset::audio::AudioAsset;
+use akashic::asset::audio::AudioAsset;
 
 use crate::command::audio::SharedAudioAsset;
 use crate::SharedObject;

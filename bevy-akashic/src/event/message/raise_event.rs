@@ -3,8 +3,8 @@ use std::fmt::{Debug, Formatter};
 use bevy::prelude::Event;
 use once_cell::sync::OnceCell;
 
-use akashic_rs::event::message::MessageEvent;
-use akashic_rs::player::Player;
+use akashic::event::message::MessageEvent;
+use akashic::player::Player;
 
 #[derive(Event)]
 pub struct RaiseEvent<E> {

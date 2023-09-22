@@ -2,7 +2,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 
 use bevy::app::{App, Plugin};
 
-use akashic_rs::prelude::UpdateHandler;
+use akashic::prelude::UpdateHandler;
 
 use crate::plugin::scene::NativeScene;
 

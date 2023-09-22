@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_rs::prelude::{AkashicEntity, EntityObject2D};
+use akashic::prelude::{AkashicEntity, EntityObject2D};
 
 use crate::command::IntoBundle;
 use crate::component::{AkashicEntityId, NativeAkashicEntity};
@@ -50,7 +50,7 @@ impl AkashicEntityBundle {
 }
 
 
-impl IntoBundle<AkashicEntityBundle> for akashic_rs::object2d::entity::AkashicEntity {
+impl IntoBundle<AkashicEntityBundle> for akashic::object2d::entity::AkashicEntity {
     #[inline(always)]
     fn into_bundle(self) -> AkashicEntityBundle {
         AkashicEntityBundle::new(self)

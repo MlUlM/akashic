@@ -5,13 +5,12 @@ use crate::component::object2d::entity::entity_bundle::AkashicEntityBundle;
 
 #[derive(Debug, Bundle)]
 pub struct AkashicSpriteBundle {
-    basic: AkashicEntityBundle
+    basic: AkashicEntityBundle,
 }
 
 
-impl IntoBundle<AkashicSpriteBundle> for akashic_rs::prelude::Sprite {
+impl IntoBundle<AkashicSpriteBundle> for akashic::prelude::Sprite {
     fn into_bundle(self) -> AkashicSpriteBundle {
-
         AkashicSpriteBundle {
             basic: AkashicEntityBundle::new(self)
         }

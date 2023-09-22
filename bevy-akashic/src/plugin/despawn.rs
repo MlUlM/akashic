@@ -1,6 +1,6 @@
 use bevy::app::{App, Last, Plugin};
 use bevy::prelude::{NonSendMut, RemovedComponents};
-use akashic_rs::prelude::EntityObject2D;
+use akashic::prelude::EntityObject2D;
 
 use crate::plugin::append::AkashicEntityMap;
 use crate::prelude::AkashicEntityId;

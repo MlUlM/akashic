@@ -8,7 +8,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = { workspace = true }
-akashic-rs = { path = "../akashic-rs" }
+akashic = { path = "../akashic" }
 bevy = { workspace = true }
 wasm-bindgen = { workspace = true }
 auto-delegate = { workspace = true }

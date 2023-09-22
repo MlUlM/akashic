@@ -1,8 +1,8 @@
 use bevy::prelude::{Component, Vec3};
 use once_cell::sync::OnceCell;
 
-use akashic_rs::player::Player;
-use akashic_rs::trigger::{PointDeltaEventBase, PointEventBase};
+use akashic::player::Player;
+use akashic::trigger::{PointDeltaEventBase, PointEventBase};
 
 #[derive(Debug, Component)]
 pub struct PointEventInner<E: PointEventBase> {

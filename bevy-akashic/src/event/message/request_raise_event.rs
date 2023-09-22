@@ -2,9 +2,9 @@ use bevy::ecs::system::SystemParam;
 use bevy::prelude::Event;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
-use akashic_rs::event::message::MessageEvent;
-use akashic_rs::game::GAME;
-use akashic_rs::player::Player;
+use akashic::event::message::MessageEvent;
+use akashic::game::GAME;
+use akashic::player::Player;
 
 #[derive(Event, Debug, Default)]
 pub struct RequestRaiseEvent<E: Serialize + DeserializeOwned + 'static> {

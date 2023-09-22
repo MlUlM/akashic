@@ -1,9 +1,8 @@
 use bevy::prelude::Component;
 
 
-
 #[derive(Component, Debug)]
-pub struct GameScene(pub(crate) akashic_rs::scene::Scene);
+pub struct GameScene(pub(crate) akashic::scene::Scene);
 
 
 unsafe impl Send for GameScene {}
