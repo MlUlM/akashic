@@ -1,0 +1,1 @@
+pub type OptionNumber = Option<f32>;
