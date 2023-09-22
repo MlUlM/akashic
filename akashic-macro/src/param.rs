@@ -6,9 +6,6 @@ use syn::__private::TokenStream2;
 use syn::FieldsNamed;
 use syn::parse::Parser;
 
-pub mod object_2d_parameter;
-pub mod e_parameter;
-
 
 #[inline]
 pub(crate) fn push_if_need(fields: &mut FieldsNamed, field_name: &str, token: TokenStream2) {

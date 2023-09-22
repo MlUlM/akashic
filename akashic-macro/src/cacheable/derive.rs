@@ -4,10 +4,10 @@ use quote::quote;
 use syn::__private::TokenStream2;
 use syn::ItemStruct;
 
-use crate::object2d::entity::try_expand_entity;
+use crate::entity::derive::try_expand_entity_derive;
 
 #[inline]
-pub fn expand_cacheable(input: TokenStream) -> TokenStream {
+pub fn expand_cacheable_derive(input: TokenStream) -> TokenStream {
     try_expand_cacheable(input)
         .unwrap_or_else(|e| e.into_compile_error())
         .into()
@@ -15,7 +15,7 @@ pub fn expand_cacheable(input: TokenStream) -> TokenStream {
 
 
 fn try_expand_cacheable(input: TokenStream) -> syn::Result<TokenStream2> {
-    let entity = try_expand_entity(input.clone())?;
+    let entity = try_expand_entity_derive(input.clone())?;
     let item = syn::parse::<ItemStruct>(input)?;
     let entity_name = item.ident;
 

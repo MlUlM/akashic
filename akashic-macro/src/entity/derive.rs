@@ -1,25 +1,21 @@
 use proc_macro::TokenStream;
-
 use proc_macro2::Ident;
 use quote::quote;
 use syn::__private::TokenStream2;
 use syn::ItemStruct;
-
-use crate::object2d::try_expand_object_2d;
+use crate::object2d::derive::try_expand_object_2d_derive;
 use crate::trigger::expand_entity_triggers;
 
-pub mod cacheable;
-
 #[inline]
-pub fn expand_entity(input: TokenStream) -> TokenStream {
-    try_expand_entity(input)
+pub fn expand_entity_derive(input: TokenStream) -> TokenStream {
+    try_expand_entity_derive(input)
         .unwrap_or_else(|e| e.into_compile_error())
         .into()
 }
 
 
-fn try_expand_entity(input: TokenStream) -> syn::Result<TokenStream2> {
-    let object_2d = try_expand_object_2d(input.clone())?;
+pub(crate) fn try_expand_entity_derive(input: TokenStream) -> syn::Result<TokenStream2> {
+    let object_2d = try_expand_object_2d_derive(input.clone())?;
     let entity_name = syn::parse::<ItemStruct>(input)?.ident;
     let entity = expand_impl_entity(&entity_name);
     let triggers = expand_entity_triggers(&entity_name)?;
@@ -37,7 +33,7 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
 
     quote! {
         #impl_into_entity
-        
+
         #[wasm_bindgen(js_namespace=g)]
         extern "C"{
             #[wasm_bindgen(method, getter, js_name=id)]

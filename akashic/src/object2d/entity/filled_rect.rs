@@ -2,7 +2,7 @@ use derive_builder::Builder;
 
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::{EntityObject2D, EParamSetters, object_e_parameter};
+use akashic_macro::{EntityObject2D, object_e_parameter};
 
 
 #[wasm_bindgen(js_namespace = g)]
@@ -25,7 +25,7 @@ extern "C" {
 #[object_e_parameter]
 #[allow(unused_variables)]
 #[wasm_bindgen(getter_with_clone)]
-#[derive(Builder, EParamSetters)]
+#[derive(Builder)]
 #[builder(
 name="FilledRectBuilder",
 custom_constructor,

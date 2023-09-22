@@ -2,7 +2,7 @@ use derive_builder::Builder;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::{CacheableEntity, EParamSetters, object_e_parameter};
+use akashic_macro::{CacheableEntity, object_e_parameter};
 
 use crate::error::AkashicError;
 use crate::font::Font;
@@ -58,10 +58,11 @@ impl Label {
     }
 }
 
+
 #[non_exhaustive]
 #[object_e_parameter]
 #[wasm_bindgen(getter_with_clone)]
-#[derive(Debug, Builder, EParamSetters)]
+#[derive(Debug, Builder)]
 #[builder(
 name = "LabelBuilder",
 custom_constructor,
@@ -109,7 +110,7 @@ impl LabelBuilder {
             ..LabelBuilder::empty()
         }
     }
-    
+
     pub fn text_alignment(&mut self, text_alignment: TextAlignment) -> &mut Self {
         self.text_align = Some(Some(text_alignment.into()));
         self

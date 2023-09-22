@@ -2,16 +2,20 @@ use derive_builder::Builder;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::{EntityObject2D, EParamSetters, object_e_parameter};
+use akashic_macro::{EntityObject2D, object_e_parameter};
 
 use crate::asset::src::Src;
 use crate::util::into_js_value::IntoJsValue;
 
 #[wasm_bindgen]
 extern "C" {
+    /// 画面を描画するエンティティを表します。
+    ///
+    /// これはアカシックの[`Sprite`](https://akashic-games.github.io/akashic-engine/v3/classes/Sprite.html)と同様のものです。
     #[wasm_bindgen(js_namespace = g)]
     #[derive(Clone, Debug, EntityObject2D)]
     pub type Sprite;
+
 
     #[wasm_bindgen(js_namespace = g, constructor)]
     pub fn new(param: SpriteParam) -> Sprite;
@@ -21,7 +25,7 @@ extern "C" {
 #[non_exhaustive]
 #[object_e_parameter]
 #[wasm_bindgen(getter_with_clone)]
-#[derive(Debug, Builder, EParamSetters)]
+#[derive(Debug, Builder)]
 #[builder(
 name="SpriteBuilder",
 custom_constructor,

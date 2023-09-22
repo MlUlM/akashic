@@ -2,7 +2,7 @@ use derive_builder::Builder;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::{EntityObject2D, EParamSetters, object_e_parameter};
+use akashic_macro::{EntityObject2D, object_e_parameter};
 
 use crate::game::Game;
 use crate::object2d::Object2D;
@@ -142,7 +142,6 @@ pub trait EntityObject2D: Object2D + PointDownHandler + PointMoveHandler + Point
 
 
 #[wasm_bindgen(js_namespace = g)]
-
 extern {
     /// アカシックエンティティの基底クラスを表します。
     ///
@@ -167,7 +166,7 @@ impl Default for AkashicEntity {
 #[non_exhaustive]
 #[object_e_parameter]
 #[wasm_bindgen(getter_with_clone)]
-#[derive(Default, Debug, Builder, EParamSetters)]
+#[derive(Default, Debug, Builder)]
 #[builder(
 name = "AkashicEntityBuilder",
 build_fn(private, name = "fallible_build")
