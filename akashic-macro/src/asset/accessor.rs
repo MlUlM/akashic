@@ -12,10 +12,13 @@ pub fn expand_asset_accessible_traits() -> TokenStream {
     let image = expand_asset_accessible_trait("image", "images");
     let audio = expand_asset_accessible_trait("audio", "audios");
     let text = expand_asset_accessible_trait("text", "texts");
+    let binary = expand_asset_accessible_trait("binary", "binaries");
+
     let output = quote! {
         #image
         #audio
         #text
+        #binary
     };
     output.into()
 }
@@ -52,11 +55,13 @@ pub fn expand_asset_accessor_derive(input: TokenStream) -> TokenStream {
             let image = expand_asset_accessor_derive_from_name(entity_name, "image", "Images");
             let audio = expand_asset_accessor_derive_from_name(entity_name, "audio", "Audios");
             let text = expand_asset_accessor_derive_from_name(entity_name, "text", "Texts");
-
+            let binary = expand_asset_accessor_derive_from_name(entity_name, "binary", "Binaries");
+            
             quote! {
                 #image
                 #audio
                 #text
+                #binary
             }
         })
         .unwrap_or_else(|e| e.to_compile_error())

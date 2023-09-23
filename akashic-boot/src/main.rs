@@ -93,6 +93,7 @@ fn convert_to_main_js() {
     fs::write("assets/script/main.js", format!(r#"
         module.exports = () => {{
             g.E.prototype.z = 0
+
             g.isNode = () => (typeof window == 'undefined')
             g.canvas_only = (width, height) => {{
                 const surface = g.game.resourceFactory.createSurface(width, height)
@@ -197,6 +198,15 @@ fn convert_to_main_js() {
             scene.onLoad.addOnce(() => {{
                 if (typeof window == 'undefined'){{
                     return;
+                }}
+
+               g.read_asset_binaries = (path) => {{
+                    try{{
+                        const data = scene.asset.getBinaryData("/assets/image/player.png")
+                        return new Uint8Array(data)
+                    }} catch{{
+                        return null
+                    }}
                 }}
 
                 {akashic_js}

@@ -2,13 +2,12 @@ use std::collections::HashMap;
 
 use bevy::app::{App, Plugin};
 use bevy::prelude::Resource;
+
 use akashic::asset::accessor::{AudioAssetAccessible, ImageAssetAccessible, TextAssetAccessible};
 use akashic::asset::Asset;
-
 use akashic::asset::audio::AudioAsset;
 use akashic::asset::image::ImageAsset;
 use akashic::asset::text::TextAsset;
-use akashic::console_log;
 use akashic::prelude::GAME;
 
 use crate::SharedObject;
@@ -23,7 +22,7 @@ impl Plugin for AkashicAssetPlugin {
 }
 
 
-#[derive(Resource, Debug)]
+#[derive(Resource, Debug, Clone)]
 pub struct AkashicAssetServer {
     images: HashMap<String, SharedObject<ImageAsset>>,
     audios: HashMap<String, SharedObject<AudioAsset>>,
@@ -45,7 +44,6 @@ impl AkashicAssetServer {
         &self,
         asset_id: &str,
     ) -> Option<ImageAsset> {
-
         self
             .images
             .get(asset_id)

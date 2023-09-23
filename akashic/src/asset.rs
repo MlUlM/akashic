@@ -6,6 +6,7 @@ pub mod image;
 pub mod audio;
 pub mod text;
 pub mod accessor;
+pub mod binary;
 
 
 pub mod prelude{

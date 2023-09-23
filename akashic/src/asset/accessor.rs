@@ -1,4 +1,3 @@
-use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
 use akashic_macro::{AssetAccessor, expand_asset_accessible_traits};
@@ -6,6 +5,7 @@ use akashic_macro::{AssetAccessor, expand_asset_accessible_traits};
 use crate::asset::audio::AudioAsset;
 use crate::asset::image::ImageAsset;
 use crate::asset::text::TextAsset;
+use crate::asset::binary::BinaryAsset;
 
 #[wasm_bindgen(js_namespace = g)]
 extern "C" {
