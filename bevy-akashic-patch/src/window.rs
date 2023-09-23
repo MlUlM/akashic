@@ -3,18 +3,15 @@ use bevy::ecs::system::SystemState;
 use bevy::prelude::{Entity, FromWorld, Plugin, Query, With};
 use bevy::window::{RawHandleWrapper, Window};
 use raw_window_handle::{RawDisplayHandle, RawWindowHandle, WebDisplayHandle, WebWindowHandle};
-
-use akashic::game::GAME;
-
-use crate::plugin::akashic_3d::{AkashicSurface, canvas_only};
-
-pub struct AkashicWinitPlugin;
+use wasm_bindgen::prelude::wasm_bindgen;
 
 
-impl Plugin for AkashicWinitPlugin {
+pub struct AkashicWindowPlugin;
+
+
+impl Plugin for AkashicWindowPlugin {
     fn build(&self, app: &mut App) {
-        let surface = canvas_only(GAME.width() as u32, GAME.height() as u32);
-
+        create_screen_surface();
 
         let mut state: SystemState<
             Query<Entity, With<Window>>
@@ -31,6 +28,12 @@ impl Plugin for AkashicWinitPlugin {
                 window_handle: RawWindowHandle::Web(window_handle),
                 display_handle: RawDisplayHandle::Web(display_handle),
             });
-        app.world.insert_non_send_resource(AkashicSurface(surface));
     }
+}
+
+
+#[wasm_bindgen]
+extern {
+    #[wasm_bindgen(js_namespace = g)]
+    fn create_screen_surface() -> akashic::asset::surface::Surface;
 }

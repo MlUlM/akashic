@@ -11,10 +11,10 @@ use akashic::prelude::GAME;
 
 use crate::SharedObject;
 
-pub struct AkashicAssetPlugin;
+pub struct AkashicAssetServerPlugin;
 
 
-impl Plugin for AkashicAssetPlugin {
+impl Plugin for AkashicAssetServerPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<AkashicAssetServer>();
     }

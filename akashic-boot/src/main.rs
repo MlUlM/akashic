@@ -95,8 +95,8 @@ fn convert_to_main_js() {
             g.E.prototype.z = 0
 
             g.isNode = () => (typeof window == 'undefined')
-            g.canvas_only = (width, height) => {{
-                const surface = g.game.resourceFactory.createSurface(width, height)
+            g.create_screen_surface = () => {{
+                const surface = g.game.resourceFactory.createSurface(g.game.width, g.game.height)
                 const bevyCanvas = surface._drawable
                 bevyCanvas.setAttribute("data-raw-handle", "1")
 

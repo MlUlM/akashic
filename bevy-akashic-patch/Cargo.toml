@@ -10,5 +10,7 @@ edition = "2021"
 [dependencies]
 bevy = { workspace = true }
 bevy-akashic = { path = "../bevy-akashic" }
+akashic = { path = "../akashic" }
 anyhow = { worksapce = true }
 wasm-bindgen = { workspace = true }
+raw-window-handle = "0.5.2"

@@ -26,7 +26,6 @@ web-sys = { version = "0.3.64", optional = true, features = [
     "HtmlStyleElement"
 ] }
 winit = "0.28.6"
-raw-window-handle = "0.5.2"
 bytemuck = { version = "1.14.0", features = ["derive"] }
 image = { version = "0.24.7", features = ["png"] }
 bevy_mod_picking = "0.15.0"

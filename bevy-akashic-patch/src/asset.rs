@@ -2,7 +2,6 @@ use std::path::{Path, PathBuf};
 
 use bevy::app::{App, Plugin};
 use bevy::asset::{AssetIo, AssetIoError, AssetServer, BoxedFuture, ChangeWatcher, FileType, Metadata};
-use bevy::reflect::GetPath;
 use wasm_bindgen::prelude::wasm_bindgen;
 
 pub struct AkashicAssetIoPlugin;

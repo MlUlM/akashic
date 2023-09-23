@@ -1,9 +1,9 @@
-use bevy::app::{PluginGroup, PluginGroupBuilder};
+use bevy::app::{App, Plugin, PluginGroup, PluginGroupBuilder};
 
 use feed::label::AkashicLabelPlugin;
 
 use crate::plugin::append::AkashicAppendEntityPlugin;
-use crate::plugin::asset::AkashicAssetPlugin;
+use crate::plugin::asset::AkashicAssetServerPlugin;
 use crate::plugin::despawn::AkashicDespawnPlugin;
 use crate::plugin::event::{PointDownPlugin, PointMovePlugin, PointUpPlugin};
 use crate::plugin::feed::entity_object2d::AkashicEntityObject2DPlugin;
@@ -35,9 +35,6 @@ pub mod scene;
 #[cfg(feature = "3d")]
 pub mod akashic_3d;
 
-#[cfg(feature = "3d")]
-pub mod winit;
-
 
 #[cfg(feature = "3d")]
 pub mod akashic_3d2;
@@ -45,7 +42,7 @@ pub mod akashic_3d2;
 
 pub mod prelude {
     pub use crate::plugin::{
-        AkashicMinimumPlugins,
+        AkashicCorePlugins,
         despawn::AkashicDespawnPlugin,
         join::AkashicJoinEventPlugin,
         schedule_runner::AkashicScheduleRunnerPlugin,
@@ -54,15 +51,41 @@ pub mod prelude {
 
 
 #[derive(Default)]
-pub struct AkashicMinimumPlugins;
+pub struct AkashicCorePlugins;
 
 
-impl PluginGroup for AkashicMinimumPlugins {
+impl Plugin for AkashicCorePlugins {
+    fn build(&self, app: &mut App) {
+        app
+            .add_plugins((
+                AkashicSystemSetPlugin,
+                AkashicScenePlugin,
+                AkashicAssetServerPlugin,
+                AkashicGameScorePlugin,
+                GameInfoPlugin,
+                PlayerIdPlugin,
+                PointDownPlugin,
+                PointMovePlugin,
+                PointUpPlugin,
+            ))
+            .add_plugins((
+                AkashicJoinEventPlugin,
+                AkashicAppendEntityPlugin,
+                AkashicEntityObject2DPlugin,
+                AkashicLabelPlugin,
+                FilledRectPlugin,
+                AkashicDespawnPlugin,
+                AkashicScheduleRunnerPlugin
+            ));
+    }
+}
+
+impl PluginGroup for AkashicCorePlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
             .add(AkashicSystemSetPlugin)
             .add(AkashicScenePlugin)
-            .add(AkashicAssetPlugin)
+            .add(AkashicAssetServerPlugin)
             .add(AkashicGameScorePlugin)
             .add(AkashicRandomPlugin)
             .add(GameInfoPlugin)
@@ -76,8 +99,6 @@ impl PluginGroup for AkashicMinimumPlugins {
             .add(AkashicLabelPlugin)
             .add(FilledRectPlugin)
             .add(AkashicDespawnPlugin)
-            // .add(Akashic3DPlugin)
-            // .add(AkashicWinitPlugin)
             .add(AkashicScheduleRunnerPlugin)
     }
 }
