@@ -97,6 +97,12 @@ fn convert_to_main_js() {
             g.canvas_only = (width, height) => {{
                 const surface = g.game.resourceFactory.createSurface(width, height)
                 const bevyCanvas = surface._drawable
+                bevyCanvas.setAttribute("data-raw-handle", "1")
+
+                const akashicCanvas = g.game.renderers[0].surface.canvas
+                akashicCanvas.parentElement.insertBefore(bevyCanvas, akashicCanvas)
+
+                const akashicCanvasRect = akashicCanvas.getBoundingClientRect()
                 bevyCanvas.style.left = `${{akashicCanvasRect.left}}px`
                 bevyCanvas.style.top = `${{akashicCanvasRect.top}}px`
                 bevyCanvas.style.width = `${{akashicCanvasRect.width}}px`
