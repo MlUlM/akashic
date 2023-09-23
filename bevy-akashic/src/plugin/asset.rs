@@ -4,7 +4,6 @@ use bevy::app::{App, Plugin};
 use bevy::prelude::Resource;
 
 use akashic::asset::accessor::{AudioAssetAccessible, ImageAssetAccessible, TextAssetAccessible};
-use akashic::asset::Asset;
 use akashic::asset::audio::AudioAsset;
 use akashic::asset::image::ImageAsset;
 use akashic::asset::text::TextAsset;
