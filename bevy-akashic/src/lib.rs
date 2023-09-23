@@ -3,10 +3,8 @@
 use std::sync::{Arc, Mutex, MutexGuard};
 
 use bevy::prelude::Deref;
-use wasm_bindgen::JsValue;
 
-use akashic::game::GAME;
-use akashic::prelude::{Scene, SceneParameterObject};
+pub use akashic::*;
 
 pub mod command;
 
@@ -16,8 +14,6 @@ pub mod component;
 pub mod extensions;
 pub mod resource;
 pub mod run_criteria;
-
-pub use akashic::*;
 
 pub mod prelude {
     pub use crate::command::prelude::*;
@@ -56,9 +52,3 @@ impl<T> Clone for SharedObject<T> {
 }
 
 
-pub fn register_scene(param: SceneParameterObject) {
-    GAME.push_scene(
-        Scene::new(param),
-        JsValue::UNDEFINED,
-    );
-}

@@ -3,7 +3,7 @@ use std::fmt::Debug;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::AkashicScene;
+use akashic_macro::Scene;
 
 use crate::game::GAME;
 use crate::object2d::entity::{AkashicEntity, EntityObject2D};
@@ -21,7 +21,7 @@ pub mod prelude {
 
 #[wasm_bindgen(js_namespace = g)]
 extern "C" {
-    #[derive(Clone, Debug, AkashicScene)]
+    #[derive(Clone, Debug, Scene)]
     pub type Scene;
 
     #[wasm_bindgen(constructor)]

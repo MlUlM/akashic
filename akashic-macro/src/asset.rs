@@ -1,3 +1,5 @@
+pub mod accessor;
+
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::__private::TokenStream2;

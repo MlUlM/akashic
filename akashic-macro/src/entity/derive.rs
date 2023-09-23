@@ -1,8 +1,10 @@
 use proc_macro::TokenStream;
+
 use proc_macro2::Ident;
 use quote::quote;
 use syn::__private::TokenStream2;
 use syn::ItemStruct;
+
 use crate::object2d::derive::try_expand_object_2d_derive;
 use crate::trigger::expand_entity_triggers;
 
@@ -104,7 +106,7 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
             }
 
             #[inline(always)]
-            fn parent(&self) -> Option<crate::parent::Parent>{
+            fn parent(&self) -> Option<crate::prelude::Parent>{
                 let parent = self._parent();
                 if parent.is_undefined(){
                     return None;
@@ -112,11 +114,11 @@ fn expand_impl_entity(entity_name: &Ident) -> TokenStream2 {
 
                 use wasm_bindgen::prelude::{JsCast, JsValue};
                 if let Ok(parent) = parent.clone().dyn_into::<crate::object2d::entity::AkashicEntity>(){
-                    return Some(crate::parent::Parent::Entity(parent));
+                    return Some(crate::prelude::Parent::Entity(parent));
                 }
 
                 if let Ok(scene) = parent.dyn_into::<crate::scene::Scene>(){
-                    return Some(crate::parent::Parent::Scene(scene));
+                    return Some(crate::prelude::Parent::Scene(scene));
                 }
 
                 panic!("g.Entity.parent type must be Scene or Entity");

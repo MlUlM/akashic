@@ -9,8 +9,12 @@ pub struct OnPointDown(PointEventInner<PointDownEvent>);
 
 impl OnPointDown {
     #[inline]
-    pub fn new(native_event: PointDownEvent) -> Self {
-        Self(PointEventInner::new(native_event))
+    pub fn new(
+        native_event: PointDownEvent,
+        half_game_width: f32,
+        half_game_height: f32
+    ) -> Self {
+        Self(PointEventInner::new(native_event, half_game_width, half_game_height))
     }
 }
 

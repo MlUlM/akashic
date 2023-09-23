@@ -20,7 +20,6 @@ fn try_expand_scene(input: TokenStream) -> syn::Result<TokenStream> {
     let point_move = expand_point_move_capture(&entity_name)?;
     let message = expand_message_trigger(&entity_name)?;
 
-
     Ok(quote! {
         #on_update
         #on_load
@@ -32,7 +31,7 @@ fn try_expand_scene(input: TokenStream) -> syn::Result<TokenStream> {
         #[wasm_bindgen(js_namespace=g)]
         extern "C"{
             #[wasm_bindgen(method, getter)]
-            pub fn asset(this: &#entity_name) -> crate::asset::AssetAccessor;
+            pub fn asset(this: &#entity_name) -> crate::prelude::AssetAccessor;
 
             #[wasm_bindgen(method, getter)]
             pub fn children(this: &#entity_name) -> Box<[crate::prelude::AkashicEntity]>;

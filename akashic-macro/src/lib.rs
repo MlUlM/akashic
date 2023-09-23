@@ -1,6 +1,7 @@
 use proc_macro::TokenStream;
 
 use proc_macro2::{Ident, Span};
+use crate::asset::accessor::expand_asset_accessor_derive;
 
 use crate::asset::expand_impl_asset;
 use crate::cacheable::derive::expand_cacheable_derive;
@@ -10,7 +11,7 @@ use crate::entity::params::expand_entity_params;
 use crate::event::{expand_point_delta_event_base, expand_point_event_base};
 use crate::object2d::derive::expand_object_2d_derive;
 
-use crate::object2d::param::expand_object_2d_params;
+use crate::object2d::param::expand_object2d_params;
 
 use crate::scene::expand_scene;
 
@@ -27,6 +28,16 @@ mod cacheable;
 #[proc_macro_derive(Asset)]
 pub fn asset(input: TokenStream) -> TokenStream {
     expand_impl_asset(input)
+}
+
+#[proc_macro_derive(AssetAccessor)]
+pub fn asset_accessor(input: TokenStream) -> TokenStream {
+    expand_asset_accessor_derive(input)
+}
+
+#[proc_macro]
+pub fn expand_asset_accessible_traits(_input: TokenStream) -> TokenStream{
+    asset::accessor::expand_asset_accessible_traits()
 }
 
 
@@ -48,7 +59,7 @@ pub fn chacheable_entity(input: TokenStream) -> TokenStream {
 }
 
 
-#[proc_macro_derive(AkashicScene)]
+#[proc_macro_derive(Scene)]
 pub fn akashic_scene(input: TokenStream) -> TokenStream {
     expand_scene(input)
 }
@@ -67,14 +78,14 @@ pub fn akashic_delta_event_base(input: TokenStream) -> TokenStream {
 
 
 #[proc_macro_attribute]
-pub fn object_2d_params(_: TokenStream, input: TokenStream) -> TokenStream {
-    expand_object_2d_params(input)
+pub fn object2d_params(_: TokenStream, input: TokenStream) -> TokenStream {
+    expand_object2d_params(input)
 }
 
 
 #[proc_macro_attribute]
-pub fn object_e_parameter(_: TokenStream, input: TokenStream) -> TokenStream {
-    expand_entity_params(expand_object_2d_params(input))
+pub fn entity_params(_: TokenStream, input: TokenStream) -> TokenStream {
+    expand_entity_params(expand_object2d_params(input))
 }
 
 

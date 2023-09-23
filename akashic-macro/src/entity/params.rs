@@ -21,7 +21,7 @@ fn try_expand_entity_params(
     }
     let setters = expand_setters(&item);
 
-    Ok(quote!{
+    Ok(quote! {
         #item
         #setters
     })
@@ -47,7 +47,7 @@ fn expand_setters(
     quote! {
         paste::paste!{
             impl [<#entity_name Builder>]{
-                pub fn parent(&mut self, parent: crate::parent::Parent) -> &mut Self{
+                pub fn parent(&mut self, parent: crate::prelude::Parent) -> &mut Self{
                     let new = self;
                     new.parent = Some(parent.as_js_value());
                     new

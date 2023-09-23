@@ -1,4 +1,4 @@
-use bevy::prelude::{App, Commands, Component, Entity, NonSend, Query, With, IntoSystemConfigs};
+use bevy::prelude::{App, Commands, Component, Entity, NonSend, Query, With, IntoSystemConfigs, Res};
 use akashic::event::point::point_move::PointMoveEvent;
 use akashic::event::point::point_up::PointUpEvent;
 
@@ -14,6 +14,7 @@ use crate::event::point_move::OnPointMove;
 use crate::prelude::point_up::OnPointUp;
 use crate::prelude::scene::GameScene;
 use crate::plugin::scene::NativeScene;
+use crate::resource::game::GameInfo;
 
 macro_rules! trigger_plugin {
     ($plugin_name: ident, $native_event: ident, $component: ident, $scene_trigger_name: ident) => {
@@ -39,17 +40,18 @@ macro_rules! trigger_plugin {
                         queue: NonSend<AkashicEventQueue<$native_event>>,
                         akashic_entities: Query<(Entity, &AkashicEntityId)>,
                         scene: Query<Entity, With<GameScene>>,
+                        game_info: Res<GameInfo>
                     |{
                         while let Some(event) = queue.pop_front() {
                             let target_id = event.target().map(|akashic_entity| akashic_entity.id());
                             if let Some(target_entity) = find_point_event_target(&akashic_entities, target_id) {
                                 commands
                                     .entity(target_entity)
-                                    .insert($component::new(event));
+                                    .insert($component::new(event, game_info.half_width(), game_info.half_height()));
                             } else {
                                 commands
                                     .entity(scene.single())
-                                    .insert($component::new(event));
+                                    .insert($component::new(event, game_info.half_width(), game_info.half_height()));
                             }
                         }
                     })

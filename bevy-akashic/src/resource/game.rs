@@ -4,14 +4,14 @@ use once_cell::sync::OnceCell;
 
 use akashic::prelude::GAME;
 
-// TODO: 遅延初期化?
+
 #[derive(Resource, Default)]
 pub struct GameInfo {
     size: OnceCell<Vec2>,
     width: OnceCell<f32>,
     height: OnceCell<f32>,
     fps: OnceCell<f32>,
-    self_id: OnceCell<Option<String>>,
+    self_id: OnceCell<String>,
     half_width: OnceCell<f32>,
     half_height: OnceCell<f32>,
 }
@@ -42,8 +42,8 @@ impl GameInfo {
 
 
     #[inline(always)]
-    pub fn self_id(&self) -> Option<String> {
-        self.self_id.get_or_init(|| GAME.self_id()).clone()
+    pub fn self_id(&self) -> String {
+        self.self_id.get_or_init(|| GAME.self_id().unwrap()).clone()
     }
 
     #[inline]

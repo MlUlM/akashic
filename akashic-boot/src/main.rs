@@ -87,47 +87,39 @@ fn convert_to_main_js() {
     let akashic_js = fs::read_to_string("out/akashic.js").unwrap();
     let akashic_js = akashic_js
         .replace("let script_src;", "let script_src = \"\"")
-        .replace("input = fetch(input)", "input = fetch(g.game._assetManager.configuration.wasm.path)")
+        .replace("input = fetch(input)", "input = g.game.scene().asset.getBinaryData('/assets/script/akashic.wasm');")
         .replace("Object.assign(__wbg_init, { initSync }, __exports);", "Object.assign(__wbg_init, { initSync }, __exports)();");
 
-    fs::write("game/script/main.js", format!(r#"
-        class CustomSprite extends g.Sprite {{
-            constructor(params) {{
-                super(params);
-                this.drawer = params.drawer;
-            }}
-
-            renderSelf(renderer, camera) {{
-                this.drawer.render();
-                super.renderSelf(renderer, camera);
-            }}
-        }}
-
+    fs::write("assets/script/main.js", format!(r#"
         module.exports = () => {{
             g.E.prototype.z = 0
             g.isNode = () => (typeof window == 'undefined')
             g.canvas_only = (width, height) => {{
                 const surface = g.game.resourceFactory.createSurface(width, height)
-                return surface
-            }}
-            g.canvas = (width, height) => {{
-                const surface = g.game.resourceFactory.createSurface(width, height)
-                const gl = surface._drawable.getContext("webgl2")
-
-                const sprite = new g.Sprite({{
-                    scene: g.game.scene(),
-                    src: surface,
-                    anchorX: 0.5,
-                    anchorY: 0.5,
-                    x: g.game.width / 2,
-                    y: g.game.height / 2,
-                    width,
-                    height
+                const bevyCanvas = surface._drawable
+                bevyCanvas.style.left = `${{akashicCanvasRect.left}}px`
+                bevyCanvas.style.top = `${{akashicCanvasRect.top}}px`
+                bevyCanvas.style.width = `${{akashicCanvasRect.width}}px`
+                bevyCanvas.style.height = `${{akashicCanvasRect.height}}px`
+                const observer = new MutationObserver(records => {{
+                    bevyCanvas.style.left = `${{akashicCanvasRect.left}}px`
+                    bevyCanvas.style.top = `${{akashicCanvasRect.top}}px`
+                    bevyCanvas.style.width = `${{akashicCanvasRect.width}}px`
+                    bevyCanvas.style.height = `${{akashicCanvasRect.height}}px`
                 }})
-                g.game.scene().append(sprite)
-                sprite.modified()
 
-                return surface._drawable
+                observer.observe(akashicCanvas, {{
+                    attributes: true,
+                    attributeFilter: ["width", "height", "style"]
+                }})
+
+                window.addEventListener("resize", () => {{
+                    bevyCanvas.style.left = `${{akashicCanvasRect.left}}px`
+                    bevyCanvas.style.top = `${{akashicCanvasRect.top}}px`
+                    bevyCanvas.style.width = `${{akashicCanvasRect.width}}px`
+                    bevyCanvas.style.height = `${{akashicCanvasRect.height}}px`
+                }})
+                return surface
             }}
 
             g.getEntityProperties = (entity) => ({{
@@ -193,24 +185,13 @@ fn convert_to_main_js() {
 
             const scene = new g.Scene({{
               game: g.game,
-              assetPaths: [
-                "/image/*",
-                "/script/*",
-                "/audio/*",
-                "/text/*"
-              ]
+              assetPaths: ["/assets/**/*"]
             }})
 
             scene.onLoad.addOnce(() => {{
                 if (typeof window == 'undefined'){{
                     return;
                 }}
-
-                g.create_3d = (param) => new CustomSprite({{
-                    scene,
-                    src: param.src,
-                    drawer: param.drawer
-                }})
 
                 {akashic_js}
             }})
@@ -223,7 +204,7 @@ fn convert_to_main_js() {
 
 
 fn move_akashic_wasm() {
-    fs::rename("out/akashic_bg.wasm", "game/script/akashic.wasm").unwrap();
+    fs::rename("out/akashic_bg.wasm", "assets/script/akashic.wasm").unwrap();
 }
 
 
@@ -236,7 +217,7 @@ fn akashic_serve() {
     Command::new("npx.cmd")
         .arg("akashic")
         .arg("serve")
-        .arg("game")
+        .arg(".")
         .args(["--target-service", "nicolive"])
         .status()
         .unwrap();
@@ -246,7 +227,7 @@ fn akashic_serve() {
 fn akashic_sandbox() {
     Command::new("npx.cmd")
         .arg("akashic-sandbox")
-        .arg("game")
+        .arg(".")
         .status()
         .unwrap();
 }

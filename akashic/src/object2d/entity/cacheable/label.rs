@@ -2,7 +2,7 @@ use derive_builder::Builder;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::{CacheableEntity, object_e_parameter};
+use akashic_macro::{CacheableEntity, entity_params};
 
 use crate::error::AkashicError;
 use crate::font::Font;
@@ -60,7 +60,7 @@ impl Label {
 
 
 #[non_exhaustive]
-#[object_e_parameter]
+#[entity_params]
 #[wasm_bindgen(getter_with_clone)]
 #[derive(Debug, Builder)]
 #[builder(
@@ -78,7 +78,7 @@ pub struct LabelParam {
 
     #[wasm_bindgen(js_name = fontSize)]
     #[builder(setter(into, strip_option), default)]
-    pub font_size: crate::option_number::OptionNumber,
+    pub font_size: crate::prelude::OptionNumber,
 
     #[wasm_bindgen(js_name = textAlign)]
     #[builder(setter(custom), default)]
@@ -86,7 +86,7 @@ pub struct LabelParam {
 
     #[wasm_bindgen(js_name = maxWidth)]
     #[builder(setter(into, strip_option), default)]
-    pub max_width: crate::option_number::OptionNumber,
+    pub max_width: crate::prelude::OptionNumber,
 
     #[wasm_bindgen(js_name = widthAutoAdjust)]
     #[builder(setter(into, strip_option), default)]

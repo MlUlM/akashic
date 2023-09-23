@@ -7,7 +7,7 @@ use crate::font::font_family::FontFamily;
 use crate::font::font_weight_string::FontWeightString;
 use crate::font::surface_atlas_set::SurfaceAtlasSet;
 use crate::game::Game;
-use crate::option_number::OptionNumber;
+use crate::prelude::OptionNumber;
 
 #[wasm_bindgen]
 extern "C" {

@@ -2,7 +2,7 @@ use derive_builder::Builder;
 
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::{EntityObject2D, object_e_parameter};
+use akashic_macro::{EntityObject2D, entity_params};
 
 
 #[wasm_bindgen(js_namespace = g)]
@@ -22,8 +22,7 @@ extern "C" {
 
 
 #[non_exhaustive]
-#[object_e_parameter]
-#[allow(unused_variables)]
+#[entity_params]
 #[wasm_bindgen(getter_with_clone)]
 #[derive(Builder)]
 #[builder(

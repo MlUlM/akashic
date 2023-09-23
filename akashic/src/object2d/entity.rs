@@ -2,11 +2,11 @@ use derive_builder::Builder;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::{EntityObject2D, object_e_parameter};
+use akashic_macro::{EntityObject2D, entity_params};
 
 use crate::game::Game;
 use crate::object2d::Object2D;
-use crate::parent::Parent;
+use parent::Parent;
 use crate::prelude::{PointDownHandler, UpdateHandler};
 use crate::scene::Scene;
 use crate::trigger::point::point_move::PointMoveHandler;
@@ -15,14 +15,20 @@ pub mod filled_rect;
 pub mod sprite;
 
 pub mod cacheable;
+pub mod parent;
 
 
 pub mod prelude {
     pub use crate::object2d::entity::{
         AkashicEntity,
+        parent::Parent,
         EntityObject2D,
         filled_rect::*,
         sprite::*,
+        cacheable::{
+            CacheableEntityObject2D,
+            label::*
+        }
     };
 }
 
@@ -164,7 +170,7 @@ impl Default for AkashicEntity {
 
 
 #[non_exhaustive]
-#[object_e_parameter]
+#[entity_params]
 #[wasm_bindgen(getter_with_clone)]
 #[derive(Default, Debug, Builder)]
 #[builder(

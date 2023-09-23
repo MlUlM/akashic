@@ -2,7 +2,7 @@ use derive_builder::Builder;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::{EntityObject2D, object_e_parameter};
+use akashic_macro::{EntityObject2D, entity_params};
 
 use crate::asset::src::Src;
 use crate::util::into_js_value::IntoJsValue;
@@ -16,18 +16,17 @@ extern "C" {
     #[derive(Clone, Debug, EntityObject2D)]
     pub type Sprite;
 
-
     #[wasm_bindgen(js_namespace = g, constructor)]
     pub fn new(param: SpriteParam) -> Sprite;
 }
 
 
 #[non_exhaustive]
-#[object_e_parameter]
+#[entity_params]
 #[wasm_bindgen(getter_with_clone)]
 #[derive(Debug, Builder)]
 #[builder(
-name="SpriteBuilder",
+name = "SpriteBuilder",
 custom_constructor,
 create_empty = "empty",
 build_fn(private, name = "fallible_build")
@@ -38,19 +37,19 @@ pub struct SpriteParam {
 
     #[wasm_bindgen(js_name = srcWidth)]
     #[builder(setter(into, strip_option), default)]
-    pub src_width: crate::option_number::OptionNumber,
+    pub src_width: crate::prelude::OptionNumber,
 
     #[wasm_bindgen(js_name = srcHeight)]
     #[builder(setter(into, strip_option), default)]
-    pub src_height: crate::option_number::OptionNumber,
+    pub src_height: crate::prelude::OptionNumber,
 
     #[wasm_bindgen(js_name = srcX)]
     #[builder(setter(into, strip_option), default)]
-    pub src_x: crate::option_number::OptionNumber,
+    pub src_x: crate::prelude::OptionNumber,
 
     #[wasm_bindgen(js_name = srcY)]
     #[builder(setter(into, strip_option), default)]
-    pub src_y: crate::option_number::OptionNumber,
+    pub src_y: crate::prelude::OptionNumber,
 }
 
 
