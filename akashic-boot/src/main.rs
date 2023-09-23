@@ -88,134 +88,16 @@ fn convert_to_main_js() {
     let akashic_js = akashic_js
         .replace("let script_src;", "let script_src = \"\"")
         .replace("input = fetch(input)", "input = g.game.scene().asset.getBinaryData('/assets/script/akashic.wasm');")
-        .replace("Object.assign(__wbg_init, { initSync }, __exports);", "Object.assign(__wbg_init, { initSync }, __exports)();");
-
-    fs::write("assets/script/main.js", format!(r#"
-        module.exports = () => {{
-            g.E.prototype.z = 0
-
-            g.isNode = () => (typeof window == 'undefined')
-            g.create_screen_surface = () => {{
-                const surface = g.game.resourceFactory.createSurface(g.game.width, g.game.height)
-                const bevyCanvas = surface._drawable
-                bevyCanvas.setAttribute("data-raw-handle", "1")
-
-                const akashicCanvas = g.game.renderers[0].surface.canvas
-                akashicCanvas.parentElement.insertBefore(bevyCanvas, akashicCanvas)
-
-                const akashicCanvasRect = akashicCanvas.getBoundingClientRect()
-                bevyCanvas.style.left = `${{akashicCanvasRect.left}}px`
-                bevyCanvas.style.top = `${{akashicCanvasRect.top}}px`
-                bevyCanvas.style.width = `${{akashicCanvasRect.width}}px`
-                bevyCanvas.style.height = `${{akashicCanvasRect.height}}px`
-                const observer = new MutationObserver(records => {{
-                    bevyCanvas.style.left = `${{akashicCanvasRect.left}}px`
-                    bevyCanvas.style.top = `${{akashicCanvasRect.top}}px`
-                    bevyCanvas.style.width = `${{akashicCanvasRect.width}}px`
-                    bevyCanvas.style.height = `${{akashicCanvasRect.height}}px`
-                }})
-
-                observer.observe(akashicCanvas, {{
-                    attributes: true,
-                    attributeFilter: ["width", "height", "style"]
-                }})
-
-                window.addEventListener("resize", () => {{
-                    bevyCanvas.style.left = `${{akashicCanvasRect.left}}px`
-                    bevyCanvas.style.top = `${{akashicCanvasRect.top}}px`
-                    bevyCanvas.style.width = `${{akashicCanvasRect.width}}px`
-                    bevyCanvas.style.height = `${{akashicCanvasRect.height}}px`
-                }})
-                return surface
-            }}
-
-            g.getEntityProperties = (entity) => ({{
-                id: entity.id,
-                x: entity.x,
-                y: entity.y,
-                z: entity.z,
-                width: entity.width,
-                height: entity.height,
-                angle: entity.angle,
-                scaleX: entity.scaleX,
-                scaleY: entity.scaleY,
-                anchorX: entity.anchorX,
-                anchorY: entity.anchorY,
-                touchable: entity.touchable,
-                visible: entity.visible()
-            }})
-
-            g.feedFilledRectProperties = (entity, cssColor) => {{
-                entity.cssColor = cssColor
-                entity.modified()
-            }}
-
-            g.feedLabelProperties = (entity, text, textAlign, textColor, widthAutoAdjust) => {{
-                entity.text = text
-                entity.textAlign = textAlign
-                entity.textColor = textColor
-                entity.widthAutoAdjust = widthAutoAdjust
-                entity.invalidate()
-            }}
-
-            const halfWidth =  g.game.width / 2
-            const halfHeight = g.game.height / 2
-
-            g.feedEntityProperties = (entity, x, y, z, angle, width, height, scaleX, scaleY, anchorX, anchorY, touchable, visible) => {{
-                entity.angle = angle;
-                entity.z = z
-                entity.resizeTo(width, height)
-                const parent = entity.parent
-
-                if(parent && !(parent instanceof g.Scene)){{
-                    entity.moveTo(x + parent.width / 2, parent.height / 2 - y)
-                }} else {{
-                    entity.moveTo(x + halfWidth, halfHeight - y)
-                }}
-
-                entity.scale(scaleX, scaleY)
-                entity.anchor(anchorX, anchorY)
-                entity.touchable = touchable
-                if(visible && !entity.visible()){{
-                    entity.show()
-                }} else if(!visible && entity.visible()){{
-                    entity.hide()
-                }}
-                entity.modified()
-            }}
-
-            if (typeof window == 'undefined') {{
-               globalThis.crypto = {{
-                    getRandomValues: (args) => new Uint8Array(args.map(_ => Math.floor(g.game.random.generate() * 255)))
-               }}
-            }}
-
-            const scene = new g.Scene({{
-              game: g.game,
-              assetPaths: ["/assets/**/*"]
-            }})
-
-            scene.onLoad.addOnce(() => {{
-                if (typeof window == 'undefined'){{
-                    return;
-                }}
-
-               g.read_asset_binaries = (path) => {{
-                    try{{
-                        const data = scene.asset.getBinaryData("/assets/image/player.png")
-                        return new Uint8Array(data)
-                    }} catch{{
-                        return null
-                    }}
-                }}
-
-                {akashic_js}
-            }})
-
-            g.game.pushScene(scene)
-        }}
-    "#))
-        .unwrap();
+        .replace("wasm_bindgen = Object.assign(__wbg_init, { initSync }, __exports);", r#"
+            const init = Object.assign(__wbg_init, {initSync}, __exports);
+            module.exports = {
+                init: (passG) => {
+                    g = passG
+                    init()
+                }
+            }
+        "#);
+    fs::write("assets/script/akashic.js", akashic_js).unwrap();
 }
 
 
