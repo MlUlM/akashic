@@ -29,6 +29,7 @@ winit = "0.28.6"
 bytemuck = { version = "1.14.0", features = ["derive"] }
 image = { version = "0.24.7", features = ["png"] }
 bevy_mod_picking = "0.15.0"
+bevy_mod_raycast = { workspace = true }
 
 [features]
 default = []

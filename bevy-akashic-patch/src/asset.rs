@@ -22,7 +22,9 @@ impl AssetIo for AkashicAssetIo {
             let Some(file_path) = path.to_str().map(|p| p.to_string()) else {
                 return Err(AssetIoError::NotFound(path.to_path_buf()));
             };
-
+            
+            let file_path = if file_path.starts_with("/assets/") {file_path} else {format!("/assets/{file_path}")};
+            
             let Some(binary_data) = read_asset_binaries(file_path) else {
                 return Err(AssetIoError::NotFound(path.to_path_buf()));
             };

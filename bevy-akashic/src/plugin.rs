@@ -75,7 +75,6 @@ impl Plugin for AkashicCorePlugins {
                 AkashicLabelPlugin,
                 FilledRectPlugin,
                 AkashicDespawnPlugin,
-                AkashicScheduleRunnerPlugin
             ));
     }
 }
@@ -99,7 +98,6 @@ impl PluginGroup for AkashicCorePlugins {
             .add(AkashicLabelPlugin)
             .add(FilledRectPlugin)
             .add(AkashicDespawnPlugin)
-            .add(AkashicScheduleRunnerPlugin)
     }
 }
 

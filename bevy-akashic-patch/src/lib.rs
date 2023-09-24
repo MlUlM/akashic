@@ -20,12 +20,15 @@ use bevy::time::TimePlugin;
 use bevy::ui::UiPlugin;
 
 use bevy_akashic::plugin::AkashicCorePlugins;
+use bevy_akashic::prelude::AkashicScheduleRunnerPlugin;
 
 use crate::asset::AkashicAssetIoPlugin;
-use crate::window::AkashicWindowPlugin;
+use crate::input::AkashicInputPlugin;
+use crate::winit::AkashicWinitPlugin;
 
 pub mod asset;
-pub mod window;
+pub mod winit;
+pub mod input;
 
 
 pub struct AkashicPatchDefaultPlugins;
@@ -41,7 +44,7 @@ impl PluginGroup for AkashicPatchDefaultPlugins {
             .add(FrameCountPlugin)
             .add(InputPlugin)
             .add(WindowPlugin::default())
-            .add(AkashicWindowPlugin)
+            .add(AkashicWinitPlugin)
             .add(AkashicAssetIoPlugin)
             .add(AssetPlugin::default())
             .add(TransformPlugin)
@@ -60,5 +63,7 @@ impl PluginGroup for AkashicPatchDefaultPlugins {
             .add(GltfPlugin::default())
             .add(GizmoPlugin)
             .add(GilrsPlugin)
+            .add(AkashicInputPlugin)
+            .add(AkashicScheduleRunnerPlugin)
     }
 }

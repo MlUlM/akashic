@@ -1,5 +1,6 @@
 use std::collections::VecDeque;
 use std::sync::{Arc, Mutex};
+use bevy::math::Vec3;
 use bevy::prelude::{Resource};
 
 pub mod point_down;
@@ -10,8 +11,11 @@ pub mod message;
 pub mod join;
 
 
+
+
+
 #[derive(Resource)]
-pub(crate) struct AkashicEventQueue<T>(pub Arc<Mutex<VecDeque<T>>>);
+pub struct AkashicEventQueue<T>(pub Arc<Mutex<VecDeque<T>>>);
 
 
 impl<T> Clone for AkashicEventQueue<T> {
@@ -31,6 +35,12 @@ impl<T> AkashicEventQueue<T> {
     #[inline(always)]
     pub fn pop_front(&self) -> Option<T> {
         self.0.lock().unwrap().pop_front()
+    }
+
+
+    #[inline(always)]
+    pub fn clear(&self){
+        self.0.lock().unwrap().clear();
     }
 }
 

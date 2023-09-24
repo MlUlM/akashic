@@ -4,7 +4,7 @@ use bevy::prelude::{Component, Deref, DerefMut};
 ///
 /// この値が偽である場合、ポインティングイベントの対象にならない。
 #[derive(Component, Debug, Copy, Clone, Deref, DerefMut, Eq, PartialEq, Hash)]
-pub struct Touchable(pub(crate) bool);
+pub struct Touchable(pub bool);
 
 
 impl Touchable{

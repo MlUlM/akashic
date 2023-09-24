@@ -14,3 +14,19 @@ akashic = { path = "../akashic" }
 anyhow = { worksapce = true }
 wasm-bindgen = { workspace = true }
 raw-window-handle = "0.5.2"
+winit = "0.28.6"
+web-sys = { version = "0.3.64", features = [
+    'Document',
+    'Element',
+    'HtmlElement',
+    "HtmlCanvasElement",
+    'Node',
+    'Window',
+    "HtmlStyleElement",
+    "PointerEvent",
+    "MouseEvent",
+    "Touch",
+    "TouchEvent",
+    "TouchList"
+] }
+paste = { workspace = true }

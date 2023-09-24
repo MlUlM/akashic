@@ -5,8 +5,8 @@ use akashic::player::Player;
 use akashic::trigger::{PointDeltaEventBase, PointEventBase};
 
 
-#[derive(Debug, Component)]
-pub struct PointEventInner<E: PointEventBase> {
+#[derive(Debug, Clone, Component)]
+pub struct PointEventInner<E: PointEventBase + Clone> {
     native_event: E,
     button: OnceCell<u8>,
     event_flags: OnceCell<u8>,
@@ -20,7 +20,7 @@ pub struct PointEventInner<E: PointEventBase> {
 }
 
 
-impl<E: PointEventBase> PointEventInner<E> {
+impl<E: PointEventBase + Clone> PointEventInner<E> {
     pub(crate) fn new(
         native_event: E,
         half_game_width: f32,
@@ -55,10 +55,15 @@ macro_rules! event_base_methods {
             *self.event_flags.get_or_init(|| self.native_event.event_flags())
         }
 
-
         #[inline(always)]
         pub fn local(&self) -> bool {
             *self.local.get_or_init(|| self.native_event.local())
+        }
+
+
+        #[inline(always)]
+        pub fn my_event(&self, player_id: &str) -> bool {
+            &self.player_id() == player_id
         }
 
 
@@ -91,19 +96,19 @@ macro_rules! event_base_methods {
 }
 
 
-impl<B: PointEventBase> PointEventInner<B> {
+impl<B: PointEventBase  + Clone > PointEventInner<B> {
     event_base_methods!();
 }
 
 
-unsafe impl<B: PointEventBase> Send for PointEventInner<B> {}
+unsafe impl<B: PointEventBase + Clone> Send for PointEventInner<B> {}
 
 
-unsafe impl<B: PointEventBase> Sync for PointEventInner<B> {}
+unsafe impl<B: PointEventBase + Clone> Sync for PointEventInner<B> {}
 
 
-#[derive(Debug, Component)]
-pub struct PointDeltaEventInner<E: PointDeltaEventBase> {
+#[derive(Debug, Component, Clone)]
+pub struct PointDeltaEventInner<E: PointDeltaEventBase + Clone> {
     native_event: E,
     button: OnceCell<u8>,
     event_flags: OnceCell<u8>,
@@ -119,7 +124,7 @@ pub struct PointDeltaEventInner<E: PointDeltaEventBase> {
 }
 
 
-impl<E: PointDeltaEventBase> PointDeltaEventInner<E> {
+impl<E: PointDeltaEventBase + Clone> PointDeltaEventInner<E> {
     pub(crate) fn new(
         native_event: E,
         half_game_width: f32,
@@ -143,13 +148,13 @@ impl<E: PointDeltaEventBase> PointDeltaEventInner<E> {
 }
 
 
-impl<B: PointDeltaEventBase> PointDeltaEventInner<B> {
+impl<B: PointDeltaEventBase + Clone> PointDeltaEventInner<B> {
     event_base_methods!();
 
     #[inline(always)]
     pub fn start_delta(&self) -> Vec3 {
         *self.start_delta.get_or_init(|| {
-            let point = self.native_event.point();
+            let point = self.native_event.start_delta();
             Vec3::new(point.x(), point.y(), 0.)
         })
     }
@@ -158,13 +163,13 @@ impl<B: PointDeltaEventBase> PointDeltaEventInner<B> {
     #[inline(always)]
     pub fn prev_delta(&self) -> Vec3 {
         *self.prev_delta.get_or_init(|| {
-            let point = self.native_event.point();
+            let point = self.native_event.prev_delta();
             Vec3::new(point.x(), point.y(), 0.)
         })
     }
 }
 
 
-unsafe impl<B: PointDeltaEventBase> Send for PointDeltaEventInner<B> {}
+unsafe impl<B: PointDeltaEventBase + Clone> Send for PointDeltaEventInner<B> {}
 
-unsafe impl<B: PointDeltaEventBase> Sync for PointDeltaEventInner<B> {}
+unsafe impl<B: PointDeltaEventBase + Clone> Sync for PointDeltaEventInner<B> {}
