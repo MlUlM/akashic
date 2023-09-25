@@ -3,7 +3,6 @@ use bevy::math::Vec2;
 use bevy::prelude::{Deref, EventWriter, NonSend, TouchInput};
 use web_sys::TouchEvent;
 
-use akashic::console_log;
 use bevy_akashic::event::AkashicEventQueue;
 
 use crate::winit::AkashicSurface;
@@ -27,20 +26,15 @@ pub(crate) fn subscribe_touchstart_event(app: &mut bevy::prelude::App) {
 }
 
 
-
-
 pub(crate) fn pop_touch_event_queue(
     mut ew: EventWriter<TouchInput>,
     queue: NonSend<AkashicEventQueue<HtmlTouchEvent>>,
 ) {
     while let Some(event) = queue.pop_front() {
-        console_log!("+++++++ {event:?}");
         let touch_list = event.target_touches();
         if touch_list.is_undefined() {
             continue;
         }
-
-        console_log!("{touch_list:?}");
 
         for i in 0..touch_list.length() {
             let touch = touch_list.get(i).unwrap();

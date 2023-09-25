@@ -83,7 +83,7 @@ macro_rules! event_base_methods {
         pub fn point(&self) -> Vec3 {
             *self.point.get_or_init(|| {
                 let point = self.native_event.point();
-                Vec3::new(point.x() - self.half_game_width, self.half_game_height - point.y(), 0.)
+                Vec3::new(point.x(), point.y(), 0.)
             })
         }
 

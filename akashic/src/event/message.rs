@@ -1,6 +1,7 @@
 use serde::Serialize;
-use wasm_bindgen::JsValue;
+use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen::prelude::wasm_bindgen;
+use crate::event::AkashicEvent;
 use crate::player::Player;
 
 #[wasm_bindgen(js_namespace = g)]
@@ -25,6 +26,14 @@ extern "C" {
 
     #[wasm_bindgen(method, getter, js_name = "type")]
     pub fn event_type(this: &MessageEvent) -> String;
+}
+
+
+impl Into<AkashicEvent> for MessageEvent{
+    #[inline(always)]
+    fn into(self) -> AkashicEvent {
+        self.unchecked_into()
+    }
 }
 
 

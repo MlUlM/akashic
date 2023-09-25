@@ -1,9 +1,11 @@
-mod pbr;
-
 use bevy::ecs::query::WorldQuery;
+use bevy::input::ButtonState;
+use bevy::input::mouse::MouseButtonInput;
+use bevy::input::touch::TouchPhase;
 use bevy::math::{Vec2, Vec3};
-use bevy::prelude::{App, CalculatedClip, Commands, Component, ComputedVisibility, Entity, GlobalTransform, IntoSystemConfigs, Node, NonSend, Query, Res, With};
+use bevy::prelude::{App, CalculatedClip, Commands, Component, ComputedVisibility, Entity, EventWriter, GlobalTransform, IntoSystemConfigs, Node, NonSend, Query, Res, TouchInput, With};
 use bevy::ui::{RelativeCursorPosition, UiStack};
+use bevy::window::Window;
 
 use akashic::event::point::point_move::PointMoveEvent;
 use akashic::event::point::point_up::PointUpEvent;
@@ -17,10 +19,13 @@ use crate::component::object2d::touchable::Touchable;
 use crate::event::AkashicEventQueue;
 use crate::event::point_down::OnPointDown;
 use crate::event::point_move::OnPointMove;
+use crate::plugin::event::point_down::RapierParam;
 use crate::plugin::scene::NativeScene;
 use crate::prelude::point_up::OnPointUp;
 use crate::prelude::scene::GameScene;
 use crate::resource::game::GameInfo;
+
+mod point_down;
 
 macro_rules! trigger_plugin {
     ($plugin_name: ident, $native_event: ident, $component: ident, $scene_trigger_name: ident) => {
@@ -47,22 +52,19 @@ macro_rules! trigger_plugin {
                         akashic_entities: Query<(Entity, &AkashicEntityId)>,
                         scene: Query<Entity, With<GameScene>>,
                         game_info: Res<GameInfo>,
-                        node_query: Query<NodeQuery>,
-                        ui_stack: Res<UiStack>,
+                        rapier: RapierParam
                     |{
                         while let Some(event) = queue.pop_front() {
                             let target_id = event.target().map(|akashic_entity| akashic_entity.id());
                             let pos = Vec3::new(event.point().x(), event.point().y(), 0.);
                             let c = $component::new(event, game_info.half_width(), game_info.half_height());
-                            if let Some(target_entity) = find_point_event_target(&akashic_entities, target_id) {
+                            if let Some(target_entity) = find_point_event_target(&akashic_entities, target_id)
+                                .or_else(||rapier.find(pos))
+                            {
                                 commands
                                     .entity(target_entity)
                                     .insert(c);
-                            } else if let Some(entity) = ui_picking(pos, &node_query, &ui_stack){
-                                 commands
-                                    .entity(entity)
-                                    .insert(c);
-                            } else{
+                            } else {
                                 commands
                                     .entity(scene.single())
                                     .insert(c);
@@ -83,72 +85,72 @@ trigger_plugin!(PointUpPlugin, PointUpEvent, OnPointUp, on_point_up_capture);
 trigger_plugin!(PointMovePlugin, PointMoveEvent, OnPointMove, on_point_move_capture);
 
 
-
-#[derive(WorldQuery)]
-#[world_query(mutable)]
-pub struct NodeQuery {
-    entity: Entity,
-    node: &'static Node,
-    global_transform: &'static GlobalTransform,
-    touchable: &'static Touchable,
-    relative_cursor_position: Option<&'static mut RelativeCursorPosition>,
-    calculated_clip: Option<&'static CalculatedClip>,
-    computed_visibility: Option<&'static ComputedVisibility>,
-}
-
-fn ui_picking(
-    point: Vec3,
-    node_query: &Query<NodeQuery>,
-    ui_stack: &Res<UiStack>,
-) -> Option<Entity> {
-    let mut hovered_nodes = ui_stack
-        .uinodes
-        .iter()
-        // reverse the iterator to traverse the tree from closest nodes to furthest
-        .rev()
-        .filter_map(|entity| {
-            if let Ok(node) = node_query.get(*entity) {
-                if !node.touchable.0{
-                    return None;
-                }
-
-                if let Some(computed_visibility) = node.computed_visibility {
-                    if !computed_visibility.is_visible() {
-                        return None;
-                    }
-                }
-
-                let position = node.global_transform.translation();
-
-                let ui_position = position.truncate();
-
-                let extents = node.node.size() / 2.0;
-                let mut min = ui_position - extents;
-                if let Some(clip) = node.calculated_clip {
-                    min = Vec2::max(min, clip.clip.min);
-                }
-
-                let relative_cursor_position = Vec2::new(
-                    (point.x - min.x) / node.node.size().x,
-                    (point.y - min.y) / node.node.size().y,
-                );
-
-                if (0.0..1.).contains(&relative_cursor_position.x)
-                    && (0.0..1.).contains(&relative_cursor_position.y)
-                {
-                    Some(*entity)
-                } else {
-                    None
-                }
-            } else {
-                None
-            }
-        })
-        .collect::<Vec<Entity>>()
-        .into_iter();
-
-    hovered_nodes.next()
-}
+//
+// #[derive(WorldQuery)]
+// #[world_query(mutable)]
+// pub struct NodeQuery {
+//     entity: Entity,
+//     node: &'static Node,
+//     global_transform: &'static GlobalTransform,
+//     touchable: &'static Touchable,
+//     relative_cursor_position: Option<&'static mut RelativeCursorPosition>,
+//     calculated_clip: Option<&'static CalculatedClip>,
+//     computed_visibility: Option<&'static ComputedVisibility>,
+// }
+//
+// fn ui_picking(
+//     point: Vec3,
+//     node_query: &Query<NodeQuery>,
+//     ui_stack: &Res<UiStack>,
+// ) -> Option<Entity> {
+//     let mut hovered_nodes = ui_stack
+//         .uinodes
+//         .iter()
+//         // reverse the iterator to traverse the tree from closest nodes to furthest
+//         .rev()
+//         .filter_map(|entity| {
+//             if let Ok(node) = node_query.get(*entity) {
+//                 if !node.touchable.0 {
+//                     return None;
+//                 }
+//
+//                 if let Some(computed_visibility) = node.computed_visibility {
+//                     if !computed_visibility.is_visible() {
+//                         return None;
+//                     }
+//                 }
+//
+//                 let position = node.global_transform.translation();
+//
+//                 let ui_position = position.truncate();
+//
+//                 let extents = node.node.size() / 2.0;
+//                 let mut min = ui_position - extents;
+//                 if let Some(clip) = node.calculated_clip {
+//                     min = Vec2::max(min, clip.clip.min);
+//                 }
+//
+//                 let relative_cursor_position = Vec2::new(
+//                     (point.x - min.x) / node.node.size().x,
+//                     (point.y - min.y) / node.node.size().y,
+//                 );
+//
+//                 if (0.0..1.).contains(&relative_cursor_position.x)
+//                     && (0.0..1.).contains(&relative_cursor_position.y)
+//                 {
+//                     Some(*entity)
+//                 } else {
+//                     None
+//                 }
+//             } else {
+//                 None
+//             }
+//         })
+//         .collect::<Vec<Entity>>()
+//         .into_iter();
+//
+//     hovered_nodes.next()
+// }
 
 fn remove_point_component_system<P: Component>(
     mut commands: Commands,
@@ -159,7 +161,7 @@ fn remove_point_component_system<P: Component>(
     }
 }
 
-fn find_point_event_target(
+pub(crate) fn find_point_event_target(
     akashic_entities: &Query<(Entity, &AkashicEntityId)>,
     target_id: Option<isize>,
 ) -> Option<Entity> {

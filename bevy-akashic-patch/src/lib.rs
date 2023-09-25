@@ -11,24 +11,25 @@ use bevy::hierarchy::HierarchyPlugin;
 use bevy::input::InputPlugin;
 use bevy::log::LogPlugin;
 use bevy::pbr::PbrPlugin;
-use bevy::prelude::{ImagePlugin, TransformPlugin, WindowPlugin};
+use bevy::prelude::{ImagePlugin, TransformPlugin};
 use bevy::render::RenderPlugin;
 use bevy::scene::ScenePlugin;
 use bevy::sprite::SpritePlugin;
 use bevy::text::TextPlugin;
 use bevy::time::TimePlugin;
 use bevy::ui::UiPlugin;
-
 use bevy_akashic::plugin::AkashicCorePlugins;
 use bevy_akashic::prelude::AkashicScheduleRunnerPlugin;
 
 use crate::asset::AkashicAssetIoPlugin;
 use crate::input::AkashicInputPlugin;
+use crate::window::AkashicWindowPlugin;
 use crate::winit::AkashicWinitPlugin;
 
 pub mod asset;
 pub mod winit;
 pub mod input;
+mod window;
 
 
 pub struct AkashicPatchDefaultPlugins;
@@ -43,8 +44,15 @@ impl PluginGroup for AkashicPatchDefaultPlugins {
             .add(TimePlugin)
             .add(FrameCountPlugin)
             .add(InputPlugin)
-            .add(WindowPlugin::default())
+            .add(bevy::window::WindowPlugin {
+                primary_window: Some(bevy::window::Window {
+                    present_mode: bevy::window::PresentMode::AutoNoVsync,
+                    ..Default::default()
+                }),
+                ..Default::default()
+            })
             .add(AkashicWinitPlugin)
+            // .add(AkashicWindowPlugin)
             .add(AkashicAssetIoPlugin)
             .add(AssetPlugin::default())
             .add(TransformPlugin)
@@ -63,7 +71,7 @@ impl PluginGroup for AkashicPatchDefaultPlugins {
             .add(GltfPlugin::default())
             .add(GizmoPlugin)
             .add(GilrsPlugin)
-            .add(AkashicInputPlugin)
-            .add(AkashicScheduleRunnerPlugin)
+            // .add(AkashicInputPlugin)
+            // .add(AkashicScheduleRunnerPlugin)
     }
 }

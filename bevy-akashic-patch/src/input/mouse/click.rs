@@ -1,8 +1,11 @@
+use bevy::app::{App, PreUpdate};
 use bevy::input::ButtonState;
 use bevy::input::mouse::MouseButtonInput;
 use bevy::input::touch::TouchPhase;
-use bevy::prelude::{Deref, Entity, EventWriter, MouseButton, NonSend, Query, TouchInput, With};
+use bevy::prelude::{Deref, Entity, EventWriter, MouseButton, NonSend, Plugin, Query, TouchInput, With};
+use bevy::reflect::erased_serde::__private::serde::Serialize;
 use bevy::window::PrimaryWindow;
+use serde::Deserialize;
 use web_sys::PointerEvent;
 
 use bevy_akashic::event::AkashicEventQueue;
@@ -10,13 +13,31 @@ use bevy_akashic::event::AkashicEventQueue;
 use crate::input::mouse::convert_to_position;
 use crate::input::mouse::macros::subscribe_html_event;
 
+#[derive(Serialize, Deserialize)]
+struct PickPointDownEvent {
+    entity: Entity,
+}
+
+pub struct PointDownPlugin;
+
+impl Plugin for PointDownPlugin {
+    fn build(&self, app: &mut App) {
+        subscribe_click_event(app);
+
+        app
+            .add_systems(PreUpdate, (
+                pop_click_event_queue
+            ));
+    }
+}
+
 #[derive(Deref)]
 pub(crate) struct HtmlClickEvent(PointerEvent);
 
 
 subscribe_html_event!(click, PointerEvent, HtmlClickEvent);
 
-pub(crate) fn pop_click_event_queue(
+fn pop_click_event_queue(
     mut ew: EventWriter<MouseButtonInput>,
     mut touch_writer: EventWriter<TouchInput>,
     window: Query<Entity, With<PrimaryWindow>>,

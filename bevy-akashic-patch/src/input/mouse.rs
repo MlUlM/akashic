@@ -1,15 +1,22 @@
 use bevy::math::Vec2;
-use web_sys::PointerEvent;
+use wasm_bindgen::prelude::wasm_bindgen;
+use web_sys::{DomRect, PointerEvent};
 
 pub mod click;
 pub mod r#move;
 pub mod up;
 
+#[wasm_bindgen(js_namespace = g)]
+extern {
+    #[wasm_bindgen(js_name = canvasRect)]
+    fn canvas_rect() -> DomRect;
+}
 
 pub(crate) fn convert_to_position(
     event: &PointerEvent,
 ) -> Vec2 {
-    return Vec2::new(event.offset_x() as f32, event.offset_y() as f32);
+    let rect = canvas_rect();
+    Vec2::new(event.client_x() as f32 - rect.left() as f32, event.client_y() as f32 - rect.top() as f32)
 }
 
 

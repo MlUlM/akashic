@@ -2,6 +2,7 @@ use std::fmt::Debug;
 use wasm_bindgen::JsValue;
 
 use wasm_bindgen::prelude::wasm_bindgen;
+use crate::event::AkashicEvent;
 
 use crate::event::join::JoinEvent;
 use crate::event::message::MessageEvent;
@@ -65,11 +66,20 @@ extern "C" {
     pub fn modified(this: &Game);
 
     #[wasm_bindgen(method, js_name = raiseEvent)]
-    pub fn raise_event(this: &Game, event: MessageEvent);
+    fn _raise_event(this: &Game, event: AkashicEvent);
 
     #[wasm_bindgen(method, getter, js_name = onJoin)]
     fn _on_join(this: &Game) -> NativeTrigger;
 }
+
+
+impl Game {
+    #[inline]
+    pub fn raise_event(&self, event: impl Into<AkashicEvent>){
+        self._raise_event(event.into());
+    }
+}
+
 
 impl JoinHandler for Game {
     #[inline(always)]
