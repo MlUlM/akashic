@@ -1,10 +1,8 @@
-use bevy::math::Vec3;
 use bevy::prelude::{Component, Deref};
 
 use akashic::event::point::point_move::PointMoveEvent;
 
 use crate::event::event_inner::PointDeltaEventInner;
-
 
 #[derive(Debug, Component, Clone, Deref)]
 pub struct OnPointMove(PointDeltaEventInner<PointMoveEvent>);

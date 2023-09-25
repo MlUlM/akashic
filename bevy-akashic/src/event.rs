@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 use std::sync::{Arc, Mutex};
-use bevy::math::Vec3;
+
 use bevy::prelude::{Resource};
 
 pub mod point_down;

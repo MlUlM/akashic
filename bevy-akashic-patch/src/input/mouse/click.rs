@@ -1,13 +1,11 @@
 use bevy::input::ButtonState;
 use bevy::input::mouse::MouseButtonInput;
 use bevy::input::touch::TouchPhase;
-use bevy::prelude::{Deref, Entity, EventWriter, MouseButton, NonSend, Query, Res, TouchInput, With};
+use bevy::prelude::{Deref, Entity, EventWriter, MouseButton, NonSend, Query, TouchInput, With};
 use bevy::window::PrimaryWindow;
-use wasm_bindgen::JsCast;
 use web_sys::PointerEvent;
 
 use bevy_akashic::event::AkashicEventQueue;
-use bevy_akashic::resource::game::GameInfo;
 
 use crate::input::mouse::convert_to_position;
 use crate::input::mouse::macros::subscribe_html_event;
@@ -23,13 +21,12 @@ pub(crate) fn pop_click_event_queue(
     mut touch_writer: EventWriter<TouchInput>,
     window: Query<Entity, With<PrimaryWindow>>,
     queue: NonSend<AkashicEventQueue<HtmlClickEvent>>,
-    game_info: Res<GameInfo>,
 ) {
     while let Some(event) = queue.pop_front() {
         let button = event.button();
         touch_writer.send(TouchInput {
             id: event.pointer_id() as u64,
-            position: convert_to_position(&event, &game_info),
+            position: convert_to_position(&event),
             force: None,
             phase: TouchPhase::Started,
         });

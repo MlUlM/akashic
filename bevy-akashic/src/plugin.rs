@@ -15,7 +15,6 @@ use crate::plugin::player_id::PlayerIdPlugin;
 use crate::plugin::random::AkashicRandomPlugin;
 use crate::plugin::scene::AkashicScenePlugin;
 use crate::plugin::system_set::AkashicSystemSetPlugin;
-use crate::prelude::AkashicScheduleRunnerPlugin;
 
 pub mod schedule_runner;
 pub mod despawn;
@@ -32,10 +31,11 @@ pub mod append;
 pub mod feed;
 pub mod scene;
 
+#[allow(unused)]
 #[cfg(feature = "3d")]
 pub mod akashic_3d;
 
-
+#[allow(unused)]
 #[cfg(feature = "3d")]
 pub mod akashic_3d2;
 

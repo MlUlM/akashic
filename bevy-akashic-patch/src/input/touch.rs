@@ -1,7 +1,6 @@
 use bevy::input::touch::{ForceTouch, TouchPhase};
 use bevy::math::Vec2;
-use bevy::prelude::{Deref, Entity, EventWriter, NonSend, Query, TouchInput, With};
-use bevy::window::PrimaryWindow;
+use bevy::prelude::{Deref, EventWriter, NonSend, TouchInput};
 use web_sys::TouchEvent;
 
 use akashic::console_log;
@@ -27,10 +26,12 @@ pub(crate) fn subscribe_touchstart_event(app: &mut bevy::prelude::App) {
     cb.forget();
 }
 
+
+
+
 pub(crate) fn pop_touch_event_queue(
     mut ew: EventWriter<TouchInput>,
     queue: NonSend<AkashicEventQueue<HtmlTouchEvent>>,
-    window: Query<Entity, With<PrimaryWindow>>,
 ) {
     while let Some(event) = queue.pop_front() {
         console_log!("+++++++ {event:?}");

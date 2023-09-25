@@ -1,7 +1,5 @@
 use bevy::math::Vec2;
-use bevy::window::Window;
-use web_sys::{PointerEvent, window};
-use bevy_akashic::resource::game::GameInfo;
+use web_sys::PointerEvent;
 
 pub mod click;
 pub mod r#move;
@@ -10,13 +8,8 @@ pub mod up;
 
 pub(crate) fn convert_to_position(
     event: &PointerEvent,
-    game_info: &GameInfo
-) -> Vec2{
+) -> Vec2 {
     return Vec2::new(event.offset_x() as f32, event.offset_y() as f32);
-
-    let x = event.x() as f32 - game_info.half_width() ;
-    let y = game_info.half_height()  - event.y() as f32;
-    Vec2::new(x, y)
 }
 
 
@@ -46,6 +39,6 @@ pub(crate) mod macros {
         };
     }
 
-    
+
     pub(crate) use subscribe_html_event;
 }
