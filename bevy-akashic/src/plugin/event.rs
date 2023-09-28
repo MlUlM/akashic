@@ -5,7 +5,7 @@ use bevy::input::touch::TouchPhase;
 use bevy::math::{Vec2, Vec3};
 use bevy::prelude::{App, CalculatedClip, Commands, Component, ComputedVisibility, Entity, EventWriter, GlobalTransform, IntoSystemConfigs, Node, NonSend, Query, Res, TouchInput, With};
 use bevy::ui::{RelativeCursorPosition, UiStack};
-use bevy::window::Window;
+use bevy::window::{PrimaryWindow, Window};
 
 use akashic::event::point::point_move::PointMoveEvent;
 use akashic::event::point::point_up::PointUpEvent;
@@ -50,7 +50,7 @@ macro_rules! trigger_plugin {
                         mut commands: Commands,
                         queue: NonSend<AkashicEventQueue<$native_event>>,
                         akashic_entities: Query<(Entity, &AkashicEntityId)>,
-                        scene: Query<Entity, With<GameScene>>,
+                        window: Query<Entity, With<PrimaryWindow>>,
                         game_info: Res<GameInfo>,
                         rapier: RapierParam
                     |{
@@ -66,7 +66,7 @@ macro_rules! trigger_plugin {
                                     .insert(c);
                             } else {
                                 commands
-                                    .entity(scene.single())
+                                    .entity(window.single())
                                     .insert(c);
                             }
                         }
@@ -99,7 +99,7 @@ trigger_plugin!(PointMovePlugin, PointMoveEvent, OnPointMove, on_point_move_capt
 // }
 //
 // fn ui_picking(
-//     point: Vec3,
+//     pointer: Vec3,
 //     node_query: &Query<NodeQuery>,
 //     ui_stack: &Res<UiStack>,
 // ) -> Option<Entity> {
@@ -131,8 +131,8 @@ trigger_plugin!(PointMovePlugin, PointMoveEvent, OnPointMove, on_point_move_capt
 //                 }
 //
 //                 let relative_cursor_position = Vec2::new(
-//                     (point.x - min.x) / node.node.size().x,
-//                     (point.y - min.y) / node.node.size().y,
+//                     (pointer.x - min.x) / node.node.size().x,
+//                     (pointer.y - min.y) / node.node.size().y,
 //                 );
 //
 //                 if (0.0..1.).contains(&relative_cursor_position.x)

@@ -1,50 +1,28 @@
-use bevy::input::touch::{ForceTouch, TouchPhase};
-use bevy::math::Vec2;
-use bevy::prelude::{Deref, EventWriter, NonSend, TouchInput};
-use web_sys::TouchEvent;
+use bevy::app::App;
+use bevy::prelude::Plugin;
 
-use bevy_akashic::event::AkashicEventQueue;
+use crate::input::touch::cancel::TouchCancelPlugin;
+use crate::input::touch::end::TouchEndPlugin;
+use crate::input::touch::moved::TouchMovedPlugin;
+use crate::input::touch::start::TouchStartPlugin;
 
-use crate::winit::AkashicSurface;
-
-#[derive(Deref, Debug)]
-pub(crate) struct HtmlTouchEvent(TouchEvent);
-
-
-pub(crate) fn subscribe_touchstart_event(app: &mut bevy::prelude::App) {
-    let click_queue = bevy_akashic::event::AkashicEventQueue::<HtmlTouchEvent>::default();
-    app.insert_non_send_resource(click_queue.clone());
-    let cb = wasm_bindgen::closure::Closure::<dyn Fn(TouchEvent)>::new(move |event: TouchEvent| {
-        event.prevent_default();
-        click_queue.push(HtmlTouchEvent(event));
-    });
-
-    use wasm_bindgen::JsCast;
-    app.world.non_send_resource::<AkashicSurface>().canvas()
-        .set_ontouchstart(Some(cb.as_ref().unchecked_ref()));
-    cb.forget();
-}
+pub mod start;
+pub mod moved;
+pub mod end;
+pub mod cancel;
 
 
-pub(crate) fn pop_touch_event_queue(
-    mut ew: EventWriter<TouchInput>,
-    queue: NonSend<AkashicEventQueue<HtmlTouchEvent>>,
-) {
-    while let Some(event) = queue.pop_front() {
-        let touch_list = event.target_touches();
-        if touch_list.is_undefined() {
-            continue;
-        }
+pub struct TouchPlugins;
 
-        for i in 0..touch_list.length() {
-            let touch = touch_list.get(i).unwrap();
 
-            ew.send(TouchInput {
-                phase: TouchPhase::Started,
-                position: Vec2::new(touch.client_x() as f32, touch.client_y() as f32),
-                force: if touch.force() == 0. { None } else { Some(ForceTouch::Normalized(touch.force() as f64)) },
-                id: touch.identifier() as u64,
-            });
-        }
+impl Plugin for TouchPlugins {
+    fn build(&self, app: &mut App) {
+        app
+            .add_plugins((
+                TouchStartPlugin,
+                TouchMovedPlugin,
+                TouchEndPlugin,
+                TouchCancelPlugin
+            ));
     }
 }

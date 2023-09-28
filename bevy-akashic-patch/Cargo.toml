@@ -29,7 +29,8 @@ web-sys = { version = "0.3.64", features = [
     "TouchEvent",
     "TouchList",
     "DomRect",
-    "WheelEvent"
+    "WheelEvent",
+    "FocusEvent",
 ] }
 paste = { workspace = true }
 approx = "0.5.1"

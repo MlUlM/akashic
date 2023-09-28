@@ -7,7 +7,7 @@ use web_sys::WheelEvent;
 
 use bevy_akashic::event::AkashicEventQueue;
 
-use crate::input::point::macros::subscribe_html_event;
+use crate::input::pointer::macros::subscribe_html_event;
 
 pub struct WheelScrollPlugin;
 
@@ -15,8 +15,7 @@ impl Plugin for WheelScrollPlugin {
     fn build(&self, app: &mut App) {
         subscribe_wheel_event(app);
 
-        app
-            .add_systems(PreUpdate, pop_wheel_event_queue);
+        app.add_systems(PreUpdate, pop_wheel_event_queue);
     }
 }
 

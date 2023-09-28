@@ -15,7 +15,7 @@ use crate::prelude::object2d::touchable::Touchable;
 // ) {
 //     while let Some(event) = queue.pop_front() {
 //         let target_id = event.target().map(|akashic_entity| akashic_entity.id());
-//         let pos = Vec3::new(event.point().x(), event.point().y(), 0.);
+//         let pos = Vec3::new(event.pointer().x(), event.pointer().y(), 0.);
 //         let c = OnPointDown::new(event, game_info.half_width(), game_info.half_height());
 //
 //         if let Some(target_entity) = find_point_event_target(&akashic_entities, target_id) {
@@ -36,11 +36,11 @@ use crate::prelude::object2d::touchable::Touchable;
 //     window: &Window,
 //     event: &PointDownEvent,
 // ) {
-//     let point = event.point();
+//     let pointer = event.pointer();
 //     let button = event.button();
 //     touch.send(TouchInput {
 //         id: event.pointer_id() as u64,
-//         position: Vec2::new(point.x(), point.y()),
+//         position: Vec2::new(pointer.x(), pointer.y()),
 //         force: None,
 //         phase: TouchPhase::Started,
 //     });

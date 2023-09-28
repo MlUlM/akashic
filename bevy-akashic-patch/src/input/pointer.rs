@@ -1,10 +1,37 @@
+use bevy::app::App;
 use bevy::math::Vec2;
+use bevy::prelude::Plugin;
 use wasm_bindgen::prelude::wasm_bindgen;
 use web_sys::{DomRect, PointerEvent};
 
+use crate::input::pointer::down::PointerDownPlugin;
+use crate::input::pointer::enter::PointerEnterPlugin;
+use crate::input::pointer::left::PointerLeftPlugin;
+use crate::input::pointer::moved::PointerMovedPlugin;
+use crate::input::pointer::up::PointerUpPlugin;
+
 pub mod down;
-pub mod r#move;
+pub mod moved;
 pub mod up;
+pub mod left;
+pub mod enter;
+
+
+pub struct PointerPlugins;
+
+
+impl Plugin for PointerPlugins {
+    fn build(&self, app: &mut App) {
+        app.add_plugins((
+            PointerEnterPlugin,
+            PointerDownPlugin,
+            PointerMovedPlugin,
+            PointerUpPlugin,
+            PointerLeftPlugin
+        ));
+    }
+}
+
 
 #[wasm_bindgen(js_namespace = g)]
 extern {
@@ -25,7 +52,7 @@ pub(crate) mod macros {
     macro_rules! subscribe_html_event {
         ($event_name: ident, $html_event_type: ident, $event_type: ident) => {
             paste::paste!{
-                pub(crate) fn [<subscribe_ $event_name _event>](
+                fn [<subscribe_ $event_name _event>](
                     app: &mut bevy::prelude::App
                 ) {
                     let click_queue = bevy_akashic::event::AkashicEventQueue::<$event_type>::default();
@@ -45,7 +72,6 @@ pub(crate) mod macros {
             }
         };
     }
-
 
     pub(crate) use subscribe_html_event;
 }

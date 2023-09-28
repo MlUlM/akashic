@@ -51,8 +51,8 @@ impl PluginGroup for AkashicPatchDefaultPlugins {
                 }),
                 ..Default::default()
             })
-            .add(AkashicWinitPlugin)
-            // .add(AkashicWindowPlugin)
+            // .add(AkashicWinitPlugin)
+            .add(AkashicWindowPlugin)
             .add(AkashicAssetIoPlugin)
             .add(AssetPlugin::default())
             .add(TransformPlugin)
@@ -71,7 +71,7 @@ impl PluginGroup for AkashicPatchDefaultPlugins {
             .add(GltfPlugin::default())
             .add(GizmoPlugin)
             .add(GilrsPlugin)
-            // .add(AkashicInputPlugin)
-            // .add(AkashicScheduleRunnerPlugin)
+            .add(AkashicInputPlugin)
+            .add(AkashicScheduleRunnerPlugin)
     }
 }
