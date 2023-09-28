@@ -1,14 +1,16 @@
 use bevy::app::{App, Update};
 use bevy::prelude::Plugin;
 
-use crate::input::mouse::click::{PointDownPlugin, subscribe_click_event};
-use crate::input::mouse::r#move::{pop_mouse_move_queue, subscribe_pointermove_event};
-use crate::input::mouse::up::{pop_mouse_released_queue, subscribe_pointerup_event};
+use crate::input::point::down::{PointDownPlugin, subscribe_click_event};
+use crate::input::point::r#move::{pop_mouse_move_queue, subscribe_pointermove_event};
+use crate::input::point::up::{pop_mouse_released_queue, subscribe_pointerup_event};
+use crate::input::wheel_scroll::WheelScrollPlugin;
 
-mod mouse;
+mod point;
 
 #[allow(unused)]
 mod touch;
+mod wheel_scroll;
 
 
 pub struct AkashicInputPlugin;
@@ -20,7 +22,10 @@ impl Plugin for AkashicInputPlugin {
         subscribe_pointerup_event(app);
 
         app
-            .add_plugins(PointDownPlugin)
+            .add_plugins((
+                PointDownPlugin,
+                WheelScrollPlugin
+            ))
             .add_systems(Update, (
                 pop_mouse_move_queue,
                 pop_mouse_released_queue,

@@ -2,7 +2,7 @@ use bevy::math::Vec2;
 use wasm_bindgen::prelude::wasm_bindgen;
 use web_sys::{DomRect, PointerEvent};
 
-pub mod click;
+pub mod down;
 pub mod r#move;
 pub mod up;
 

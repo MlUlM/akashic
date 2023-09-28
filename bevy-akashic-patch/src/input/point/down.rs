@@ -10,8 +10,8 @@ use web_sys::PointerEvent;
 
 use bevy_akashic::event::AkashicEventQueue;
 
-use crate::input::mouse::convert_to_position;
-use crate::input::mouse::macros::subscribe_html_event;
+use crate::input::point::convert_to_position;
+use crate::input::point::macros::subscribe_html_event;
 
 #[derive(Serialize, Deserialize)]
 struct PickPointDownEvent {

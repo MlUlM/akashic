@@ -77,6 +77,7 @@ fn wasm_bindgen(example: &Option<String>, release: bool) {
         .args(["--out-dir", "out"])
         .args(["--out-name", "akashic"])
         .arg("--no-typescript")
+        .arg("--debug")
         .arg(wasm_path.clone())
         .status()
         .unwrap();
