@@ -36,7 +36,7 @@ fn pop_wheel_event_queue(
         ew.send(MouseWheel {
             unit: MouseScrollUnit::Pixel,
             x: event.delta_x() as f32,
-            y: event.delta_y() as f32,
+            y: -event.delta_y() as f32,
             window: window.single(),
         });
     }
