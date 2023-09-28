@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 use std::sync::{Arc, Mutex};
 
-use bevy::prelude::{Resource};
+use bevy::prelude::{Deref, Resource};
 
 pub mod point_down;
 pub mod point_up;
@@ -11,10 +11,7 @@ pub mod message;
 pub mod join;
 
 
-
-
-
-#[derive(Resource)]
+#[derive(Resource, Deref)]
 pub struct AkashicEventQueue<T>(pub Arc<Mutex<VecDeque<T>>>);
 
 
@@ -37,9 +34,13 @@ impl<T> AkashicEventQueue<T> {
         self.0.lock().unwrap().pop_front()
     }
 
+    #[inline(always)]
+    pub fn is_empty(&self) -> bool {
+        self.0.lock().unwrap().is_empty()
+    }
 
     #[inline(always)]
-    pub fn clear(&self){
+    pub fn clear(&self) {
         self.0.lock().unwrap().clear();
     }
 }

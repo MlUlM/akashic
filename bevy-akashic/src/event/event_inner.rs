@@ -1,4 +1,6 @@
-use bevy::prelude::{Component, Vec3};
+use std::any::Any;
+use bevy::prelude::{Component, Reflect, Vec3};
+use bevy::reflect::{ReflectMut, ReflectOwned, ReflectRef, TypeInfo};
 use once_cell::sync::OnceCell;
 
 use akashic::player::Player;
@@ -122,6 +124,8 @@ pub struct PointDeltaEventInner<E: PointDeltaEventBase + Clone> {
     half_game_width: f32,
     half_game_height: f32,
 }
+
+
 
 
 impl<E: PointDeltaEventBase + Clone> PointDeltaEventInner<E> {

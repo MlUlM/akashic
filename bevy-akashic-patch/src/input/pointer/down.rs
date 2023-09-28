@@ -44,8 +44,8 @@ fn pop_event_queue(
 
 pub(crate) fn convert_to_mouse_button(raw: i16) -> MouseButton {
     match raw {
-        0 => MouseButton::Left,
-        1 => MouseButton::Middle,
+        1 => MouseButton::Left,
+        4 => MouseButton::Middle,
         2 => MouseButton::Right,
         _ => {
             if let Ok(raw) = u16::try_from(raw) {

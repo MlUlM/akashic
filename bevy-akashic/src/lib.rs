@@ -52,3 +52,13 @@ impl<T> Clone for SharedObject<T> {
 }
 
 
+
+
+#[macro_export]
+macro_rules! unsafe_impl_all_synchronization {
+    ($struct_name: ident) => {
+        unsafe impl Send for $struct_name{}
+        
+        unsafe impl Sync for $struct_name{}
+    };
+}

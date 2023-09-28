@@ -1,21 +1,13 @@
 use bevy::prelude::{Component, Deref, Event};
 
-use akashic::prelude::PointDownEvent;
-
-use crate::prelude::event_inner::PointEventInner;
+use crate::plugin::event::AkashicPointDownEvent;
 
 #[derive(Debug, Clone, Event, Deref, Component)]
-pub struct OnPointDown(PointEventInner<PointDownEvent>);
+pub struct OnPointDown(AkashicPointDownEvent);
 
-impl OnPointDown {
+impl From<AkashicPointDownEvent> for OnPointDown {
     #[inline]
-    pub fn new(
-        native_event: PointDownEvent,
-        half_game_width: f32,
-        half_game_height: f32,
-    ) -> Self {
-        Self(PointEventInner::new(native_event, half_game_width, half_game_height))
+    fn from(value: AkashicPointDownEvent) -> Self {
+        Self(value)
     }
 }
-
-
