@@ -3,12 +3,10 @@ use std::sync::{Arc, Mutex};
 
 use bevy::prelude::{Deref, Resource};
 
-pub mod point_down;
-pub mod point_up;
-pub mod point_move;
-pub(crate) mod event_inner;
+
 pub mod message;
 pub mod join;
+pub mod point;
 
 
 #[derive(Resource, Deref)]

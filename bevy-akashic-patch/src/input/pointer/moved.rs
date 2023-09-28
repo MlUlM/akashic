@@ -1,5 +1,6 @@
 use bevy::app::{App, Plugin};
 use bevy::input::mouse::MouseMotion;
+use bevy::math::Vec2;
 use bevy::prelude::{Deref, Entity, EventWriter, NonSend, Query, With};
 use bevy::window::{CursorMoved, PrimaryWindow};
 use web_sys::PointerEvent;
@@ -37,11 +38,10 @@ fn pop_event_queue(
     while let Some(event) = queue.pop_front()
     {
         let pos = convert_to_position(&event);
-
         let entity = window.single_mut();
 
         moved.send(MouseMotion {
-            delta: pos,
+            delta: Vec2::new(event.movement_x() as f32, event.movement_y() as f32)
         });
 
         ew.send(CursorMoved {

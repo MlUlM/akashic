@@ -5,7 +5,6 @@ use wasm_bindgen::prelude::wasm_bindgen;
 use crate::event::AkashicEvent;
 
 use crate::event::join::JoinEvent;
-use crate::event::message::MessageEvent;
 use crate::game::vars::Vars;
 use crate::prelude::Trigger;
 use crate::random::RandomGenerator;

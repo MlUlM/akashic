@@ -1,53 +1,53 @@
-use bevy::ecs::query::WorldQuery;
+use auto_delegate::Delegate;
 use bevy::prelude::{App, Commands, Component, Deref, Entity, Event, EventWriter, IntoSystemConfigs, NonSend, Query, With};
-use bevy::render::render_resource::encase::private::RuntimeSizedArray;
-use bevy::window::{PrimaryWindow, Window};
 
 use akashic::event::point::point_move::PointMoveEvent;
 use akashic::event::point::point_up::PointUpEvent;
-use akashic::prelude::{EntityObject2D, PointDownCaptureHandler, PointDownEvent};
+use akashic::prelude::{PointDownCaptureHandler, PointDownEvent};
 use akashic::trigger::point::point_move::PointMoveCaptureHandler;
 use akashic::trigger::point::point_up::PointUpCaptureHandler;
-use akashic::trigger::PointEventBase;
 
 use crate::component::AkashicEntityId;
 use crate::event::AkashicEventQueue;
-use crate::event::event_inner::PointDeltaEventInner;
+use crate::event::point::down::OnPointDown;
+use crate::event::point::event_inner::{PointDeltaEventInner, PointEventInner};
+use crate::event::point::up::OnPointUp;
 use crate::plugin::scene::NativeScene;
-use crate::prelude::event_inner::PointEventInner;
+use crate::prelude::point::r#move::OnPointMove;
 use crate::unsafe_impl_all_synchronization;
 
-mod point_down;
-
-#[derive(Event, Deref, Clone, Debug)]
+#[derive(Event, Deref, Clone, Debug, Delegate)]
+#[to(AkashicPointEventBase, PointEventBase)]
 pub struct AkashicPointDownEvent(PointEventInner<PointDownEvent>);
 unsafe_impl_all_synchronization!(AkashicPointDownEvent);
 impl AkashicPointDownEvent {
     #[inline(always)]
-    fn new(native_event: PointDownEvent, window_width: f32, window_height: f32) -> Self {
-        Self(PointEventInner::new(native_event, window_width, window_height))
+    fn new(native_event: PointDownEvent) -> Self {
+        Self(PointEventInner::new(native_event))
     }
 }
 
 
-#[derive(Event, Deref, Debug, Clone)]
+#[derive(Event, Deref, Clone, Debug, Delegate)]
+#[to(AkashicPointEventBase, PointEventBase)]
 pub struct AkashicPointMoveEvent(PointDeltaEventInner<PointMoveEvent>);
 unsafe_impl_all_synchronization!(AkashicPointMoveEvent);
 impl AkashicPointMoveEvent {
     #[inline(always)]
-    fn new(native_event: PointMoveEvent, window_width: f32, window_height: f32) -> Self {
-        Self(PointDeltaEventInner::new(native_event, window_width, window_height))
+    fn new(native_event: PointMoveEvent) -> Self {
+        Self(PointDeltaEventInner::new(native_event))
     }
 }
 
 
-#[derive(Event, Deref, Debug, Clone)]
+#[derive(Event, Deref, Clone, Debug, Delegate)]
+#[to(AkashicPointEventBase, PointEventBase)]
 pub struct AkashicPointUpEvent(PointDeltaEventInner<PointUpEvent>);
 unsafe_impl_all_synchronization!(AkashicPointUpEvent);
 impl AkashicPointUpEvent {
     #[inline(always)]
-    fn new(native_event: PointUpEvent, window_width: f32, window_height: f32) -> Self {
-        Self(PointDeltaEventInner::new(native_event, window_width, window_height))
+    fn new(native_event: PointUpEvent) -> Self {
+        Self(PointDeltaEventInner::new(native_event))
     }
 }
 
@@ -55,7 +55,13 @@ impl AkashicPointUpEvent {
 
 
 macro_rules! point_plugin {
-    ($plugin_name: ident, $native_event: ident, $bevy_event: ident, $scene_trigger_name: ident) => {
+    (
+        $plugin_name: ident,
+        $native_event: ident,
+        $bevy_event: ident,
+        $component: ident,
+        $scene_trigger_name: ident
+    ) => {
         pub struct $plugin_name;
 
         impl bevy::prelude::Plugin for $plugin_name {
@@ -76,55 +82,24 @@ macro_rules! point_plugin {
                     })
                    .add_systems(bevy::prelude::First, |
                         mut ew: EventWriter<$bevy_event>,
-                        window: Query<&Window, With<PrimaryWindow>>,
                         queue: NonSend<AkashicEventQueue<$native_event>>,
                     |{
-                        if queue.is_empty(){
-                            return;
-                        }
-                        let size =  &window.single().resolution;
                         while let Some(event) = queue.pop_front() {
-                            ew.send($bevy_event::new(event, size.width(), size.height()));
+                            ew.send($bevy_event::new(event));
                         }
-                    });
-
-                    // .add_systems(bevy::prelude::PreUpdate, |
-                    //     mut commands: Commands,
-                    //     queue: NonSend<AkashicEventQueue<$native_event>>,
-                    //     akashic_entities: Query<(Entity, &AkashicEntityId)>,
-                    //     window: Query<Entity, With<PrimaryWindow>>,
-                    //     game_info: Res<GameInfo>,
-                    //     rapier: RapierParam
-                    // |{
-                    //     while let Some(event) = queue.pop_front() {
-                    //         let target_id = event.target().map(|akashic_entity| akashic_entity.id());
-                    //         let pos = Vec3::new(event.point().x(), event.point().y(), 0.);
-                    //         let c = $component::new(event, game_info.half_width(), game_info.half_height());
-                    //         if let Some(target_entity) = find_point_event_target(&akashic_entities, target_id)
-                    //             .or_else(||rapier.find(pos))
-                    //         {
-                    //             commands
-                    //                 .entity(target_entity)
-                    //                 .insert(c);
-                    //         } else {
-                    //             commands
-                    //                 .entity(window.single())
-                    //                 .insert(c);
-                    //         }
-                    //     }
-                    // })
-                    // .add_systems(bevy::prelude::Last, (
-                    //     remove_point_component_system::<$component>
-                    // ).in_set(crate::plugin::system_set::AkashicSystemSet::PointEvents));
+                    })
+                    .add_systems(bevy::prelude::Last, (
+                        remove_point_component_system::<$component>
+                    ).in_set(crate::plugin::system_set::AkashicSystemSet::PointEvents));
             }
         }
     };
 }
 
 
-point_plugin!(PointDownPlugin, PointDownEvent, AkashicPointDownEvent, on_point_down_capture);
-point_plugin!(PointMovePlugin, PointMoveEvent, AkashicPointMoveEvent, on_point_move_capture);
-point_plugin!(PointUpPlugin, PointUpEvent, AkashicPointUpEvent, on_point_up_capture);
+point_plugin!(PointDownPlugin, PointDownEvent, AkashicPointDownEvent, OnPointDown, on_point_down_capture);
+point_plugin!(PointMovePlugin, PointMoveEvent, AkashicPointMoveEvent, OnPointMove, on_point_move_capture);
+point_plugin!(PointUpPlugin, PointUpEvent, AkashicPointUpEvent, OnPointUp,  on_point_up_capture);
 
 //
 // #[derive(WorldQuery)]

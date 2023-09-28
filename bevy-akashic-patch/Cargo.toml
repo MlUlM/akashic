@@ -34,7 +34,7 @@ web-sys = { version = "0.3.64", features = [
 ] }
 paste = { workspace = true }
 approx = "0.5.1"
-bevy_mod_picking = { version = "0.15.0", features = ["all"] }
-serde = { version = "1.0.188", features = ["derive"] }
 
+serde = { version = "1.0.188", features = ["derive"] }
+bevy_mod_raycast = "0.13.1"
 bevy_rapier3d = "0.22.0"
