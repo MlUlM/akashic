@@ -30,11 +30,15 @@ fn pop_wheel_event_queue(
     queue: NonSend<AkashicEventQueue<HtmlWheelEvent>>,
 ) {
     while let Some(event) = queue.pop_front() {
+        let dx = event.delta_x();
+        let dy = event.delta_y();
+        let x = dx / dx.abs();
+        let y = dy / dy.abs();
 
         ew.send(MouseWheel {
             unit: MouseScrollUnit::Line,
-            x: event.delta_x() as f32,
-            y: -event.delta_y() as f32,
+            x: x as f32,
+            y: -y as f32,
             window: window.single(),
         });
     }
