@@ -35,8 +35,7 @@ fn pop_event_queue(
     mut window: Query<Entity, With<PrimaryWindow>>,
     queue: NonSend<AkashicEventQueue<HtmlMouseMoveEvent>>,
 ) {
-    while let Some(event) = queue.pop_front()
-    {
+    while let Some(event) = queue.pop_front() {
         let pos = convert_to_position(&event);
         let entity = window.single_mut();
 

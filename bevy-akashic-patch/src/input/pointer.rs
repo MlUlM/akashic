@@ -3,6 +3,7 @@ use bevy::math::Vec2;
 use bevy::prelude::Plugin;
 use wasm_bindgen::prelude::wasm_bindgen;
 use web_sys::{DomRect, PointerEvent};
+use crate::input::pointer::cancel::PointerCancelPlugin;
 
 use crate::input::pointer::down::PointerDownPlugin;
 use crate::input::pointer::enter::PointerEnterPlugin;
@@ -15,6 +16,7 @@ pub mod moved;
 pub mod up;
 pub mod left;
 pub mod enter;
+pub mod cancel;
 
 
 pub struct PointerPlugins;
@@ -27,7 +29,8 @@ impl Plugin for PointerPlugins {
             PointerDownPlugin,
             PointerMovedPlugin,
             PointerUpPlugin,
-            PointerLeftPlugin
+            PointerLeftPlugin,
+            PointerCancelPlugin
         ));
     }
 }

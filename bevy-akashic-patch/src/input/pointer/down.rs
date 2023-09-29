@@ -8,6 +8,7 @@ use web_sys::PointerEvent;
 use bevy_akashic::event::AkashicEventQueue;
 
 use crate::input::pointer::macros::subscribe_html_event;
+use crate::window::AkashicCanvas;
 
 pub struct PointerDownPlugin;
 
@@ -20,32 +21,35 @@ impl Plugin for PointerDownPlugin {
 }
 
 #[derive(Deref)]
-pub(crate) struct HtmlPointerDownEvent(PointerEvent);
+struct HtmlPointerDownEvent(PointerEvent);
 
 
 subscribe_html_event!(pointerdown, PointerEvent, HtmlPointerDownEvent);
 
+
 fn pop_event_queue(
     mut ew: EventWriter<MouseButtonInput>,
+    canvas: NonSend<AkashicCanvas>,
     window: Query<Entity, With<PrimaryWindow>>,
     queue: NonSend<AkashicEventQueue<HtmlPointerDownEvent>>,
 ) {
     while let Some(event) = queue.pop_front() {
-        let button = event.button();
-
-        ew.send(MouseButtonInput {
-            button: convert_to_mouse_button(button),
-            state: ButtonState::Pressed,
-            window: window.single(),
-        });
+        if canvas.set_pointer_capture(event.pointer_id()).is_ok() {
+            let button = event.button();
+            ew.send(MouseButtonInput {
+                button: convert_to_mouse_button(button),
+                state: ButtonState::Pressed,
+                window: window.single(),
+            });
+        }
     }
 }
 
 
 pub(crate) fn convert_to_mouse_button(raw: i16) -> MouseButton {
     match raw {
-        1 => MouseButton::Left,
-        4 => MouseButton::Middle,
+        0 => MouseButton::Left,
+        1 => MouseButton::Middle,
         2 => MouseButton::Right,
         _ => {
             if let Ok(raw) = u16::try_from(raw) {
