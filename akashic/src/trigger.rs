@@ -1,6 +1,7 @@
 use std::marker::PhantomData;
 
 use auto_delegate::delegate;
+use serde::{Deserialize, Serialize};
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::convert::FromWasmAbi;
 use wasm_bindgen::JsValue;
@@ -21,13 +22,13 @@ pub mod prelude {
         message::MessageHandler,
         on_load::*,
         on_update::*,
-        Trigger,
-        Void,
         point::{
             point_down::*,
+            point_move::*,
             point_up::*,
-            point_move::*
-        }
+        },
+        Trigger,
+        Void,
     };
 }
 
@@ -49,8 +50,6 @@ pub trait PointEventBase {
 }
 
 
-
-
 #[delegate]
 pub trait PointDeltaEventBase: PointEventBase {
     fn start_delta(&self) -> CommonOffset;
@@ -60,7 +59,7 @@ pub trait PointDeltaEventBase: PointEventBase {
 }
 
 
-
+#[derive(Deserialize, Serialize, Debug, Copy, Clone, Hash, Default)]
 pub struct Void;
 
 #[macro_export]

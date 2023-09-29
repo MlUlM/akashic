@@ -39,3 +39,10 @@ approx = "0.5.1"
 serde = { version = "1.0.188", features = ["derive"] }
 bevy_mod_raycast = "0.13.1"
 bevy_rapier3d = "0.22.0"
+
+bevy_mod_picking = { version = "0.15.0", default-features = false, features = ["backend_raycast"], optional = true }
+
+
+[features]
+default = []
+picking = ["bevy_mod_picking"]

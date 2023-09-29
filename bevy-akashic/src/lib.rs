@@ -56,9 +56,9 @@ impl<T> Clone for SharedObject<T> {
 
 #[macro_export]
 macro_rules! unsafe_impl_all_synchronization {
-    ($struct_name: ident) => {
-        unsafe impl Send for $struct_name{}
+    ($struct_name: ident $(, $generics:ident)?) => {
+        unsafe impl$(<$generics>)? Send for $struct_name$(<$generics>)?{}
         
-        unsafe impl Sync for $struct_name{}
+        unsafe impl$(<$generics>)? Sync for $struct_name$(<$generics>)?{}
     };
 }

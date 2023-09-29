@@ -11,6 +11,8 @@ pub enum AkashicSystemSet {
     Feed,
 
     Despawn,
+
+    RequestSaveSnapShot
 }
 
 
@@ -27,6 +29,7 @@ impl Plugin for AkashicSystemSetPlugin {
                     AkashicSystemSet::PointEvents,
                     AkashicSystemSet::Feed,
                     AkashicSystemSet::Despawn,
+                    AkashicSystemSet::RequestSaveSnapShot
                 )
                     .chain(),
             );

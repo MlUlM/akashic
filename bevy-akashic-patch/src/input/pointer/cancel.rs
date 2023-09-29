@@ -1,5 +1,4 @@
 use bevy::app::{App, PreUpdate};
-use bevy::log::info;
 use bevy::prelude::{Deref, Entity, EventWriter, NonSend, Plugin, Query, With};
 use bevy::window::{CursorLeft, PrimaryWindow};
 use web_sys::PointerEvent;

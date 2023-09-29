@@ -30,6 +30,8 @@ bytemuck = { version = "1.14.0", features = ["derive"] }
 image = { version = "0.24.7", features = ["png"] }
 bevy_mod_raycast = { workspace = true }
 bevy_rapier3d = "0.22.0"
+serde_json = "1.0.107"
+bevy_save = "0.9.1"
 
 [features]
 default = []

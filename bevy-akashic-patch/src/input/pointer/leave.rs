@@ -7,9 +7,10 @@ use bevy_akashic::event::AkashicEventQueue;
 
 use crate::input::pointer::macros::subscribe_html_event;
 
-pub struct PointerLeftPlugin;
+pub struct PointerLeavePlugin;
 
-impl Plugin for PointerLeftPlugin {
+
+impl Plugin for PointerLeavePlugin {
     fn build(&self, app: &mut App) {
         subscribe_pointerleave_event(app);
 
@@ -22,6 +23,7 @@ struct HtmlPointerLeaveEvent(PointerEvent);
 
 
 subscribe_html_event!(pointerleave, PointerEvent, HtmlPointerLeaveEvent);
+
 
 fn pop_event_queue(
     mut ew: EventWriter<CursorLeft>,

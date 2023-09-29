@@ -56,6 +56,13 @@ pub(crate) mod macros {
                             crate::input::akashic_pointer::raycast::update_hit_raycasts::<$event, $component>,
                             crate::input::akashic_pointer::insert_all_remaining_events_to_window::<$event, $component>
                         ).chain());
+
+                    #[cfg(feature="picking")]
+                    {
+                        app
+                            .add_event::<bevy_mod_picking::events::Pointer<$event>>()
+                            .add_plugins(bevy_mod_picking::prelude::EventListenerPlugin::<bevy_mod_picking::events::Pointer<$event>>::default());
+                    }
                 }
             }
         }

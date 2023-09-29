@@ -1,5 +1,5 @@
 use auto_delegate::Delegate;
-use bevy::prelude::{App, Commands, Component, Deref, Entity, Event, EventWriter, IntoSystemConfigs, NonSend, Query, With};
+use bevy::prelude::{App, Commands, Component, Deref, Entity, Event, EventWriter, IntoSystemConfigs, NonSend, Query, Reflect, With};
 
 use akashic::event::point::point_move::PointMoveEvent;
 use akashic::event::point::point_up::PointUpEvent;
@@ -16,9 +16,10 @@ use crate::plugin::scene::NativeScene;
 use crate::prelude::point::r#move::OnPointMove;
 use crate::unsafe_impl_all_synchronization;
 
-#[derive(Event, Deref, Clone, Debug, Delegate)]
+#[derive(Event, Deref, Clone, Debug, Delegate, Reflect)]
 #[to(AkashicPointEventBase, PointEventBase)]
-pub struct AkashicPointDownEvent(PointEventInner<PointDownEvent>);
+#[reflect(from_reflect = false)]
+pub struct AkashicPointDownEvent(#[reflect(ignore)] PointEventInner<PointDownEvent>);
 unsafe_impl_all_synchronization!(AkashicPointDownEvent);
 impl AkashicPointDownEvent {
     #[inline(always)]
@@ -28,9 +29,10 @@ impl AkashicPointDownEvent {
 }
 
 
-#[derive(Event, Deref, Clone, Debug, Delegate)]
+#[derive(Event, Deref, Clone, Debug, Delegate, Reflect)]
 #[to(AkashicPointEventBase, PointEventBase)]
-pub struct AkashicPointMoveEvent(PointDeltaEventInner<PointMoveEvent>);
+#[reflect(from_reflect = false)]
+pub struct AkashicPointMoveEvent(#[reflect(ignore)] PointDeltaEventInner<PointMoveEvent>);
 unsafe_impl_all_synchronization!(AkashicPointMoveEvent);
 impl AkashicPointMoveEvent {
     #[inline(always)]
@@ -40,9 +42,10 @@ impl AkashicPointMoveEvent {
 }
 
 
-#[derive(Event, Deref, Clone, Debug, Delegate)]
+#[derive(Event, Deref, Clone, Debug, Delegate, Reflect)]
 #[to(AkashicPointEventBase, PointEventBase)]
-pub struct AkashicPointUpEvent(PointDeltaEventInner<PointUpEvent>);
+#[reflect(from_reflect = false)]
+pub struct AkashicPointUpEvent(#[reflect(ignore)] PointDeltaEventInner<PointUpEvent>);
 unsafe_impl_all_synchronization!(AkashicPointUpEvent);
 impl AkashicPointUpEvent {
     #[inline(always)]

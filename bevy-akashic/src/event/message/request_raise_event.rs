@@ -1,5 +1,5 @@
 use bevy::ecs::system::SystemParam;
-use bevy::prelude::Event;
+use bevy::prelude::{Event, FromWorld};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use akashic::event::message::MessageEvent;
@@ -58,6 +58,7 @@ unsafe impl<E: Serialize + DeserializeOwned + Event> Sync for RequestRaiseEvent<
 
 #[derive(SystemParam, Debug, Copy, Clone)]
 pub struct RaiseEventRequester;
+
 
 impl RaiseEventRequester {
     #[inline]

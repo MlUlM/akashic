@@ -117,7 +117,7 @@ fn akashic_serve() {
         .arg("akashic")
         .arg("serve")
         .arg(".")
-        .args(["--target-service", "nicolive"])
+        .args(["-s", "nicolive:multi_admission"])
         .status()
         .unwrap();
 }

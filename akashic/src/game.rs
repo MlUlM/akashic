@@ -1,19 +1,24 @@
 use std::fmt::Debug;
+
+use serde::Serialize;
+use wasm_bindgen::closure::WasmClosureFnOnce;
 use wasm_bindgen::JsValue;
-
 use wasm_bindgen::prelude::wasm_bindgen;
-use crate::event::AkashicEvent;
+use crate::console_log;
 
+use crate::event::AkashicEvent;
 use crate::event::join::JoinEvent;
+use crate::game::snapshot::SnapshotSaveRequest;
 use crate::game::vars::Vars;
-use crate::prelude::Trigger;
+use crate::prelude::{Scene, Trigger};
 use crate::random::RandomGenerator;
 use crate::resource_factory::ResourceFactory;
-use crate::scene::Scene;
 use crate::trigger::join::JoinHandler;
 use crate::trigger::NativeTrigger;
+use crate::util::FunctionIntoJsValue;
 
 pub mod vars;
+pub mod snapshot;
 
 pub mod prelude {
     pub use crate::game::{Game, GAME};
@@ -69,14 +74,62 @@ extern "C" {
 
     #[wasm_bindgen(method, getter, js_name = onJoin)]
     fn _on_join(this: &Game) -> NativeTrigger;
+
+    #[wasm_bindgen(method, js_name = requestSaveSnapshot)]
+    fn _request_save_snapshot(this: &Game, f: JsValue);
+
+    #[wasm_bindgen(method, js_name = requestSaveSnapshot)]
+    fn _request_save_snapshot_with_owner(this: &Game, f: JsValue, owner: JsValue);
 }
 
 
 impl Game {
     #[inline]
-    pub fn raise_event(&self, event: impl Into<AkashicEvent>){
+    pub fn raise_event(&self, event: impl Into<AkashicEvent>) {
         self._raise_event(event.into());
     }
+
+    #[inline]
+    pub fn request_save_snapshot<T: Serialize>(&self, f: impl FnMut() -> Option<SnapshotSaveRequest<T>> + 'static) {
+        self._request(f, None);
+    }
+
+
+    #[inline]
+    pub fn request_save_snapshot_with_owner<T: Serialize>(
+        &self,
+        f: impl FnMut() -> Option<SnapshotSaveRequest<T>> + 'static,
+        owner: impl Into<JsValue>,
+    ) {
+        self._request(f, Some(owner.into()));
+    }
+
+    fn _request<T: Serialize>(
+        &self,
+        mut f: impl FnMut() -> Option<SnapshotSaveRequest<T>> + 'static,
+        owner: Option<JsValue>,
+    ) {
+
+        let f = convert(move || {
+            let j = f()
+                .and_then(|snapshot| serde_wasm_bindgen::to_value(&snapshot).ok())
+                .unwrap_or(JsValue::NULL);
+            console_log!("{j:?}");
+            j
+        });
+
+        if let Some(owner) = owner {
+            self._request_save_snapshot_with_owner(f, owner);
+        } else {
+            self._request_save_snapshot(f);
+        }
+    }
+}
+
+
+#[inline(always)]
+fn convert(f: impl FnMut() -> JsValue + 'static) -> JsValue {
+    f.into_js_value()
 }
 
 

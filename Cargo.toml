@@ -45,3 +45,4 @@ bevy-akashic = { path = "bevy-akashic", features = ["3d"] }
 console_error_panic_hook = "0.1.7"
 serde = { version = "1.0.167", features = ["derive"] }
 env_logger = "0.10.0"
+

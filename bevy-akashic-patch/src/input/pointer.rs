@@ -7,14 +7,14 @@ use crate::input::pointer::cancel::PointerCancelPlugin;
 
 use crate::input::pointer::down::PointerDownPlugin;
 use crate::input::pointer::enter::PointerEnterPlugin;
-use crate::input::pointer::left::PointerLeftPlugin;
+use crate::input::pointer::leave::PointerLeavePlugin;
 use crate::input::pointer::moved::PointerMovedPlugin;
 use crate::input::pointer::up::PointerUpPlugin;
 
 pub mod down;
 pub mod moved;
 pub mod up;
-pub mod left;
+pub mod leave;
 pub mod enter;
 pub mod cancel;
 
@@ -29,7 +29,7 @@ impl Plugin for PointerPlugins {
             PointerDownPlugin,
             PointerMovedPlugin,
             PointerUpPlugin,
-            PointerLeftPlugin,
+            PointerLeavePlugin,
             PointerCancelPlugin
         ));
     }
