@@ -2,6 +2,7 @@ use bevy::app::{App, PreUpdate};
 use bevy::prelude::{Deref, Entity, EventWriter, NonSend, Plugin, Query, With};
 use bevy::window::{CursorEntered, PrimaryWindow};
 use web_sys::PointerEvent;
+use akashic::console_log;
 
 use bevy_akashic::event::AkashicEventQueue;
 
@@ -29,6 +30,7 @@ fn pop_event_queue(
     queue: NonSend<AkashicEventQueue<HtmlPointerEnterEvent>>,
 ) {
     while queue.pop_front().is_some() {
+
         ew.send(CursorEntered {
             window: window.single(),
         });

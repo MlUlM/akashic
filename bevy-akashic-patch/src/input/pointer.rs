@@ -1,10 +1,11 @@
 use bevy::app::App;
+use bevy::log::info;
 use bevy::math::Vec2;
 use bevy::prelude::Plugin;
 use wasm_bindgen::prelude::wasm_bindgen;
 use web_sys::{DomRect, PointerEvent};
-use crate::input::pointer::cancel::PointerCancelPlugin;
 
+use crate::input::pointer::cancel::PointerCancelPlugin;
 use crate::input::pointer::down::PointerDownPlugin;
 use crate::input::pointer::enter::PointerEnterPlugin;
 use crate::input::pointer::leave::PointerLeavePlugin;
@@ -46,6 +47,7 @@ pub(crate) fn convert_to_position(
     event: &PointerEvent,
 ) -> Vec2 {
     let rect = canvas_rect();
+
     Vec2::new(event.client_x() as f32 - rect.left() as f32, event.client_y() as f32 - rect.top() as f32)
 }
 

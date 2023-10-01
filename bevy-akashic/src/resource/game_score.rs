@@ -1,4 +1,4 @@
-use bevy::prelude::Resource;
+use bevy::prelude::{info, Resource};
 
 use akashic::game::GAME;
 use akashic::game::vars::game_state::GameState;
@@ -25,7 +25,6 @@ impl GameScore {
     #[inline(always)]
     pub fn add_score_by(&mut self, add_score: isize) {
         self.set_score(self.cache + add_score);
-        self.cache += add_score;
     }
 
     #[inline(always)]

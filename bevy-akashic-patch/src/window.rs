@@ -4,6 +4,7 @@ use bevy::prelude::{Deref, Entity, FromWorld, Query, Window, With};
 use bevy::window::RawHandleWrapper;
 use raw_window_handle::{RawDisplayHandle, RawWindowHandle, WebDisplayHandle, WebWindowHandle};
 use web_sys::HtmlCanvasElement;
+use bevy_akashic::prelude::object2d::touchable::Touchable;
 
 use crate::winit::{AkashicSurface, create_screen_surface};
 
@@ -31,6 +32,7 @@ impl Plugin for AkashicWindowPlugin {
 
         app.world
             .entity_mut(primary)
+            .insert(Touchable(true))
             .insert(RawHandleWrapper {
                 window_handle: RawWindowHandle::Web(window_raw_handle),
                 display_handle: RawDisplayHandle::Web(WebDisplayHandle::empty()),

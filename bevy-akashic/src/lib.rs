@@ -22,6 +22,10 @@ pub mod prelude {
     pub use crate::plugin::prelude::*;
 }
 
+pub mod save{
+    pub use bevy_save::*;
+}
+
 
 #[derive(Debug, Default, Deref)]
 pub(crate) struct SharedObject<T: 'static>(Arc<Mutex<T>>);

@@ -1,4 +1,5 @@
 use bevy::app::{App, PreUpdate};
+use bevy::log::info;
 use bevy::prelude::{Deref, Entity, EventWriter, NonSend, Plugin, Query, With};
 use bevy::window::{PrimaryWindow, WindowFocused};
 use web_sys::FocusEvent;
@@ -39,6 +40,7 @@ fn pop_focus_queue(
     queue: NonSend<AkashicEventQueue<HtmlFocusEvent>>,
 ) {
     while queue.pop_front().is_some() {
+        info!("focus");
         ew.send(WindowFocused {
             focused: true,
             window: window.single(),

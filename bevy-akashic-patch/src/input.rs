@@ -1,8 +1,7 @@
 use bevy::app::App;
 use bevy::prelude::Plugin;
-use bevy_akashic::plugin::akashic_3d::is_node;
-use crate::input::akashic_pointer::AkashicPointPatchPlugins;
 
+use crate::input::akashic_pointer::AkashicPointPatchPlugins;
 use crate::input::focus::WindowFocusPlugin;
 use crate::input::pointer::PointerPlugins;
 use crate::input::touch::TouchPlugins;
@@ -21,8 +20,7 @@ pub struct AkashicInputPlugin;
 
 impl Plugin for AkashicInputPlugin {
     fn build(&self, app: &mut App) {
-        if !is_node() {
-            app
+        app
             .add_plugins((
                 PointerPlugins,
                 TouchPlugins,
@@ -31,7 +29,6 @@ impl Plugin for AkashicInputPlugin {
                 WindowFocusPlugin,
                 WindowResizePlugin
             ));
-        }
     }
 }
 

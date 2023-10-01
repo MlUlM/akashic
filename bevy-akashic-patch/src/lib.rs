@@ -1,6 +1,7 @@
 use bevy::a11y::AccessibilityPlugin;
 use bevy::app::{PluginGroup, PluginGroupBuilder};
 use bevy::asset::AssetPlugin;
+use bevy::audio::AudioPlugin;
 use bevy::core::{FrameCountPlugin, TaskPoolPlugin, TypeRegistrationPlugin};
 use bevy::core_pipeline::CorePipelinePlugin;
 use bevy::diagnostic::DiagnosticsPlugin;
@@ -18,13 +19,13 @@ use bevy::sprite::SpritePlugin;
 use bevy::text::TextPlugin;
 use bevy::time::TimePlugin;
 use bevy::ui::UiPlugin;
+
 use bevy_akashic::plugin::AkashicCorePlugins;
 use bevy_akashic::prelude::AkashicScheduleRunnerPlugin;
 
 use crate::asset::AkashicAssetIoPlugin;
 use crate::input::AkashicInputPlugin;
 use crate::window::AkashicWindowPlugin;
-use crate::winit::AkashicWinitPlugin;
 
 pub mod asset;
 pub mod winit;
@@ -73,5 +74,6 @@ impl PluginGroup for AkashicPatchDefaultPlugins {
             .add(GilrsPlugin)
             .add(AkashicInputPlugin)
             .add(AkashicScheduleRunnerPlugin)
+            .add(AudioPlugin::default())
     }
 }

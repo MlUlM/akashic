@@ -1,6 +1,10 @@
 use std::sync::atomic::{AtomicBool, Ordering};
 
-use bevy::app::{App, Plugin};
+use bevy::app::{App, AppExit, Plugin};
+use bevy::ecs::event::ManualEventReader;
+use bevy::prelude::Events;
+use winit::event_loop::ControlFlow;
+use akashic::game::GAME;
 
 use akashic::prelude::UpdateHandler;
 
@@ -11,6 +15,8 @@ pub struct AkashicScheduleRunnerPlugin;
 
 impl Plugin for AkashicScheduleRunnerPlugin {
     fn build(&self, app: &mut App) {
+        let mut app_exit_event_reader = ManualEventReader::<AppExit>::default();
+
         app
             .set_runner(move |mut app| {
                 app
@@ -26,6 +32,13 @@ impl Plugin for AkashicScheduleRunnerPlugin {
                             SETUP_DONE.store(true, Ordering::Relaxed);
                             app.finish();
                             app.cleanup();
+                        }
+
+                        if let Some(app_exit_events) = app.world.get_resource::<Events<AppExit>>() {
+                            if app_exit_event_reader.iter(app_exit_events).last().is_some() {
+                                GAME.pop_scene();
+                                return;
+                            }
                         }
 
                         if app.ready() {

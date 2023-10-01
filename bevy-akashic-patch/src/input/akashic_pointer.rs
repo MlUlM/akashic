@@ -1,4 +1,5 @@
 use bevy::app::App;
+use bevy::log::info;
 use bevy::prelude::{Commands, Component, Deref, DerefMut, Entity, Event, EventReader, NonSendMut, Plugin, Query, With};
 use bevy::window::PrimaryWindow;
 
@@ -88,6 +89,7 @@ pub(crate) fn insert_all_remaining_events_to_window<E: Event, C: From<E> + Compo
 ) {
     let Ok(window_entity) = window.get_single() else { return; };
     while let Some(event) = storage.pop() {
+
         commands.entity(window_entity).insert(C::from(event));
     }
 }

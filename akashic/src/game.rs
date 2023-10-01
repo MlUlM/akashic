@@ -64,7 +64,10 @@ extern "C" {
     pub fn resource_factory(this: &Game) -> ResourceFactory;
 
     #[wasm_bindgen(method, js_name = pushScene)]
-    pub fn push_scene(this: &Game, scene: Scene, options: JsValue) -> NativeTrigger;
+    pub fn push_scene(this: &Game, scene: Scene, options: JsValue);
+
+    #[wasm_bindgen(method, js_name = popScene)]
+    pub fn pop_scene_with_args(this: &Game, preserve: bool, step: usize);
 
     #[wasm_bindgen(method)]
     pub fn modified(this: &Game);
@@ -84,6 +87,12 @@ extern "C" {
 
 
 impl Game {
+    #[inline]
+    pub fn pop_scene(&self) {
+        self.pop_scene_with_args(false, 1);
+    }
+
+
     #[inline]
     pub fn raise_event(&self, event: impl Into<AkashicEvent>) {
         self._raise_event(event.into());
@@ -109,7 +118,6 @@ impl Game {
         mut f: impl FnMut() -> Option<SnapshotSaveRequest<T>> + 'static,
         owner: Option<JsValue>,
     ) {
-
         let f = convert(move || {
             let j = f()
                 .and_then(|snapshot| serde_wasm_bindgen::to_value(&snapshot).ok())

@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 
-use bevy::math::{Vec2, Vec3Swizzles};
+use bevy::math::{Vec2, Vec2Swizzles};
 use bevy::prelude::{Camera, Commands, Component, Entity, EventWriter, GlobalTransform, NonSendMut, Query, Reflect, With};
 use bevy::render::camera::NormalizedRenderTarget;
 use bevy::window::{PrimaryWindow, WindowRef};
@@ -20,7 +20,7 @@ pub(crate) fn update_hit_raycasts<E: AkashicPointEventBase + PointEventBase + De
     window: Query<Entity, With<PrimaryWindow>>,
     camera: Query<(&Camera, &GlobalTransform)>,
     pickables: Query<&Touchable>,
-   #[cfg(feature = "picking")] mut ew: EventWriter<bevy_mod_picking::events::Pointer<E>>,
+    #[cfg(feature = "picking")] mut ew: EventWriter<bevy_mod_picking::events::Pointer<E>>,
 ) {
     let mut no_hits: Vec<E> = Vec::with_capacity(storage.len());
 
@@ -36,7 +36,7 @@ pub(crate) fn update_hit_raycasts<E: AkashicPointEventBase + PointEventBase + De
                     let point_id = PointerId::Mouse;
                     let location = Location {
                         target: NormalizedRenderTarget::Window(WindowRef::Primary.normalize(window.get_single().ok()).unwrap()),
-                        position: event.pointer_location().xy(),
+                        position: event.pointer_location(),
                     };
                     ew.send(bevy_mod_picking::events::Pointer::new(point_id, location, entity, event.clone()));
                 }
@@ -61,12 +61,12 @@ fn find_hits(
 
     let settings = bevy_mod_raycast::system_param::RaycastSettings {
         visibility: RaycastVisibility::MustBeVisibleAndInView,
-        filter: &|_| true,
-        early_exit_test: &|entity_hit| {
-            pickables
-                .get(entity_hit)
-                .is_ok_and(|touchable| touchable.0)
-        },
+        filter: &|entity| pickables
+            .get(entity)
+            .is_ok_and(|touchable| touchable.0),
+        early_exit_test: &|entity| pickables
+            .get(entity)
+            .is_ok_and(|touchable| touchable.0),
     };
 
     let hits = raycast
@@ -75,7 +75,6 @@ fn find_hits(
         .map(|(entity, _)| entity)
         .copied()
         .collect::<Vec<_>>();
-
 
     if hits.is_empty() {
         None

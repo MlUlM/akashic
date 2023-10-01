@@ -1,6 +1,8 @@
-use bevy::math::Vec3;
+use bevy::math::Vec2;
+
 use akashic::player::Player;
 use akashic::trigger::PointEventBase;
+
 use crate::resource::game::GameInfo;
 
 pub mod down;
@@ -13,7 +15,8 @@ pub trait AkashicPointEventBase {
     fn source_player(&self) -> Player;
 
 
-    fn pointer_location(&self) -> Vec3;
+    fn pointer_location(&self) -> Vec2;
+
 
     #[inline(always)]
     fn source_player_id(&self) -> String {
@@ -35,8 +38,11 @@ impl<E: PointEventBase> AkashicPointEventBase for E {
 
 
     #[inline]
-    fn pointer_location(&self) -> Vec3 {
+    fn pointer_location(&self) -> Vec2 {
         let pos = self.point();
-        Vec3::new(pos.x(), pos.y(), 0.)
+        Vec2::new(pos.x(), pos.y())
     }
 }
+
+
+

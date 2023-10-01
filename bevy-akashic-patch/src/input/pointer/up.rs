@@ -1,7 +1,6 @@
 use bevy::app::{App, Plugin};
 use bevy::input::ButtonState;
 use bevy::input::mouse::MouseButtonInput;
-use bevy::log::info;
 use bevy::prelude::{Deref, Entity, EventWriter, NonSend, Query, With};
 use bevy::window::PrimaryWindow;
 use web_sys::PointerEvent;
@@ -10,7 +9,6 @@ use bevy_akashic::event::AkashicEventQueue;
 
 use crate::input::pointer::down::convert_to_mouse_button;
 use crate::input::pointer::macros::subscribe_html_event;
-
 
 pub struct PointerUpPlugin;
 
@@ -36,11 +34,6 @@ fn pop_event_queue(
     window: Query<Entity, With<PrimaryWindow>>,
 ) {
     while let Some(event) = queue.pop_front() {
-        info!("up = {:?}", MouseButtonInput {
-            state: ButtonState::Released,
-            button: convert_to_mouse_button(event.button()),
-            window: window.single(),
-        });
         ew.send(MouseButtonInput {
             state: ButtonState::Released,
             button: convert_to_mouse_button(event.button()),

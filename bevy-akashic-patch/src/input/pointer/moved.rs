@@ -1,8 +1,8 @@
 use bevy::app::{App, Plugin};
 use bevy::input::mouse::MouseMotion;
-use bevy::math::Vec2;
+use bevy::math::{DVec2, Vec2};
 use bevy::prelude::{Deref, Entity, EventWriter, NonSend, Query, With};
-use bevy::window::{CursorMoved, PrimaryWindow};
+use bevy::window::{CursorMoved, PrimaryWindow, Window};
 use web_sys::PointerEvent;
 
 use bevy_akashic::event::AkashicEventQueue;
@@ -32,20 +32,23 @@ subscribe_html_event!(pointermove, PointerEvent, HtmlMouseMoveEvent);
 fn pop_event_queue(
     mut ew: EventWriter<CursorMoved>,
     mut moved: EventWriter<MouseMotion>,
-    mut window: Query<Entity, With<PrimaryWindow>>,
+    mut window: Query<(Entity, &mut Window), With<PrimaryWindow>>,
     queue: NonSend<AkashicEventQueue<HtmlMouseMoveEvent>>,
 ) {
     while let Some(event) = queue.pop_front() {
-        let pos = convert_to_position(&event);
-        let entity = window.single_mut();
-
         moved.send(MouseMotion {
             delta: Vec2::new(event.movement_x() as f32, event.movement_y() as f32)
         });
 
+        let position = convert_to_position(&event);
+        let (entity, mut window) = window.single_mut();
+
+        let physical_position = DVec2::new(position.x as f64, position.y as f64);
+        window.set_physical_cursor_position(Some(physical_position));
+
         ew.send(CursorMoved {
             window: entity,
-            position: pos,
+            position: (physical_position / window.resolution.scale_factor()).as_vec2(),
         })
     }
 }

@@ -1,5 +1,4 @@
 use bevy::ecs::system::SystemParam;
-use bevy::log::info;
 use bevy::math::{Vec3, Vec3Swizzles};
 use bevy::prelude::{Camera, Commands, Component, Entity, GlobalTransform, NonSendMut, Query, Res};
 use bevy_rapier3d::pipeline::QueryFilter;
@@ -16,7 +15,7 @@ pub(crate) fn update_hit_rapiers<E: AkashicPointEventBase + Clone, C: From<E> + 
     rapier: RapierParam,
 ) {
     for event in storage.iter().cloned() {
-        let Some(target_entity) = rapier.find(event.pointer_location()) else { continue; };
+        let Some(target_entity) = rapier.find(event.pointer_location().extend(0.)) else { continue; };
         commands
             .entity(target_entity)
             .insert(C::from(event));
@@ -25,7 +24,7 @@ pub(crate) fn update_hit_rapiers<E: AkashicPointEventBase + Clone, C: From<E> + 
     **storage = storage
         .iter()
         .cloned()
-        .filter(|event| rapier.find(event.pointer_location()).is_none())
+        .filter(|event| rapier.find(event.pointer_location().extend(0.)).is_none())
         .collect();
 }
 
@@ -83,8 +82,6 @@ fn find_pick_entity<'w, 's>(
             }),
         )
         .map(|(target, _)| {
-            info!("find entity = {target:?}");
-
             target
         })
 }

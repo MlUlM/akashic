@@ -1,11 +1,11 @@
 use auto_delegate::Delegate;
-use bevy::prelude::{Component, Vec3};
+use bevy::math::Vec2;
+use bevy::prelude::Component;
 use once_cell::sync::OnceCell;
 
 use akashic::player::Player;
 use akashic::prelude::{AkashicEntity, CommonOffset};
 use akashic::trigger::{PointDeltaEventBase, PointEventBase};
-
 
 #[derive(Debug, Clone, Component)]
 pub struct PointEventInner<E: PointEventBase + Clone> {
@@ -89,8 +89,8 @@ pub struct PointDeltaEventInner<E: PointDeltaEventBase + Clone> {
     #[to(AkashicPointEventBase, PointEventBase)]
     base: PointEventInner<E>,
     native_event: E,
-    start_delta: OnceCell<Vec3>,
-    prev_delta: OnceCell<Vec3>,
+    start_delta: OnceCell<Vec2>,
+    prev_delta: OnceCell<Vec2>,
 }
 
 
@@ -108,19 +108,19 @@ impl<E: PointDeltaEventBase + Clone> PointDeltaEventInner<E> {
 
 impl<B: PointDeltaEventBase + Clone> PointDeltaEventInner<B> {
     #[inline(always)]
-    pub fn start_delta(&self) -> Vec3 {
+    pub fn start_delta(&self) -> Vec2 {
         *self.start_delta.get_or_init(|| {
             let point = self.native_event.start_delta();
-            Vec3::new(point.x(), point.y(), 0.)
+            Vec2::new(point.x(), point.y())
         })
     }
 
 
     #[inline(always)]
-    pub fn prev_delta(&self) -> Vec3 {
+    pub fn prev_delta(&self) -> Vec2 {
         *self.prev_delta.get_or_init(|| {
             let point = self.native_event.prev_delta();
-            Vec3::new(point.x(), point.y(), 0.)
+            Vec2::new(point.x(), point.y())
         })
     }
 }
