@@ -1,12 +1,11 @@
 use bevy::app::{App, PreUpdate};
-use bevy::log::info;
 use bevy::prelude::{Deref, Entity, EventWriter, NonSend, Plugin, Query, With};
 use bevy::window::{PrimaryWindow, WindowBackendScaleFactorChanged, WindowResized, WindowScaleFactorChanged};
 use web_sys::{UiEvent, window};
 
 use bevy_akashic::event::AkashicEventQueue;
 
-use crate::winit::AkashicSurface;
+use crate::window::AkashicSurface;
 
 pub struct WindowResizePlugin;
 

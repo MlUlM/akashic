@@ -3,7 +3,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use bevy::app::{App, AppExit, Plugin};
 use bevy::ecs::event::ManualEventReader;
 use bevy::prelude::Events;
-use winit::event_loop::ControlFlow;
+
 use akashic::game::GAME;
 
 use akashic::prelude::UpdateHandler;

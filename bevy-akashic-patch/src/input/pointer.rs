@@ -69,7 +69,7 @@ pub(crate) mod macros {
                     use wasm_bindgen::JsCast;
                     app
                         .world
-                        .non_send_resource::<$crate::winit::AkashicSurface>()
+                        .non_send_resource::<$crate::window::AkashicSurface>()
                         .canvas()
                         .[<set_on $event_name>](Some(cb.as_ref().unchecked_ref()));
                     cb.forget();

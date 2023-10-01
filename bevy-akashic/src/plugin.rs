@@ -31,13 +31,8 @@ pub mod append;
 pub mod feed;
 pub mod scene;
 
-#[allow(unused)]
-#[cfg(feature = "3d")]
-pub mod akashic_3d;
 
 #[allow(unused)]
-#[cfg(feature = "3d")]
-pub mod akashic_3d2;
 pub mod snapshot;
 
 

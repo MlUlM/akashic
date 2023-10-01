@@ -15,7 +15,7 @@ auto-delegate = { workspace = true }
 serde-wasm-bindgen = { workspace = true }
 serde = { workspace = true }
 once_cell = { workspace = true }
-wgpu = { version = "0.16.0", optional = true, features = ["webgl"] }
+
 web-sys = { version = "0.3.64", optional = true, features = [
     'Document',
     'Element',
@@ -25,9 +25,8 @@ web-sys = { version = "0.3.64", optional = true, features = [
     'Window',
     "HtmlStyleElement"
 ] }
-winit = "0.28.6"
-bytemuck = { version = "1.14.0", features = ["derive"] }
-image = { version = "0.24.7", features = ["png"] }
+
+
 bevy_mod_raycast = { workspace = true }
 bevy_rapier3d = "0.22.0"
 serde_json = "1.0.107"
@@ -35,4 +34,3 @@ bevy_save = "0.9.1"
 
 [features]
 default = []
-3d = ["dep:wgpu", "dep:web-sys"]

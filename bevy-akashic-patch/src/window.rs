@@ -3,14 +3,16 @@ use bevy::ecs::system::SystemState;
 use bevy::prelude::{Deref, Entity, FromWorld, Query, Window, With};
 use bevy::window::RawHandleWrapper;
 use raw_window_handle::{RawDisplayHandle, RawWindowHandle, WebDisplayHandle, WebWindowHandle};
+use wasm_bindgen::prelude::wasm_bindgen;
 use web_sys::HtmlCanvasElement;
 use bevy_akashic::prelude::object2d::touchable::Touchable;
 
-use crate::winit::{AkashicSurface, create_screen_surface};
 
 #[derive(Deref, Debug)]
 pub(crate) struct AkashicCanvas(HtmlCanvasElement);
 
+#[derive(Deref, Debug)]
+pub(crate) struct AkashicSurface(akashic::asset::surface::Surface);
 
 pub struct AkashicWindowPlugin;
 
@@ -38,4 +40,10 @@ impl Plugin for AkashicWindowPlugin {
                 display_handle: RawDisplayHandle::Web(WebDisplayHandle::empty()),
             });
     }
+}
+
+
+#[wasm_bindgen(js_namespace=g)]
+extern {
+    fn create_screen_surface() -> akashic::asset::surface::Surface;
 }

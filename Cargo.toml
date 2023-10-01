@@ -31,18 +31,6 @@ anyhow = "1.0.75"
 thiserror = "1.0.48"
 bevy_mod_raycast = "0.13.1"
 
-[dev-dependencies]
-bevy = { version = "0.11", default-features = false, features = [
-    "bevy_core_pipeline",
-    "bevy_render",
-    "bevy_pbr",
-    "bevy_sprite",
-    "x11",
-    "png"
-] }
-bevy_rapier2d = "0.22.0"
-bevy-akashic = { path = "bevy-akashic", features = ["3d"] }
-console_error_panic_hook = "0.1.7"
-serde = { version = "1.0.167", features = ["derive"] }
-env_logger = "0.10.0"
+
+
 

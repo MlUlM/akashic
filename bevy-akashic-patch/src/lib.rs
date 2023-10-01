@@ -28,7 +28,6 @@ use crate::input::AkashicInputPlugin;
 use crate::window::AkashicWindowPlugin;
 
 pub mod asset;
-pub mod winit;
 pub mod input;
 mod window;
 
@@ -52,7 +51,6 @@ impl PluginGroup for AkashicPatchDefaultPlugins {
                 }),
                 ..Default::default()
             })
-            // .add(AkashicWinitPlugin)
             .add(AkashicWindowPlugin)
             .add(AkashicAssetIoPlugin)
             .add(AssetPlugin::default())
