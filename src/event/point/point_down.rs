@@ -15,6 +15,7 @@ extern "C" {
 }
 
 
+#[allow(clippy::from_over_into)]
 impl Into<AkashicEvent> for PointDownEvent {
     #[inline]
     fn into(self) -> AkashicEvent {

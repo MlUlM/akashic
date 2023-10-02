@@ -29,6 +29,7 @@ extern "C" {
 }
 
 
+#[allow(clippy::from_over_into)]
 impl Into<AkashicEvent> for MessageEvent{
     #[inline(always)]
     fn into(self) -> AkashicEvent {

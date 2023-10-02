@@ -5,7 +5,6 @@ use crate::prelude::Void;
 
 pub(crate) mod into_js_value;
 
-
 pub(crate) trait FunctionIntoJsValue<I, O> {
     /// ボクシングされたクロージャーからJsValueに変換します。
     fn into_js_value(self) -> JsValue;
