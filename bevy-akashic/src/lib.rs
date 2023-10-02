@@ -22,6 +22,8 @@ pub mod prelude {
     pub use crate::plugin::prelude::*;
 }
 
+
+#[cfg(feature = "snapshot")]
 pub mod save{
     pub use bevy_save::*;
 }

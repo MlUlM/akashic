@@ -33,6 +33,7 @@ pub mod scene;
 
 
 #[allow(unused)]
+#[cfg(feature = "snapshot")]
 pub mod snapshot;
 
 
