@@ -1,7 +1,6 @@
 use std::fmt::Debug;
 
 use serde::Serialize;
-use wasm_bindgen::closure::WasmClosureFnOnce;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 use crate::console_log;

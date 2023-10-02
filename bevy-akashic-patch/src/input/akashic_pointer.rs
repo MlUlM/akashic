@@ -11,7 +11,11 @@ pub mod down;
 
 pub mod r#move;
 pub mod up;
+
+#[cfg(feature = "input_raycast")]
 mod raycast;
+
+#[cfg(feature = "input_rapier3d")]
 mod rapier;
 
 pub struct AkashicPointPatchPlugins;
@@ -53,7 +57,9 @@ pub(crate) mod macros {
                         .insert_non_send_resource(crate::input::akashic_pointer::AkashicPontEventStorage::<$event>::default())
                         .add_systems(bevy::prelude::PreUpdate, (
                             crate::input::akashic_pointer::push_all_point_down_event::<$event>,
+                            #[cfg(feature = "input_rapier3d")]
                             crate::input::akashic_pointer::rapier::update_hit_rapiers::<$event, $component>,
+                            #[cfg(feature = "input_raycast")]
                             crate::input::akashic_pointer::raycast::update_hit_raycasts::<$event, $component>,
                             crate::input::akashic_pointer::insert_all_remaining_events_to_window::<$event, $component>
                         ).chain());

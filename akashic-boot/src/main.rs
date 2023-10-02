@@ -72,13 +72,14 @@ fn wasm_bindgen(example: &Option<String>, release: bool) {
     };
 
 
-    Command::new("wasm-bindgen")
+    Command::new("wasm-pack")
+        .arg("build")
+        .arg("--release")
         .args(["--target", "no-modules"])
         .args(["--out-dir", "out"])
         .args(["--out-name", "akashic"])
         .arg("--no-typescript")
-        .arg("--debug")
-        .arg(wasm_path.clone())
+        .arg("--no-pack")
         .status()
         .unwrap();
 }
@@ -94,7 +95,7 @@ fn convert_to_main_js() {
             module.exports = {
                 init: (passG) => {
                     g = passG
-                    init()
+                    init().then(wasm => wasm.start())
                 }
             }
         "#);

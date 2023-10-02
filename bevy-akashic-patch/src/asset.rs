@@ -3,6 +3,7 @@ use std::sync::{Arc, Mutex};
 
 use bevy::app::{App, Plugin};
 use bevy::asset::{AssetIo, AssetIoError, AssetServer, BoxedFuture, ChangeWatcher, FileType, Metadata};
+use bevy::log::info;
 use bevy::utils::HashMap;
 use wasm_bindgen::prelude::wasm_bindgen;
 
@@ -32,6 +33,7 @@ impl AssetIo for AkashicAssetIo {
 
             let file_path = if file_path.starts_with("/assets/") { file_path } else { format!("/assets/{file_path}") };
             let mut chace_map = chace.lock().unwrap();
+
             if let Some(asset_binary) = chace_map.get(&file_path) {
                 Ok(asset_binary.clone())
             } else {
@@ -39,6 +41,7 @@ impl AssetIo for AkashicAssetIo {
                     return Err(AssetIoError::NotFound(path.to_path_buf()));
                 };
                 let binary_data = binary_data.into_vec();
+             
                 chace_map.insert(file_path, binary_data.clone());
                 Ok(binary_data)
             }

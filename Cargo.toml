@@ -28,7 +28,7 @@ derive_builder = "0.12.0"
 once_cell = "1.18.0"
 anyhow = "1.0.75"
 thiserror = "1.0.48"
-bevy_mod_raycast = "0.13.1"
+
 
 
 
