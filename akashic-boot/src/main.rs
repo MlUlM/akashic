@@ -80,6 +80,13 @@ fn wasm_bindgen(example: &Option<String>, release: bool) {
         .arg(wasm_path)
         .status()
         .unwrap();
+
+    Command::new("npx.cmd")
+        .arg("wasm-opt")
+        .arg("out/akashic_bg.wasm")
+        .args(["-o", "out/akashic_bg.wasm"])
+        .status()
+        .unwrap();
 }
 
 
