@@ -1,10 +1,11 @@
 use std::fmt::Debug;
 
+use js_sys::JsString;
 use serde::Serialize;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
-use crate::console_log;
 
+use crate::console_log;
 use crate::event::AkashicEvent;
 use crate::event::join::JoinEvent;
 use crate::game::snapshot::SnapshotSaveRequest;
@@ -70,6 +71,9 @@ extern "C" {
 
     #[wasm_bindgen(method)]
     pub fn modified(this: &Game);
+
+    #[wasm_bindgen(method, getter, js_name = joinedPlayerIds)]
+    pub fn joined_player_ids(this: &Game) -> Box<[JsString]>;
 
     #[wasm_bindgen(method, js_name = raiseEvent)]
     fn _raise_event(this: &Game, event: AkashicEvent);
