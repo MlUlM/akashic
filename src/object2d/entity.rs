@@ -9,7 +9,7 @@ use crate::object2d::Object2D;
 use parent::Parent;
 use crate::prelude::{PointDownHandler, UpdateHandler};
 use crate::scene::Scene;
-use crate::trigger::point::point_move::PointMoveHandler;
+use crate::trigger::point::r#move::PointMoveHandler;
 
 pub mod filled_rect;
 pub mod sprite;

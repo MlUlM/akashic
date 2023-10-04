@@ -41,7 +41,7 @@ pub fn expand_on_load(entity_name: &Ident) -> syn::Result<TokenStream2> {
     expand_trigger(
         entity_name,
         ident("onLoad"),
-        quote!(crate::prelude::OnLoadHandler),
+        quote!(crate::prelude::LoadHandler),
         quote!(crate::prelude::Scene),
     )
 }
@@ -59,8 +59,8 @@ pub fn expand_point_up_capture(entity_name: &Ident) -> syn::Result<TokenStream2>
     expand_trigger(
         entity_name,
         ident("onPointUpCapture"),
-        quote!(crate::trigger::point::point_up::PointUpCaptureHandler),
-        quote!(crate::event::point::point_up::PointUpEvent),
+        quote!(crate::trigger::point::up::PointUpCaptureHandler),
+        quote!(crate::event::point::up::PointUpEvent),
     )
 }
 
@@ -68,8 +68,8 @@ pub fn expand_point_up(entity_name: &Ident) -> syn::Result<TokenStream2> {
     expand_trigger(
         entity_name,
         ident("onPointUp"),
-        quote!(crate::trigger::point::point_up::PointUpHandler),
-        quote!(crate::event::point::point_up::PointUpEvent),
+        quote!(crate::trigger::point::up::PointUpHandler),
+        quote!(crate::event::point::up::PointUpEvent),
     )
 }
 
@@ -77,8 +77,8 @@ pub fn expand_point_move_capture(entity_name: &Ident) -> syn::Result<TokenStream
     expand_trigger(
         entity_name,
         ident("onPointMoveCapture"),
-        quote!(crate::trigger::point::point_move::PointMoveCaptureHandler),
-        quote!(crate::event::point::point_move::PointMoveEvent),
+        quote!(crate::trigger::point::r#move::PointMoveCaptureHandler),
+        quote!(crate::event::point::r#move::PointMoveEvent),
     )
 }
 
@@ -86,8 +86,8 @@ pub fn expand_point_move(entity_name: &Ident) -> syn::Result<TokenStream2> {
     expand_trigger(
         entity_name,
         ident("onPointMove"),
-        quote!(crate::trigger::point::point_move::PointMoveHandler),
-        quote!(crate::event::point::point_move::PointMoveEvent),
+        quote!(crate::trigger::point::r#move::PointMoveHandler),
+        quote!(crate::event::point::r#move::PointMoveEvent),
     )
 }
 

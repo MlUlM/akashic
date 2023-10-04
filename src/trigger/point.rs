@@ -1,3 +1,3 @@
-pub mod point_down;
-pub mod point_up;
-pub mod point_move;
+pub mod down;
+pub mod up;
+pub mod r#move;

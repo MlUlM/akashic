@@ -10,8 +10,8 @@ use wasm_bindgen::prelude::wasm_bindgen;
 use crate::object2d::entity::AkashicEntity;
 use crate::prelude::CommonOffset;
 
-pub mod on_load;
-pub mod on_update;
+pub mod load;
+pub mod update;
 pub mod message;
 pub mod join;
 pub mod point;
@@ -20,12 +20,12 @@ pub mod point;
 pub mod prelude {
     pub use crate::trigger::{
         message::MessageHandler,
-        on_load::*,
-        on_update::*,
+        load::*,
+        update::*,
         point::{
-            point_down::*,
-            point_move::*,
-            point_up::*,
+            down::*,
+            r#move::*,
+            up::*,
         },
         Trigger,
         Void,

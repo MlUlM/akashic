@@ -19,9 +19,9 @@ pub mod prelude {
     pub use crate::{
         event::{
             point::{
-                point_down::*,
-                point_move::*,
-                point_up::*
+                down::*,
+                r#move::*,
+                up::*
             }
         },
         math::prelude::*

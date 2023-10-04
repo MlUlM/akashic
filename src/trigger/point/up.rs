@@ -1,5 +1,5 @@
 use auto_delegate::delegate;
-use crate::event::point::point_up::PointUpEvent;
+use crate::event::point::up::PointUpEvent;
 use crate::prelude::Trigger;
 
 #[delegate]
