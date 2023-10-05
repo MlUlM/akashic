@@ -7,11 +7,11 @@ use crate::prelude::{AkashicEntity, CommonOffset};
 
 #[wasm_bindgen(js_namespace = g)]
 extern "C" {
-    #[derive(Clone, Debug, PointEventBase)]
+    #[derive(Clone, PointEventBase)]
     pub type PointDownEvent;
 
     #[wasm_bindgen(constructor)]
-    pub fn new(pointer_id: u32, target: Option<AkashicEntity>, point: CommonOffset) -> PointDownEvent;
+    pub fn new(pointer_id: i32, target: Option<AkashicEntity>, point: CommonOffset) -> PointDownEvent;
 }
 
 

@@ -34,7 +34,7 @@ pub mod prelude {
 
 #[delegate]
 pub trait PointEventBase {
-    fn button(&self) -> u8;
+    fn button(&self) -> i16;
 
     fn event_flags(&self) -> u8;
 
@@ -46,7 +46,7 @@ pub trait PointEventBase {
 
     fn point(&self) -> crate::prelude::CommonOffset;
 
-    fn pointer_id(&self) -> f32;
+    fn pointer_id(&self) -> i32;
 }
 
 
