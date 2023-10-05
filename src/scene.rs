@@ -33,8 +33,11 @@ extern "C" {
     #[wasm_bindgen(method, getter)]
     pub fn name(this: &Scene) -> Option<String>;
 
-    #[wasm_bindgen(method, getter, js_name = _loaded)]
+    #[wasm_bindgen(method, getter, js_name = loaded)]
     pub fn loaded(this: &Scene) -> bool;
+
+    #[wasm_bindgen(method)]
+    pub fn unregister(this: &Scene, entity: JsValue);
 
     #[wasm_bindgen(method, js_name = append)]
     fn _append(this: &Scene, e: JsValue);

@@ -13,6 +13,7 @@ fn main() {
         let game_height = GAME.height();
 
         let scene = GAME.scene();
+
         let player_image = scene.asset().get_image("/assets/image/player.png");
         let player = SpriteBuilder::new(player_image).build();
         let player_width = player.width();
@@ -45,7 +46,7 @@ fn main() {
             );
 
             scene.append(&shot);
-            scene.on_update().add(move || {
+            shot.clone().on_update().add(move || {
                 if shot.x() > game_width {
                     shot.destroy();
                 }
