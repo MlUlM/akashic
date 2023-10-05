@@ -25,7 +25,7 @@ extern "C" {
     pub type Scene;
 
     #[wasm_bindgen(constructor)]
-    pub fn new(param: param::SceneParameterObject) -> Scene;
+    pub fn new(param: param::SceneParam) -> Scene;
 
     #[wasm_bindgen(method, getter)]
     pub fn local(this: &Scene) -> String;

@@ -1,0 +1,50 @@
+{
+	"width": 1280,
+	"height": 720,
+	"fps": 30,
+	"main": "./assets/script/main.js",
+	"assets": {
+		"assets/script/main.js": {
+			"type": "script",
+			"path": "assets/script/main.js",
+			"global": true
+		},
+		"assets/script/akashic_bg.wasm": {
+			"type": "binary",
+			"path": "assets/script/akashic_bg.wasm",
+			"global": true
+		},
+		"assets/script/akashic.js": {
+			"type": "script",
+			"path": "assets/script/akashic.js",
+			"global": true
+		},
+		"assets/image/player.png": {
+			"type": "image",
+			"path": "assets/image/player.png",
+			"width": 32,
+			"height": 32
+		},
+		"assets/image/shot.png": {
+			"type": "image",
+			"path": "assets/image/shot.png",
+			"width": 16,
+			"height": 16
+		},
+		"assets/audio/se": {
+			"type": "audio",
+			"path": "assets/audio/se",
+			"systemId": "sound",
+			"duration": 250,
+			"hint": {
+				"extensions": [
+					".aac",
+					".ogg"
+				]
+			}
+		}
+	},
+	"environment": {
+		"sandbox-runtime": "3"
+	}
+}

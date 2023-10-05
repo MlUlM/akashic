@@ -6,6 +6,17 @@ edition = "2021"
 [lib]
 
 
+[[example]]
+name = "hello_world"
+path = "examples/hello_world.rs"
+
+
+[[example]]
+name = "akashic_sample"
+path = "examples/akashic_sample.rs"
+
+
+
 [workspace]
 members = [
     "akashic-macro",
@@ -31,6 +42,5 @@ bevy_reflect = {version = "0.11.3", optional = true }
 [features]
 default = ["bevy"]
 bevy = ["bevy_reflect"]
-
 
 

@@ -1,77 +1,97 @@
+use derive_builder::Builder;
 use js_sys::JsString;
-use wasm_bindgen::{JsValue};
-use wasm_bindgen::prelude::wasm_bindgen;
+use wasm_bindgen::prelude::*;
 
 use crate::game::Game;
+use crate::scene::Scene;
 
-
-#[wasm_bindgen(getter_with_clone)]
-#[derive(Default, Clone)]
 #[non_exhaustive]
-pub struct SceneParameterObject {
+#[wasm_bindgen(getter_with_clone)]
+#[derive(Builder)]
+#[builder(
+name = "SceneBuilder",
+build_fn(private, name = "fallible_build")
+)]
+pub struct SceneParam {
+    #[builder(default)]
     pub game: Game,
 
     #[wasm_bindgen(js_name = assetIds)]
+    #[builder(setter(custom), default)]
     pub asset_ids: Option<Box<[JsString]>>,
 
     #[wasm_bindgen(js_name = assetPaths)]
+    #[builder(setter(custom), default)]
     pub asset_paths: Option<Box<[JsString]>>,
 
     #[wasm_bindgen(js_name = storageKeys)]
+    #[builder(setter(into, strip_option), default)]
     pub storage_keys: Option<Box<[JsValue]>>,
 
-    pub local: bool,
+    #[builder(default)]
+    pub local: LocalTickMode,
 
+    #[builder(setter(into, strip_option), default)]
     pub name: Option<JsString>,
+
+    #[builder(default)]
+    pub seethrough: bool,
+
+    #[wasm_bindgen(js_name = tickGenerationMode)]
+    #[builder(default)]
+    pub tick_generation_mode: TickGenerationMode,
 }
 
 
-impl SceneParameterObject {
-    pub fn builder(game: Game) -> SceneParameterObjectBuilder {
-        SceneParameterObjectBuilder::new(game)
-    }
-}
-
-
-// TODO: SCENEのパラメータを定義しなおす
-#[allow(unused)]
-#[derive(Default)]
-pub struct SceneParameterObjectBuilder {
-    game: Game,
-    asset_ids: Option<Vec<&'static str>>,
-    asset_paths: Option<Vec<String>>,
-    storage_keys: Option<Vec<String>>,
-    local: bool,
-    name: Option<String>,
-}
-
-
-impl SceneParameterObjectBuilder {
+impl SceneBuilder {
     #[inline]
-    pub fn new(game: Game) -> Self {
-        Self {
-            game,
-            ..Default::default()
-        }
-    }
-
-
-    #[inline]
-    pub fn asset_ids(mut self, asset_ids: Vec<&'static str>) -> SceneParameterObjectBuilder {
-        self.asset_ids = Some(asset_ids);
+    pub fn assets_ids(&mut self, assets_ids: Vec<&str>) -> &mut Self {
+        self.asset_ids = Some(Some(assets_ids.into_iter().map(JsString::from).collect()));
         self
     }
 
+    #[inline]
+    pub fn assets_paths(&mut self, asset_paths: Vec<&str>) -> &mut Self {
+        self.asset_paths = Some(Some(asset_paths.into_iter().map(JsString::from).collect()));
+        self
+    }
 
     #[inline]
-    pub fn build(self) -> SceneParameterObject {
-        SceneParameterObject {
-            game: self.game,
-            asset_ids: self.asset_ids.map(|ids| ids.into_iter().map(JsString::from).collect()),
-            asset_paths: self.asset_paths.map(|p| p.into_iter().map(JsString::from).collect()),
-            name: self.name.map(JsString::from),
-            ..Default::default()
-        }
+    pub fn build(&self) -> Scene {
+        Scene::new(self.fallible_build().unwrap())
     }
 }
 
+
+#[wasm_bindgen]
+#[derive(Eq, PartialEq, Debug, Copy, Clone, Hash)]
+pub enum LocalTickMode {
+    NonLocal = "non-local",
+    FullLocal = "full-local",
+    InterpolateLocal = "interpolate-local",
+}
+
+
+#[allow(clippy::derivable_impls)]
+impl Default for LocalTickMode {
+    fn default() -> Self {
+        LocalTickMode::NonLocal
+    }
+}
+
+
+#[wasm_bindgen]
+#[derive(Eq, PartialEq, Debug, Copy, Clone, Hash)]
+pub enum TickGenerationMode {
+    ByClock = "by-clock",
+
+    Manual = "manual",
+}
+
+
+#[allow(clippy::derivable_impls)]
+impl Default for TickGenerationMode {
+    fn default() -> Self {
+        Self::ByClock
+    }
+}

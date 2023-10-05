@@ -1,6 +1,6 @@
 use std::fmt::Debug;
-
 use js_sys::JsString;
+
 use serde::Serialize;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
@@ -10,9 +10,10 @@ use crate::event::AkashicEvent;
 use crate::event::join::JoinEvent;
 use crate::game::snapshot::SnapshotSaveRequest;
 use crate::game::vars::Vars;
-use crate::prelude::{Scene, Trigger};
+use crate::prelude::Trigger;
 use crate::random::RandomGenerator;
 use crate::resource_factory::ResourceFactory;
+use crate::scene::Scene;
 use crate::trigger::join::JoinHandler;
 use crate::trigger::NativeTrigger;
 use crate::util::FunctionIntoJsValue;
@@ -66,6 +67,9 @@ extern "C" {
     #[wasm_bindgen(method, js_name = pushScene)]
     pub fn push_scene(this: &Game, scene: Scene, options: JsValue);
 
+    #[wasm_bindgen(method, js_name = replaceScene)]
+    fn _replace_scene(this: &Game, scene: Scene, preserve_urrent: bool);
+
     #[wasm_bindgen(method, js_name = popScene)]
     pub fn pop_scene_with_args(this: &Game, preserve: bool, step: usize);
 
@@ -93,6 +97,18 @@ impl Game {
     #[inline]
     pub fn pop_scene(&self) {
         self.pop_scene_with_args(false, 1);
+    }
+
+
+    #[inline]
+    pub fn replace_scene(&self, scene: Scene) {
+        self._replace_scene(scene, false);
+    }
+
+
+    #[inline]
+    pub fn replace_scene_with_preserve_current(&self, scene: Scene) {
+        self._replace_scene(scene, true);
     }
 
 
