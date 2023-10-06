@@ -36,11 +36,8 @@ thiserror = "1.0.48"
 web-sys = { version = "0.3.64", features = ["HtmlCanvasElement"] }
 paste = "1.0.14"
 akashic-macro = { path = "./akashic-macro", version = "0.1" }
-bevy_reflect = {version = "0.11.3", optional = true }
 
 
-[features]
-default = ["bevy"]
-bevy = ["bevy_reflect"]
+
 
 
