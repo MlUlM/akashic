@@ -7,6 +7,9 @@ use crate::prelude::{AkashicEntity, CommonOffset};
 
 #[wasm_bindgen(js_namespace = g)]
 extern "C" {
+    /// This event is occurred once when `pointerdown` occurs.
+    ///
+    /// Then, if the pointer moves while down, [`PointMoveEvent`] will occur in succession.
     #[derive(Clone, PointEventBase)]
     pub type PointDownEvent;
 

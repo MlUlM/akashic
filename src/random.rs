@@ -6,7 +6,7 @@ extern {
     pub type RandomGenerator;
 
 
-    /// 0以上1未満の範囲で乱数を生成します。
+    /// Generates a random number greater than or equal to 0 and less than 1.
     #[wasm_bindgen(method)]
     pub fn generate(this: &RandomGenerator) -> f32;
 }

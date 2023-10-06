@@ -7,6 +7,7 @@ use akashic_macro::Scene;
 
 use crate::game::GAME;
 use crate::object2d::entity::{AkashicEntity, EntityObject2D};
+use crate::prelude::LocalTickMode;
 
 pub mod param;
 
@@ -28,7 +29,7 @@ extern "C" {
     pub fn new(param: param::SceneParam) -> Scene;
 
     #[wasm_bindgen(method, getter)]
-    pub fn local(this: &Scene) -> String;
+    pub fn local(this: &Scene) -> LocalTickMode;
 
     #[wasm_bindgen(method, getter)]
     pub fn name(this: &Scene) -> Option<String>;

@@ -6,12 +6,19 @@ use crate::player::Player;
 
 #[wasm_bindgen(js_namespace = g)]
 extern "C" {
+    /// Event representing a generic message.
+    ///
+    ///
+    /// Events are sent using [`Game::raise_event`](crate::game::Game::raise_event),
+    /// and each players can receive them using [`MessageHandler::on_message`](crate::trigger::message::MessageHandler::on_message).
     #[derive(Clone, Debug)]
     pub type MessageEvent;
 
     #[wasm_bindgen(constructor)]
     fn _new(data: JsValue, player: Option<Player>, local: Option<bool>, event_flags: Option<u8>) -> MessageEvent;
 
+
+    /// Return the message data.
     #[wasm_bindgen(method, getter)]
     pub fn data(this: &MessageEvent) -> JsValue;
 

@@ -3,11 +3,9 @@ use akashic_macro::PointDeltaEventBase;
 
 #[wasm_bindgen]
 extern "C" {
-    /// ポインティング操作の移動を表すイベント。 PointDownEvent後にのみ発生するため、MouseMove相当のものが本イベントとして発生することはない。
+    /// This event occurs when pointer is moved move after [`PointerDownEvent`](crate::event::point::down::PointDownEvent) occurred.
     ///
-    /// PointMoveEvent#startDeltaによってPointDownEvent時からの移動量が、 PointMoveEvent#prevDeltaによって直近のPointMoveEventからの移動量が取得出来る。 PointMoveEvent#pointにはPointMoveEvent#pointと同じ値が格納される。
-    ///
-    /// 本イベントは、プレイヤーがポインティングデバイスを移動していなくても、 カメラの移動等視覚的にポイントが変化している場合にも発生する。
+    /// So, it's more like a drag event than an event like `cursor-move`
     #[derive(Clone, PointDeltaEventBase)]
     pub type PointMoveEvent;
 }
