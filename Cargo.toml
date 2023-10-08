@@ -2,8 +2,11 @@
 name = "akashic"
 version = "0.1.0"
 edition = "2021"
-
-[lib]
+description = "Provides you Library that implements binding for the Akashic Engine"
+exclude = ["assets/", "crates"]
+readme = "README.md"
+keywords = ["game", "gamedev", "bevy"]
+license = "MIT OR Apache-2.0"
 
 
 [[example]]
@@ -15,6 +18,10 @@ path = "examples/hello_world.rs"
 name = "akashic_sample"
 path = "examples/akashic_sample.rs"
 
+
+[[example]]
+name = "play_audio"
+path = "examples/audio/play_audio.rs"
 
 
 [workspace]

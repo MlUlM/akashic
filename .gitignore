@@ -4,10 +4,7 @@
 **/.idea/
 **/node_modules/
 **/*.wasm
-game/script/bevy-akashic.wasm
 /.vscode/
-chars.txt
 *.zip
-PixelMplus12-Regular.ttf
 *.lock
-/game/script/main.js
+*.lock.json
