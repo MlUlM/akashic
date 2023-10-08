@@ -41,117 +41,90 @@ pub mod prelude {
 ///
 /// より詳細な情報は[akashic-engineのリファレンス](https://akashic-games.github.io/akashic-engine/v3/classes/E.html)を参照してください。
 pub trait EntityObject2D: Object2D + PointDownHandler + PointMoveHandler + PointMoveHandler + UpdateHandler + Into<AkashicEntity> {
-    /// このエンティティに割り振られる Game 単位で一意のID。(ただし local が真である場合を除く)
+    /// Returns the unique-id for each game assigned to this entity. (unless local is true).
     fn id(&self) -> isize;
 
 
-    /// このエンティティが属する[`Scene`](crate::scene::Scene)を取得します。
+    /// Returns the [`Scene`] to which this entity belongs.
     fn scene(&self) -> Scene;
 
 
-    /// このエンティティが属する[`Game`](crate::game::Game)を返します。
+    /// Returns the [`Game`] to which this entity belongs.
     fn game(&self) -> Game;
 
 
-    /// 自身の子となるエンティティをすべて取得します。
+    /// Returns the children of this entity.
     fn children(&self) -> Box<[AkashicEntity]>;
 
 
-    /// 自身の親を返します。
+    /// Returns the parent.
     ///
-    /// 親が存在しない場合、Noneが返されます。
+    /// If the parent does not exists, returns `None`.
     fn parent(&self) -> Option<Parent>;
 
 
-    /// 指定されたエンティティが自身の子に属す場合、そのエンティティを削除します。
+    /// Remove the target entity from this entity.
     ///
     /// ## Panics
     ///
-    /// 指定されたエンティティが自身の子ではない場合
+    /// If passed entity is not a child of this entity.
     fn remove_child(&self, child_entity: impl Into<AkashicEntity>);
 
 
-    /// 自身を親から削除します。
+    /// Remove this entity from parent.
     ///
     /// ## Panics
     ///
-    /// 属する親がいない場合
+    /// If there is no parent to belong to.
     fn remove_self(&self);
 
 
     /// TODO: shader_programメソッドを定義する
     // fn shader_program(&self);
 
-    /// プレイヤーにとって触れられるオブジェクトであるかを表します。
-    ///
-    /// 値がfalseである場合、ポインティングイベントの対象になりません。
-    /// デフォルトはfalseです。
-    ///
-    /// [`EntityObject2D`](EntityObject2D)の他のプロパティと異なり、この値の変更後に this.modified() を呼び出す必要はありません。
+    /// Returns whether this object is a pointing target.
     fn touchable(&self) -> bool;
 
 
-    /// 子を追加します。
     fn append(&self, child: impl Into<AkashicEntity>);
 
 
-    /// 子をtargetの直前に挿入します。
-    ///
-    /// targetが自身の子でない場合、append(e) と同じ動作となります。
     fn insert_before(&self, child: impl Into<AkashicEntity>, target: Option<AkashicEntity>);
 
 
-    /// このエンティティを破棄します。
     fn destroy(&self);
 
 
-    /// このエンティティが破棄済みであるかを返します。
     fn destroyed(&self) -> bool;
 
 
-    /// このエンティティが表示状態であるかを返します。
     fn visible(&self) -> bool;
 
 
-    /// 自身を表示状態にします。
     fn show(&self);
 
 
-    /// 自身を非表示状態にします。
-    ///
-    /// [`show`](EntityObject2D::show) が呼ばれるまでの間、このエンティティは各 Renderer によって描画されず、Game#findPointSource() で返されることもなくなります。
-    ///
-    /// this#pointDown, pointMove, pointUp なども通常の方法ではfireされなくなります。
     fn hide(&self);
 
 
-    /// このエンティティに対する変更をエンジンに通知します。
+    /// Notifies the engine of changes to this entity.
     ///
-    /// このメソッドの呼び出し後、 自身に対する変更が各Rendererの描画に反映されます。
-    ///
-    /// ## Notes
-    ///
-    /// - このオブジェクトの Object2D 由来のプロパティ (x, y, angle など) を変更した場合にも呼びだす必要があります。
-    ///
-    /// - このメソッドは描画キャッシュの無効化処理を含みません。描画キャッシュを持つエンティティは、このメソッドとは別に[`invalidate`](cacheable::CacheableEntityObject2D::invalidate) が提供されており、
-    /// そちらを呼び出す必要があります。
+    /// After calling this method, changes made to itself will be reflected in each Renderer's drawing.
     fn modified(&self);
 
 
-    /// 自身を表すJsValueをクローンして返します。
     fn as_js_value(&self) -> JsValue;
 
 
-    /// 自身を表すJsValueの不変参照を返します。
     fn js_value_ref(&self) -> &JsValue;
 }
 
 
 #[wasm_bindgen(js_namespace = g)]
 extern {
-    /// アカシックエンティティの基底クラスを表します。
+    /// Represents the base class for Akashic entities.
     ///
-    /// これはアカシックの[`E`](https://akashic-games.github.io/akashic-engine/v3/classes/E.html)と同等のものです。
+    /// This is equivalent to [`E`](https:akashic-games.github.ioakashic-enginev 3 classes E.html).
     #[derive(Clone, EntityObject2D, Debug)]
     #[wasm_bindgen(js_name = "E")]
     pub type AkashicEntity;

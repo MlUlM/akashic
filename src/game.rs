@@ -1,6 +1,6 @@
 use std::fmt::Debug;
-use js_sys::JsString;
 
+use js_sys::JsString;
 use serde::Serialize;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
@@ -54,20 +54,34 @@ extern "C" {
 
     /// Returns the game screen width.
     ///
-    /// This value is equal to the canvas size used by akasic engine.
+    /// This value is equal to the canvas size used by akashic engine.
     #[wasm_bindgen(getter, method)]
     pub fn width(this: &Game) -> f32;
 
 
     /// Returns the game screen height.
     ///
-    /// This value is equal to the canvas size used by akasic engine.
+    /// This value is equal to the canvas size used by akashic engine.
     #[wasm_bindgen(getter, method)]
     pub fn height(this: &Game) -> f32;
 
+
+    /// Returns the base path used to load assets.
+    #[wasm_bindgen(getter, method, js_name = assetBase)]
+    pub fn asset_base(this: &Game) -> String;
+
+
+    /// Returns the [`RandomGenerator`].
+    ///
+    /// [`RandomGenerator`] returned by this method generates a same random number for all players.
     #[wasm_bindgen(method, getter)]
     pub fn random(this: &Game) -> RandomGenerator;
 
+
+    /// Returns the [`RandomGenerator`].
+    ///
+    /// [`RandomGenerator`] returned by this method generates a different random number
+    /// for each player.
     #[wasm_bindgen(method, getter, js_name = localRandom)]
     pub fn local_random(this: &Game) -> RandomGenerator;
 
@@ -87,12 +101,12 @@ extern "C" {
     pub fn resource_factory(this: &Game) -> ResourceFactory;
 
 
-    /// Request to push scene to the scene stack and trasitioning to that scene.
+    /// Request to push scene to the scene stack and translating to that scene.
     #[wasm_bindgen(method, js_name = pushScene)]
     pub fn push_scene(this: &Game, scene: Scene);
 
 
-    /// Request to pop scenes from the scene statck.
+    /// Request to pop scenes from the scene stack.
     ///
     ///
     /// * `preserve` - if preserve is true, do not destroy the scene.
@@ -105,34 +119,19 @@ extern "C" {
 
 
 
-    /// Returns the list of playerid that have joined the game.
+    /// Returns the list of player-id that have joined the game.
     #[wasm_bindgen(method, getter, js_name = joinedPlayerIds)]
     pub fn joined_player_ids(this: &Game) -> Box<[JsString]>;
 
     #[wasm_bindgen(method)]
     pub fn unregister(this: &Game, entity: JsValue);
-
-    #[wasm_bindgen(method, js_name = raiseEvent)]
-    fn _raise_event(this: &Game, event: AkashicEvent);
-
-    #[wasm_bindgen(method, js_name = replaceScene)]
-    fn _replace_scene(this: &Game, scene: Scene, preserve_urrent: bool);
-
-    #[wasm_bindgen(method, getter, js_name = onJoin)]
-    fn _on_join(this: &Game) -> NativeTrigger;
-
-    #[wasm_bindgen(method, js_name = requestSaveSnapshot)]
-    fn _request_save_snapshot(this: &Game, f: JsValue);
-
-    #[wasm_bindgen(method, js_name = requestSaveSnapshot)]
-    fn _request_save_snapshot_with_owner(this: &Game, f: JsValue, owner: JsValue);
 }
 
 
 impl Game {
-    /// Request to pop current scene from the scene statck.
+    /// Request to pop current scene from the scene stack.
     ///
-    /// The poped scene will be discarded.
+    /// The popped scene will be discarded.
     #[inline]
     pub fn pop_scene(&self) {
         self.pop_scene_with_args(false, 1);
@@ -152,7 +151,7 @@ impl Game {
     /// Request to replace the current scene with the scene passed as an argument.
     ///
     ///
-    /// Replaced scene won't destroyed, so you must explicitly destory.
+    /// Replaced scene won't destroyed, so you must explicitly destroy.
     #[inline]
     pub fn replace_scene_with_preserve_current(&self, scene: Scene) {
         self._replace_scene(scene, true);
@@ -176,17 +175,17 @@ impl Game {
     ///
     ///
     /// Passed callback is called when finishing this frame.
-    /// if the return value of passed callbakc is `Some`, save snapshot using it.
+    /// if the return value of passed callback is `Some`, save snapshot using it.
     #[inline]
     pub fn request_save_snapshot<T: Serialize>(&self, f: impl FnMut() -> Option<SnapshotSaveRequest<T>> + 'static) {
         self._request(f, None);
     }
 
 
-     /// Request to save snapshot.
-     ///
-     /// Basically the same as [`Game::request_save_snapshot`](Game::request_save_snapshot),
-     /// but except that callback-function's `this` target to be `owner`
+    /// Request to save snapshot.
+    ///
+    /// Basically the same as [`Game::request_save_snapshot`](Game::request_save_snapshot),
+    /// but except that callback-function's `this` target to be `owner`
     #[inline]
     pub fn request_save_snapshot_with_owner<T: Serialize>(
         &self,
@@ -216,12 +215,6 @@ impl Game {
 }
 
 
-#[inline(always)]
-fn convert(f: impl FnMut() -> JsValue + 'static) -> JsValue {
-    f.into_js_value()
-}
-
-
 impl JoinHandler for Game {
     #[inline(always)]
     fn on_join(&self) -> Trigger<JoinEvent> {
@@ -229,8 +222,34 @@ impl JoinHandler for Game {
     }
 }
 
+
 impl Default for Game {
     fn default() -> Self {
         GAME.clone()
     }
+}
+
+
+#[inline(always)]
+fn convert(f: impl FnMut() -> JsValue + 'static) -> JsValue {
+    f.into_js_value()
+}
+
+
+#[wasm_bindgen]
+extern {
+    #[wasm_bindgen(method, js_name = raiseEvent)]
+    fn _raise_event(this: &Game, event: AkashicEvent);
+
+    #[wasm_bindgen(method, js_name = replaceScene)]
+    fn _replace_scene(this: &Game, scene: Scene, preserve_current: bool);
+
+    #[wasm_bindgen(method, getter, js_name = onJoin)]
+    fn _on_join(this: &Game) -> NativeTrigger;
+
+    #[wasm_bindgen(method, js_name = requestSaveSnapshot)]
+    fn _request_save_snapshot(this: &Game, f: JsValue);
+
+    #[wasm_bindgen(method, js_name = requestSaveSnapshot)]
+    fn _request_save_snapshot_with_owner(this: &Game, f: JsValue, owner: JsValue);
 }
