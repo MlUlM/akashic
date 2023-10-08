@@ -1,7 +1,6 @@
 {
   "name": "akashic",
   "version": "1.0.0",
-  "main": "index.js",
   "repository": "https://github.com/elm-register/akashic",
   "scripts": {
     "play_audio": "cargo run --example play_audio --target wasm32-unknown-unknown",
