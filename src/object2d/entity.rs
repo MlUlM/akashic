@@ -2,14 +2,14 @@ use derive_builder::Builder;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::{EntityObject2D, entity_params};
+use akashic_macro::{entity_params, EntityObject2D};
+use parent::Parent;
 
 use crate::game::Game;
 use crate::object2d::Object2D;
-use parent::Parent;
 use crate::prelude::{PointDownHandler, UpdateHandler};
 use crate::scene::Scene;
-use crate::trigger::point::r#move::PointMoveHandler;
+use crate::trigger::point::mov::PointMoveHandler;
 
 pub mod filled_rect;
 pub mod sprite;
@@ -21,14 +21,14 @@ pub mod parent;
 pub mod prelude {
     pub use crate::object2d::entity::{
         AkashicEntity,
-        parent::Parent,
-        EntityObject2D,
-        filled_rect::*,
-        sprite::*,
         cacheable::{
             CacheableEntityObject2D,
-            label::*
-        }
+            label::*,
+        },
+        EntityObject2D,
+        filled_rect::*,
+        parent::Parent,
+        sprite::*,
     };
 }
 

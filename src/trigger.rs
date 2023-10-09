@@ -1,14 +1,10 @@
 use std::marker::PhantomData;
 
-use auto_delegate::delegate;
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::convert::FromWasmAbi;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
-
-use crate::object2d::entity::AkashicEntity;
-use crate::prelude::CommonOffset;
 
 pub mod load;
 pub mod update;
@@ -19,43 +15,17 @@ pub mod point;
 
 pub mod prelude {
     pub use crate::trigger::{
-        message::MessageHandler,
         load::*,
-        update::*,
+        message::MessageHandler,
         point::{
             down::*,
-            r#move::*,
+            mov::*,
             up::*,
         },
         Trigger,
+        update::*,
         Void,
     };
-}
-
-#[delegate]
-pub trait PointEventBase {
-    fn button(&self) -> i16;
-
-    fn event_flags(&self) -> u8;
-
-    fn local(&self) -> bool;
-
-    fn target(&self) -> Option<AkashicEntity>;
-
-    fn player(&self) -> Option<crate::player::Player>;
-
-    fn point(&self) -> crate::prelude::CommonOffset;
-
-    fn pointer_id(&self) -> i32;
-}
-
-
-#[delegate]
-pub trait PointDeltaEventBase: PointEventBase {
-    fn start_delta(&self) -> CommonOffset;
-
-
-    fn prev_delta(&self) -> CommonOffset;
 }
 
 

@@ -34,7 +34,7 @@ fn point_event_base_debug(input: TokenStream) -> syn::Result<TokenStream2> {
     Ok(quote! {
         impl core::fmt::Debug for #name{
             fn fmt(&self, f: &mut  core::fmt::Formatter<'_>) -> std::fmt::Result {
-                use crate::trigger::PointEventBase;
+                use crate::event::point::PointEventBase;
                 f
                     .debug_struct(#name_str)
                     .field("point", &self.point())
@@ -73,7 +73,7 @@ fn try_expand_point_event_base(input: TokenStream) -> syn::Result<TokenStream2> 
               fn _target(this: &#name) -> Option<crate::object2d::entity::AkashicEntity>;
             }
 
-            impl crate::trigger::PointEventBase for #name{
+            impl crate::event::point::PointEventBase for #name{
                 #[inline(always)]
                 fn button(&self) -> i16{
                     self._button()
@@ -130,7 +130,7 @@ fn try_expand_point_delta_event_base(input: TokenStream) -> syn::Result<TokenStr
             fn _prev_delta(this: &#name) -> crate::prelude::CommonOffset;
         }
 
-        impl crate::trigger::PointDeltaEventBase for #name{
+        impl crate::event::point::PointDeltaEventBase for #name{
             #[inline(always)]
             fn start_delta(&self) -> crate::prelude::CommonOffset{
                 self._start_delta()
@@ -142,10 +142,9 @@ fn try_expand_point_delta_event_base(input: TokenStream) -> syn::Result<TokenStr
             }
         }
 
-        impl  core::fmt::Debug for #name{
+        impl core::fmt::Debug for #name{
             fn fmt(&self, f: &mut  core::fmt::Formatter<'_>) -> std::fmt::Result {
-                use crate::trigger::PointDeltaEventBase;
-                use crate::trigger::PointEventBase;
+                use crate::event::point::{PointEventBase, PointDeltaEventBase};
 
                 f
                     .debug_struct(#name_str)
