@@ -11,3 +11,4 @@ extern "C" {
     #[wasm_bindgen(getter, method)]
     pub fn y(this: &CommonOffset) -> f32;
 }
+

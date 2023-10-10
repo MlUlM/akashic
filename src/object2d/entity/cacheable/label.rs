@@ -19,6 +19,9 @@ extern "C" {
     #[wasm_bindgen(method, getter)]
     pub fn text(this: &Label) -> String;
 
+    #[wasm_bindgen(method, setter, js_name = text)]
+    pub fn set_text(this: &Label, text: String);
+
     #[wasm_bindgen(method, getter, js_name = textColor)]
     fn _text_color(this: &Label) -> Option<String>;
 

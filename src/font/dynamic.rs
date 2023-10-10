@@ -1,3 +1,4 @@
+use std::fmt::Debug;
 use derive_builder::Builder;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::wasm_bindgen;
@@ -18,6 +19,13 @@ extern "C" {
     pub fn new(param: DynamicFontParam) -> DynamicFont;
 }
 
+
+impl Default for DynamicFont {
+    fn default() -> Self {
+        DynamicFontBuilder::new(FontFamily::sans_serif(), 32.)
+            .build()
+    }
+}
 
 #[allow(clippy::from_over_into)]
 impl Into<Font> for DynamicFont {

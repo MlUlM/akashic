@@ -24,6 +24,35 @@ name = "play_audio"
 path = "examples/audio/play_audio.rs"
 
 
+[[example]]
+name = "next_scene"
+path = "examples/scene/next_scene.rs"
+
+
+
+[[example]]
+name = "point_down"
+path = "examples/event/point_down.rs"
+
+[[example]]
+name = "point_move"
+path = "examples/event/point_move.rs"
+
+[[example]]
+name = "point_up"
+path = "examples/event/point_up.rs"
+
+
+[[example]]
+name = "filled_rect"
+path = "examples/entity/filled_rect.rs"
+
+
+[[example]]
+name = "sprite"
+path = "examples/entity/sprite.rs"
+
+
 [workspace]
 members = [
     "akashic-macro",

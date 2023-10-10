@@ -16,5 +16,5 @@ By requesting a game on a live-room, anyone watching stream(including the stream
 It is possible to create a game using this library alone, but most of the processing will involve calling javascript using wasm,
 and the performance will very poor.
 
-I also created a library called [bevy-akashic]() to solve this problem, please also check this.
+I also created a library called [bevy-akashic](https://github.com/elm-register/bevy-akashic) to solve this problem, please also check this.
 

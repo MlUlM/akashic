@@ -2,14 +2,14 @@ use derive_builder::Builder;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use akashic_macro::{EntityObject2D, entity_params};
-
-use crate::game::Game;
-use crate::object2d::Object2D;
+use akashic_macro::{entity_params, EntityObject2D};
 use parent::Parent;
+
+use crate::game::{Game, GAME};
+use crate::object2d::Object2D;
 use crate::prelude::{PointDownHandler, UpdateHandler};
 use crate::scene::Scene;
-use crate::trigger::point::r#move::PointMoveHandler;
+use crate::trigger::point::mov::PointMoveHandler;
 
 pub mod filled_rect;
 pub mod sprite;
@@ -21,14 +21,14 @@ pub mod parent;
 pub mod prelude {
     pub use crate::object2d::entity::{
         AkashicEntity,
-        parent::Parent,
-        EntityObject2D,
-        filled_rect::*,
-        sprite::*,
         cacheable::{
             CacheableEntityObject2D,
-            label::*
-        }
+            label::*,
+        },
+        EntityObject2D,
+        filled_rect::*,
+        parent::Parent,
+        sprite::*,
     };
 }
 
@@ -117,6 +117,20 @@ pub trait EntityObject2D: Object2D + PointDownHandler + PointMoveHandler + Point
 
 
     fn js_value_ref(&self) -> &JsValue;
+
+
+    fn move_to_center(&self) {
+        if let Some(parent_entity) = self
+            .parent()
+            .and_then(|parent| match parent {
+                Parent::Entity(entity) => Some(entity),
+                _ => None
+            }) {
+            self.move_to(parent_entity.half_width() - self.half_width(), parent_entity.half_height() - self.half_width());
+        } else {
+            self.move_to(GAME.half_width() - self.half_width(), GAME.half_height() - self.half_height());
+        }
+    }
 }
 
 

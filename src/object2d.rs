@@ -142,4 +142,16 @@ pub trait Object2D {
     ///
     /// If the scale is changed by this method, you must call [`AkashicEntity::modified`].
     fn scale(&self, scale: f32);
+
+
+    #[inline(always)]
+    fn half_width(&self) -> f32 {
+        self.width() * 0.5
+    }
+
+
+    #[inline(always)]
+    fn half_height(&self) -> f32 {
+        self.height() * 0.5
+    }
 }

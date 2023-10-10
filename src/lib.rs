@@ -20,7 +20,7 @@ pub mod prelude {
         event::{
             point::{
                 down::*,
-                r#move::*,
+                mov::*,
                 up::*
             }
         },

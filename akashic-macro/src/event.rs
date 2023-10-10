@@ -37,8 +37,13 @@ fn point_event_base_debug(input: TokenStream) -> syn::Result<TokenStream2> {
                 use crate::trigger::PointEventBase;
                 f
                     .debug_struct(#name_str)
+                    .field("button", &self.button())
+                    .field("event_flags", &self.event_flags())
+                    .field("local", &self.local())
+                    .field("target", &self.target())
+                    .field("player", &self.player())
                     .field("point", &self.point())
-                    .field("pointer_id", &self.pointer_id())
+                    .field("point", &self.pointer_id())
                     .finish()
             }
         }

@@ -1,6 +1,6 @@
 use auto_delegate::delegate;
 
-use crate::event::point::r#move::PointMoveEvent;
+use crate::event::point::mov::PointMoveEvent;
 use crate::prelude::Trigger;
 
 #[delegate]

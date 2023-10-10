@@ -24,7 +24,7 @@ pub mod prelude {
         update::*,
         point::{
             down::*,
-            r#move::*,
+            mov::*,
             up::*,
         },
         Trigger,

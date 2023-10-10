@@ -129,6 +129,17 @@ extern "C" {
 
 
 impl Game {
+    #[inline(always)]
+    pub fn half_width(&self) -> f32 {
+        self.width() * 0.5
+    }
+
+
+    #[inline(always)]
+    pub fn half_height(&self) -> f32 {
+        self.height() * 0.5
+    }
+    
     /// Request to pop current scene from the scene stack.
     ///
     /// The popped scene will be discarded.
@@ -195,6 +206,9 @@ impl Game {
         self._request(f, Some(owner.into()));
     }
 
+    
+    
+    
     fn _request<T: Serialize>(
         &self,
         mut f: impl FnMut() -> Option<SnapshotSaveRequest<T>> + 'static,

@@ -4,6 +4,14 @@
   "repository": "https://github.com/elm-register/akashic",
   "scripts": {
     "play_audio": "cargo run --example play_audio --target wasm32-unknown-unknown",
+    "next_scene": "cargo run --example next_scene --target wasm32-unknown-unknown",
+    "hello_world": "cargo run --example hello_world --target wasm32-unknown-unknown",
+    "akashic_sample": "cargo run --example akashic_sample --target wasm32-unknown-unknown",
+    "point_down": "cargo run --example point_down --target wasm32-unknown-unknown",
+    "point_move": "cargo run --example point_move --target wasm32-unknown-unknown",
+    "point_up": "cargo run --example point_up --target wasm32-unknown-unknown",
+    "filled_rect": "cargo run --example filled_rect --target wasm32-unknown-unknown",
+    "sprite": "cargo run --example sprite --target wasm32-unknown-unknown",
     "sandbox": "akashic-sandbox .",
     "scan": "akashic scan asset"
   },

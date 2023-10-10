@@ -12,6 +12,11 @@ extern "C" {
 
 impl FontFamily {
     #[inline]
+    pub fn sans_serif() -> Self{
+        Self::new("sans-serif")
+    }
+
+    #[inline]
     pub fn new(font: impl Into<String>) -> Self {
         let font: String = font.into();
         JsValue::from(font).unchecked_into()

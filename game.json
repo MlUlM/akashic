@@ -41,6 +41,10 @@
 		"assets/script/akashic_bg.wasm": {
 			"type": "binary",
 			"path": "assets/script/akashic_bg.wasm"
+		},
+		"assets/script/main_bg.wasm": {
+			"type": "binary",
+			"path": "assets/script/main_bg.wasm"
 		}
 	},
 	"environment": {

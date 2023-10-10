@@ -9,7 +9,7 @@ use crate::prelude::{AkashicEntity, CommonOffset};
 extern "C" {
     /// This event is occurred once when `pointerdown` occurs.
     ///
-    /// Then, if the pointer moves while down, [`PointMoveEvent`] will occur in succession.
+    /// Then, if the pointer moves while down, [`PointMoveEvent`](crate::event::point::mov::PointMoveEvent) will occur in succession.
     #[derive(Clone, PointEventBase)]
     pub type PointDownEvent;
 
